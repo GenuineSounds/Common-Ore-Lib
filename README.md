@@ -3,6 +3,10 @@ CommonOres
 
 [Genuine] Commone Ores is a mod for Minecraft that adds various ores, dusts, nuggets, ingots, and blocks that are common. This mod is in no way usable.
 
+License
+=======
+This computer software code ("the code") is ©2014 GenuineSounds ("the author") all rights reserved, and is licensed for use and redistribution under the “Don’t Be a Jerk” non-commercial care-free license.
+
 Don't Be a Jerk
 ===============
 

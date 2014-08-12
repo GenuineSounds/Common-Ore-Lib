@@ -12,5 +12,6 @@ public class Config {
 	public Map<String, Integer> spreadMap = new HashMap<String, Integer>();
 	public Map<String, String> pairMap = new HashMap<String, String>();
 
-	public Config() {}
+	public Config() {
+	}
 }

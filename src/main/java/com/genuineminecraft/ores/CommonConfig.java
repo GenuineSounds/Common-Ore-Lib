@@ -12,5 +12,6 @@ public class CommonConfig {
 	public Map<String, Integer> spreadMap = new HashMap<String, Integer>();
 	public Map<String, String> pairMap = new HashMap<String, String>();
 
-	public CommonConfig() {}
+	public CommonConfig() {
+	}
 }

@@ -37,7 +37,7 @@ public class CommonOres {
 
 	public static final String MODID = "CommonOres";
 	public static final String NAME = "[Genuine] Common Ores";
-	public static final String VERSION = "1.6";
+	public static final String VERSION = "1.7.10-r1";
 	@Instance("CommonOres")
 	public static CommonOres instance;
 	public static Config config;

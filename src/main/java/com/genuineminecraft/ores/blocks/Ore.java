@@ -7,6 +7,7 @@ import net.minecraft.world.World;
 import com.genuineminecraft.ores.CommonOres;
 import com.genuineminecraft.ores.interfaces.IAlloy;
 import com.genuineminecraft.ores.interfaces.IMinable;
+import com.genuineminecraft.ores.registry.OreRegistry;
 
 public class Ore extends BlockOre implements IMinable, IAlloy {
 
@@ -48,7 +49,7 @@ public class Ore extends BlockOre implements IMinable, IAlloy {
 
 	@Override
 	public boolean isReplaceableOreGen(World world, int x, int y, int z, Block target) {
-		return CommonOres.oreMap.containsValue(target);
+		return OreRegistry.getInstance().oreMap.containsValue(target);
 	}
 
 	public String getName() {

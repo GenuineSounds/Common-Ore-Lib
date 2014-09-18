@@ -9,6 +9,7 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 
 import com.genuineminecraft.ores.CommonOres;
 import com.genuineminecraft.ores.blocks.Ore;
+import com.genuineminecraft.ores.registry.OreRegistry;
 
 import cpw.mods.fml.common.IWorldGenerator;
 
@@ -44,7 +45,7 @@ public class AlloyOreWorldGenerator implements IWorldGenerator {
 	}
 
 	private void genOverworld(World world, Random random, int chunkX, int chunkZ) {
-		for (Ore ore : CommonOres.oreMap.values()) {
+		for (Ore ore : OreRegistry.getInstance().oreMap.values()) {
 			if (!ore.isAlloy())
 				continue;
 			int nodes = ore.getNodesPerChunk() / 2;

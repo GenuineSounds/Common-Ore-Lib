@@ -84,7 +84,7 @@ public class OreRegistry {
 		for (int i = 0; i < commonList.size(); i++) {
 			String name = commonList.get(i);
 			if (alloyList.contains(name))
-				oreMap.get(name).setComponents(oreMap.get(commonList.get(i - 1)), oreMap.get(commonList.get(i + 1)), null);
+				oreMap.get(name).setComponents(oreMap.get(commonList.get(i - 1)), oreMap.get(commonList.get(i + 1)));
 		}
 		for (Entry<String, Storage> entry : storageMap.entrySet()) {
 			ItemStack stack = new ItemStack(entry.getValue());

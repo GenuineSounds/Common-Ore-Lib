@@ -20,7 +20,6 @@ public class Ore extends BlockOre implements IMinable, IAlloy {
 	private int spread;
 	private Block primary;
 	private Block secondary;
-	private Block tertiary;
 
 	public Ore(String name) {
 		super();
@@ -81,10 +80,9 @@ public class Ore extends BlockOre implements IMinable, IAlloy {
 	}
 
 	@Override
-	public void setComponents(Block primary, Block secondary, Block tertiary) {
+	public void setComponents(Block primary, Block secondary) {
 		this.primary = primary;
 		this.secondary = secondary;
-		this.tertiary = tertiary;
 	}
 
 	@Override
@@ -95,11 +93,6 @@ public class Ore extends BlockOre implements IMinable, IAlloy {
 	@Override
 	public Block getSecondaryComponent() {
 		return secondary;
-	}
-
-	@Override
-	public Block getTertiaryComponent() {
-		return tertiary;
 	}
 
 	@Override

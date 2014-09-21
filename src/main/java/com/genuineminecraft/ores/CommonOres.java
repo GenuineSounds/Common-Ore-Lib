@@ -17,11 +17,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 @Mod(modid = CommonOres.MODID, name = CommonOres.NAME, version = CommonOres.VERSION)
 public class CommonOres {
 
-	@Instance("CommonOres")
+	@Instance(CommonOres.MODID)
 	public static CommonOres instance;
-	public static final String MODID = "CommonOres";
-	public static final String NAME = "[Genuine] Common Ores";
-	public static final String VERSION = "1.7.10-r1";
+	public static final String MODID = "GenuineCommonOres";
+	public static final String NAME = "Common Ores";
+	public static final String VERSION = "1.7.10-r2";
 	public static Config config;
 
 	@EventHandler

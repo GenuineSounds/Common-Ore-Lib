@@ -6,11 +6,11 @@ public interface IMinable {
 
 	public int getNodesPerChunk();
 
-	public int getChunkRarity();
+	public float getChunkRarity();
 
-	public int getDepth();
+	public float getDepth();
 
-	public int getSpread();
+	public float getSpread();
 
 	public int getNodeSize();
 }

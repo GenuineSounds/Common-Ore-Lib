@@ -1,14 +1,14 @@
 package com.genuineminecraft.ores.interfaces;
 
-import net.minecraft.block.Block;
+import com.genuineminecraft.ores.metals.Metal;
 
 public interface IAlloy {
 
-	public void setComponents(Block primary, Block secondary);
+	public void setComponents(Metal primary, Metal secondary);
 
-	public Block getPrimaryComponent();
+	public Metal getPrimaryComponent();
 
-	public Block getSecondaryComponent();
+	public Metal getSecondaryComponent();
 
 	public boolean isAlloy();
 }

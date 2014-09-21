@@ -1,23 +1,14 @@
 package com.genuineminecraft.ores.registry;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.genuineminecraft.ores.CommonOres;
-import com.genuineminecraft.ores.blocks.Ore;
-import com.genuineminecraft.ores.blocks.Storage;
-import com.genuineminecraft.ores.items.Dust;
-import com.genuineminecraft.ores.items.Ingot;
-import com.genuineminecraft.ores.items.Nugget;
+import com.genuineminecraft.ores.metals.Metal;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -32,147 +23,72 @@ public class OreRegistry {
 		return instance;
 	}
 
-	public static List<String> commonList = new ArrayList<String>();
-	public static List<String> alloyList = Arrays.asList("electrum", "invar", "steel", "bronze", "brass");
-	public Map<String, Dust> dustMap = new HashMap<String, Dust>();
-	public Map<String, Ingot> ingotMap = new HashMap<String, Ingot>();
-	public Map<String, Nugget> nuggetMap = new HashMap<String, Nugget>();
-	public Map<String, Storage> storageMap = new HashMap<String, Storage>();
-	public Map<String, Ore> oreMap = new HashMap<String, Ore>();
+	public List<Metal> metals = new ArrayList<Metal>();
+	public Map<String, Metal> metalMap = new HashMap<String, Metal>();
 
-	public static void registerOre(String... oreNames) {
-		for (String oreName : oreNames)
-			commonList.add(oreName);
-	}
-
-	public void preinitialize() {
-		registerOre("platinum", "titanium", "gold", "electrum", "silver", "tungsten", "nickel", "invar", "iron", "steel", "lead", "tin", "bronze", "copper", "brass", "zinc", "aluminium");
+	public void preInitialize() {
+		registerOre("aluminium", 1.0F, 1, 6, 4, 0.1F);
+		registerOre("zinc", 1.0F, 1, 6, 4, 0.1F);
+		registerOre("copper", 1.0F, 1, 6, 4, 0.1F);
+		registerOre("tin", 0.8F, 1, 6, 4, 0.1F);
+		registerOre("lead", 0.8F, 1, 6, 4, 0.1F);
+		registerOre("iron", 0.8F, 1, 6, 4, 0.1F);
+		registerOre("nickel", 0.6F, 1, 6, 4, 0.1F);
+		registerOre("tungsten", 0.6F, 1, 6, 4, 0.1F);
+		registerOre("silver", 0.6F, 1, 6, 4, 0.1F);
+		registerOre("gold", 0.4F, 1, 6, 4, 0.1F);
+		registerOre("titanium", 0.4F, 1, 6, 4, 0.1F);
+		registerOre("platinum", 0.4F, 1, 6, 4, 0.1F);
+		registerAlloy("brass", "copper", "zinc", 1.0F, 1, 6, 4, 0.1F);
+		registerAlloy("bronze", "copper", "tin", 0.8F, 1, 6, 4, 0.1F);
+		registerAlloy("steel", "coal", "iron", 0.8F, 1, 6, 4, 0.1F);
+		registerAlloy("invar", "nickel", "iron", 0.6F, 1, 6, 4, 0.1F);
+		registerAlloy("electrum", "gold", "silver", 0.4F, 1, 6, 4, 0.1F);
 	}
 
 	public void initialize() {
-		for (String name : commonList) {
-			String nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-			Ore ore = new Ore(nameFixed);
-			Dust dust = new Dust(nameFixed);
-			Ingot ingot = new Ingot(nameFixed);
-			Nugget nugget = new Nugget(nameFixed);
-			Storage storage = new Storage(nameFixed);
-			ore.setup(CommonOres.config.chunkRarityMap.get(name), CommonOres.config.nodesPerChunkMap.get(name), CommonOres.config.nodeSizeMap.get(name), CommonOres.config.depthMap.get(name), CommonOres.config.spreadMap.get(name));
-			oreMap.put(name, ore);
-			dustMap.put(name, dust);
-			ingotMap.put(name, ingot);
-			nuggetMap.put(name, nugget);
-			storageMap.put(name, storage);
-			GameRegistry.registerBlock(ore, ore.getName());
-			GameRegistry.registerItem(dust, dust.getName());
-			GameRegistry.registerItem(ingot, ingot.getName());
-			GameRegistry.registerItem(nugget, nugget.getName());
-			GameRegistry.registerBlock(storage, storage.getName());
-			OreDictionary.registerOre(ore.getName(), ore);
-			OreDictionary.registerOre(dust.getName(), dust);
-			OreDictionary.registerOre("pulv" + nameFixed, dust);
-			OreDictionary.registerOre(ingot.getName(), ingot);
-			OreDictionary.registerOre(nugget.getName(), nugget);
-			OreDictionary.registerOre(storage.getName(), storage);
-			GameRegistry.addSmelting(ore, new ItemStack(ingot), 10);
-			GameRegistry.addSmelting(dust, new ItemStack(ingot), 10);
-			GameRegistry.addShapelessRecipe(new ItemStack(nugget, 9), ingot);
-			GameRegistry.addShapelessRecipe(new ItemStack(storage), ingot, ingot, ingot, ingot, ingot, ingot, ingot, ingot, ingot);
-			GameRegistry.addShapelessRecipe(new ItemStack(ingot), nugget, nugget, nugget, nugget, nugget, nugget, nugget, nugget, nugget);
-			GameRegistry.addShapelessRecipe(new ItemStack(ingot, 9), storage);
-		}
-		for (int i = 0; i < commonList.size(); i++) {
-			String name = commonList.get(i);
-			if (alloyList.contains(name))
-				oreMap.get(name).setComponents(oreMap.get(commonList.get(i - 1)), oreMap.get(commonList.get(i + 1)));
-		}
-		for (Entry<String, Storage> entry : storageMap.entrySet()) {
-			ItemStack stack = new ItemStack(entry.getValue());
+		for (Metal metal : metals) {
+			GameRegistry.registerBlock(metal.ore, metal.ore.getName());
+			GameRegistry.registerBlock(metal.storage, metal.storage.getName());
+			GameRegistry.registerItem(metal.dust, metal.dust.getName());
+			GameRegistry.registerItem(metal.ingot, metal.ingot.getName());
+			GameRegistry.registerItem(metal.nugget, metal.nugget.getName());
+			OreDictionary.registerOre("ore" + metal.name, metal.ore);
+			OreDictionary.registerOre("storage" + metal.name, metal.storage);
+			OreDictionary.registerOre("dust" + metal.name, metal.dust);
+			OreDictionary.registerOre("pulv" + metal.name, metal.dust);
+			OreDictionary.registerOre("ingot" + metal.name, metal.ingot);
+			OreDictionary.registerOre("nugget" + metal.name, metal.nugget);
+			GameRegistry.addSmelting(metal.ore, new ItemStack(metal.ingot), 10);
+			GameRegistry.addSmelting(metal.dust, new ItemStack(metal.ingot), 10);
+			GameRegistry.addShapelessRecipe(new ItemStack(metal.nugget, 9), metal.ingot);
+			GameRegistry.addShapelessRecipe(new ItemStack(metal.storage), metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot);
+			GameRegistry.addShapelessRecipe(new ItemStack(metal.ingot), metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget);
+			GameRegistry.addShapelessRecipe(new ItemStack(metal.ingot, 9), metal.storage);
+			ItemStack stack;
+			stack = new ItemStack(metal.ore);
 			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", stack);
-		}
-		for (Entry<String, Ore> entry : oreMap.entrySet()) {
-			ItemStack stack = new ItemStack(entry.getValue());
+			stack = new ItemStack(metal.storage);
 			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", stack);
 		}
 	}
 
-	public static Block getOreByName(String name) {
-		Block out = instance.oreMap.get(cleanName(name));
-		if (out == null)
-			out = GameRegistry.findBlock("Minecraft", name);
-		return out;
+	public void postInitialize() {}
+
+	public void registerOre(String name, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread) {
+		Metal metal = new Metal(name);
+		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread);
+		metals.add(metal);
+		metalMap.put(name, metal);
 	}
 
-	public static Item getDustByName(String name) {
-		Item out = instance.dustMap.get(cleanName(name));
-		if (out == null)
-			out = GameRegistry.findItem("Minecraft", name);
-		return out;
-	}
-
-	public static Item getIngotByName(String name) {
-		Item out = instance.ingotMap.get(cleanName(name));
-		if (out == null)
-			out = GameRegistry.findItem("Minecraft", name);
-		return out;
-	}
-
-	public static Item getNuggetByName(String name) {
-		Item out = instance.nuggetMap.get(cleanName(name));
-		if (out == null)
-			out = GameRegistry.findItem("Minecraft", name);
-		return out;
-	}
-
-	public static Block getBlockByName(String name) {
-		Block out = instance.storageMap.get(cleanName(name));
-		if (out == null)
-			out = GameRegistry.findBlock("Minecraft", name);
-		return out;
-	}
-
-	public static String cleanName(String name) {
-		if (name.startsWith("ore"))
-			name = name.substring(3);
-		else if (name.startsWith("dust"))
-			name = name.substring(4);
-		else if (name.startsWith("pulv"))
-			name = name.substring(4);
-		else if (name.startsWith("ingot"))
-			name = name.substring(5);
-		else if (name.startsWith("block"))
-			name = name.substring(5);
-		else if (name.startsWith("nugget"))
-			name = name.substring(6);
-		return name;
-	}
-
-	public static void createLang() {
-		System.out.println();
-		for (String name : commonList) {
-			String nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-			System.out.println("tile.ore" + nameFixed + ".name=" + nameFixed + " Ore");
-		}
-		System.out.println();
-		for (String name : commonList) {
-			String nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-			System.out.println("item.dust" + nameFixed + ".name=Pulverized " + nameFixed);
-		}
-		System.out.println();
-		for (String name : commonList) {
-			String nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-			System.out.println("item.ingot" + nameFixed + ".name=" + nameFixed + " Ingot");
-		}
-		System.out.println();
-		for (String name : commonList) {
-			String nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-			System.out.println("item.nugget" + nameFixed + ".name=" + nameFixed + " Nugget");
-		}
-		System.out.println();
-		for (String name : commonList) {
-			String nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-			System.out.println("tile.block" + nameFixed + ".name=" + nameFixed + " Block");
-		}
-		System.out.println();
+	public void registerAlloy(String name, String first, String second, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread) {
+		Metal metal = new Metal(name);
+		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread);
+		Metal primary = metalMap.get(first);
+		Metal secondary = metalMap.get(second);
+		metal.setComponents(primary, secondary);
+		metals.add(metal);
+		metalMap.put(name, metal);
 	}
 }

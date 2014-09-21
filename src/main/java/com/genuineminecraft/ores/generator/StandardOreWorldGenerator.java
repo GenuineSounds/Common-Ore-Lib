@@ -2,12 +2,13 @@ package com.genuineminecraft.ores.generator;
 
 import java.util.Random;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 
-import com.genuineminecraft.ores.CommonOres;
-import com.genuineminecraft.ores.blocks.Ore;
+import com.genuineminecraft.ores.metals.Metal;
 import com.genuineminecraft.ores.registry.OreRegistry;
 
 import cpw.mods.fml.common.IWorldGenerator;
@@ -17,42 +18,48 @@ public class StandardOreWorldGenerator implements IWorldGenerator {
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 		switch (world.provider.dimensionId) {
-		case -1:
-			genNether(world, random, chunkX, chunkZ);
-			break;
-		case 0:
-			genOverworld(world, random, chunkX, chunkZ);
-			break;
-		case 1:
-			genEnd(world, random, chunkX, chunkZ);
-			break;
-		default:
-			// genOverworld(world, random, chunkX, chunkZ, isHellBiome);
-			break;
+			case -1:
+				genNether(world, random, chunkX, chunkZ);
+				break;
+			case 0:
+				genOverworld(world, random, chunkX, chunkZ);
+				break;
+			case 1:
+				genEnd(world, random, chunkX, chunkZ);
+				break;
+			default:
+				break;
 		}
 	}
 
-	private void genNether(World world, Random random, int chunkX, int chunkZ) {
-	}
+	private void genNether(World world, Random random, int chunkX, int chunkZ) {}
 
 	private void genOverworld(World world, Random random, int chunkX, int chunkZ) {
-		for (Ore ore : OreRegistry.getInstance().oreMap.values()) {
-			if (ore.isAlloy())
+		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
+		WorldGenMinable gen = null;
+		for (Metal metal : OreRegistry.getInstance().metals) {
+			if (metal.isAlloy())
 				continue;
-			for (int i = 0; i < ore.getNodesPerChunk(); i++) {
-				if (ore.getChunkRarity() < random.nextInt(100))
-					continue;
-				int y = (int) ((random.nextGaussian() - 0.5) * ore.getSpread()) + ore.getDepth();
-				if (y < 0)
+			gen = new WorldGenMinable(metal.ore, metal.getNodeSize());
+			for (int i = 0; i < metal.getNodesPerChunk(); i++) {
+				if (metal.getChunkRarity() < random.nextDouble())
 					continue;
 				int x = chunkX * 16 + random.nextInt(16);
 				int z = chunkZ * 16 + random.nextInt(16);
-				WorldGenMinable gen = new WorldGenMinable(ore, ore.getNodeSize());
+				int yMax = 255;
+				for (int yCheck = 255; yCheck > 0; yCheck--) {
+					if (chunk.getBlock(x - chunkX * 16, yCheck, z - chunkZ * 16).equals(Blocks.air))
+						yMax--;
+					else
+						break;
+				}
+				int y = (int) (((random.nextGaussian() - 0.5) * metal.getSpread() * yMax) + metal.getDepth() * yMax);
+				if (y < 0)
+					continue;
 				gen.generate(world, random, x, y, z);
 			}
 		}
 	}
 
-	private void genEnd(World world, Random random, int chunkX, int chunkZ) {
-	}
+	private void genEnd(World world, Random random, int chunkX, int chunkZ) {}
 }

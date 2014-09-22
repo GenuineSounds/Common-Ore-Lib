@@ -9,7 +9,7 @@
   "updateUrl": "",
   "authorList": ["GenuineSounds"],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "assets/commonores/logo.png",
   "screenshots": [],
   "dependencies": []
 }

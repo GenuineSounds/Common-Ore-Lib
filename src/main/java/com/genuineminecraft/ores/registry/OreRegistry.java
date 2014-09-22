@@ -49,16 +49,16 @@ public class OreRegistry {
 	public void initialize() {
 		for (Metal metal : metals) {
 			GameRegistry.registerBlock(metal.ore, metal.ore.getName());
-			GameRegistry.registerBlock(metal.storage, metal.storage.getName());
 			GameRegistry.registerItem(metal.dust, metal.dust.getName());
 			GameRegistry.registerItem(metal.ingot, metal.ingot.getName());
 			GameRegistry.registerItem(metal.nugget, metal.nugget.getName());
+			GameRegistry.registerBlock(metal.storage, metal.storage.getName());
 			OreDictionary.registerOre("ore" + metal.name, metal.ore);
-			OreDictionary.registerOre("storage" + metal.name, metal.storage);
 			OreDictionary.registerOre("dust" + metal.name, metal.dust);
 			OreDictionary.registerOre("pulv" + metal.name, metal.dust);
 			OreDictionary.registerOre("ingot" + metal.name, metal.ingot);
 			OreDictionary.registerOre("nugget" + metal.name, metal.nugget);
+			OreDictionary.registerOre("storage" + metal.name, metal.storage);
 			GameRegistry.addSmelting(metal.ore, new ItemStack(metal.ingot), 10);
 			GameRegistry.addSmelting(metal.dust, new ItemStack(metal.ingot), 10);
 			GameRegistry.addShapelessRecipe(new ItemStack(metal.nugget, 9), metal.ingot);

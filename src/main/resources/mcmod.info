@@ -1,6 +1,6 @@
 [
 {
-  "modid": "GenuineCommonOres",
+  "modid": "CommonOres",
   "name": "Common Ores",
   "description": "Common Ores is a library of widely used ores, dusts, ingots, nuggets, and blocks.",
   "version": "1.7.10-r2",

@@ -29,10 +29,10 @@ public class Config {
 	Configuration mainCfg;
 
 	public Config(FMLPreInitializationEvent event) {
-		File folder = new File(event.getModConfigurationDirectory() + "/" + CommonOres.MODID);
+		File folder = new File(event.getModConfigurationDirectory(), "CommonOre");
 		folder.mkdirs();
-		oreGenCfg = new Configuration(new File(folder, CommonOres.MODID + " - Ore Generation.cfg"));
-		mainCfg = new Configuration(new File(folder, CommonOres.MODID + " - Main.cfg"));
+		oreGenCfg = new Configuration(new File(folder, "CommonOre - Ore Generation.cfg"));
+		mainCfg = new Configuration(new File(folder, "CommonOre - Main.cfg"));
 		// Main Config
 		flatBedrock = mainCfg.getBoolean("flatBedrock", "Options", true, "Generate flat bedrock in the Overworld and nether.");
 		genAlloys = mainCfg.getBoolean("genAlloys", "Options", true, "Generate alloy ores in world. Might break balance if rare alloys is not enabled. (recommended)");

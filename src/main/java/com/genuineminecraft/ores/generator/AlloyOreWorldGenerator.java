@@ -26,6 +26,7 @@ public class AlloyOreWorldGenerator implements IWorldGenerator {
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
+		long time = System.currentTimeMillis();
 		switch (world.provider.dimensionId) {
 			case -1:
 				genNether(world, random, chunkX, chunkZ);
@@ -39,6 +40,9 @@ public class AlloyOreWorldGenerator implements IWorldGenerator {
 			default:
 				break;
 		}
+		long newTime = System.currentTimeMillis() - time;
+		if (newTime > 1)
+			System.out.println("Alloy generation: " + newTime + " milliseconds");
 	}
 
 	private void genNether(World world, Random random, int chunkX, int chunkZ) {}

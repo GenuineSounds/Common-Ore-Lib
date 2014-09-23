@@ -1,16 +1,12 @@
 package com.genuineminecraft.ores.config;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.minecraftforge.common.config.Configuration;
 
-import com.genuineminecraft.ores.CommonOres;
 import com.genuineminecraft.ores.metals.Metal;
 import com.genuineminecraft.ores.registry.OreRegistry;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class Config {

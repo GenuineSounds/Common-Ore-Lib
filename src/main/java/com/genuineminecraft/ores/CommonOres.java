@@ -1,7 +1,5 @@
 package com.genuineminecraft.ores;
 
-import net.minecraftforge.common.MinecraftForge;
-
 import com.genuineminecraft.ores.config.Config;
 import com.genuineminecraft.ores.generator.AlloyOreWorldGenerator;
 import com.genuineminecraft.ores.generator.FlatBedrockWorldGenerator;
@@ -30,7 +28,6 @@ public class CommonOres {
 	public void preInit(FMLPreInitializationEvent event) {
 		config = new Config(event);
 		OreRegistry.getInstance().preInitialize();
-//		MinecraftForge.ORE_GEN_BUS.post(arg0);
 	}
 
 	@EventHandler

@@ -60,14 +60,12 @@ public class OreRegistry {
 		for (NBTTagCompound tag : metals) {
 			try {
 				registerOre(tag.getString("name"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"));
-			}
-			catch (Exception e) {}
+			} catch (Exception e) {}
 		}
 		for (NBTTagCompound tag : alloys) {
 			try {
 				registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getString("secondary"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"));
-			}
-			catch (Exception e) {}
+			} catch (Exception e) {}
 		}
 	}
 

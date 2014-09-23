@@ -6,11 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.genuineminecraft.ores.CommonOres;
 import com.genuineminecraft.ores.metals.Metal;
+import com.google.common.collect.ImmutableList;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.event.FMLInterModComms.IMCMessage;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class OreRegistry {
@@ -44,6 +48,27 @@ public class OreRegistry {
 		registerAlloy("steel", "coal", "iron", 0.8F, 1, 6, 4, 0.1F);
 		registerAlloy("invar", "nickel", "iron", 0.6F, 1, 6, 4, 0.1F);
 		registerAlloy("electrum", "gold", "silver", 0.4F, 1, 6, 4, 0.1F);
+		ImmutableList<IMCMessage> list = FMLInterModComms.fetchRuntimeMessages(CommonOres.instance);
+		List<NBTTagCompound> metals = new ArrayList<NBTTagCompound>();
+		List<NBTTagCompound> alloys = new ArrayList<NBTTagCompound>();
+		for (IMCMessage imc : list) {
+			if (imc.key.equalsIgnoreCase("commonMetal"))
+				metals.add(imc.getNBTValue());
+			if (imc.key.equalsIgnoreCase("commonAlloy"))
+				alloys.add(imc.getNBTValue());
+		}
+		for (NBTTagCompound tag : metals) {
+			try {
+				registerOre(tag.getString("name"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"));
+			}
+			catch (Exception e) {}
+		}
+		for (NBTTagCompound tag : alloys) {
+			try {
+				registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getString("secondary"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"));
+			}
+			catch (Exception e) {}
+		}
 	}
 
 	public void initialize() {

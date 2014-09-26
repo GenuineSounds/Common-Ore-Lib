@@ -31,23 +31,23 @@ public class MetalRegistry {
 	public Map<String, Metal> metalMap = new HashMap<String, Metal>();
 
 	public void preInitialize() {
-		registerOre("aluminium", 1.0F, 1, 6, 4, 0.1F);
-		registerOre("zinc", 1.0F, 1, 6, 4, 0.1F);
-		registerOre("copper", 1.0F, 1, 6, 4, 0.1F);
-		registerOre("tin", 0.8F, 1, 6, 4, 0.1F);
-		registerOre("lead", 0.8F, 1, 6, 4, 0.1F);
-		registerOre("iron", 0.8F, 1, 6, 4, 0.1F);
-		registerOre("nickel", 0.6F, 1, 6, 4, 0.1F);
-		registerOre("tungsten", 0.6F, 1, 6, 4, 0.1F);
-		registerOre("silver", 0.6F, 1, 6, 4, 0.1F);
-		registerOre("gold", 0.4F, 1, 6, 4, 0.1F);
-		registerOre("titanium", 0.4F, 1, 6, 4, 0.1F);
-		registerOre("platinum", 0.4F, 1, 6, 4, 0.1F);
-		registerAlloy("brass", "copper", "zinc", 1.0F, 1, 6, 4, 0.1F);
-		registerAlloy("bronze", "copper", "tin", 0.8F, 1, 6, 4, 0.1F);
-		registerAlloy("steel", "coal", "iron", 0.8F, 1, 6, 4, 0.1F);
-		registerAlloy("invar", "nickel", "iron", 0.6F, 1, 6, 4, 0.1F);
-		registerAlloy("electrum", "gold", "silver", 0.4F, 1, 6, 4, 0.1F);
+		registerOre("aluminium", 1.0F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerOre("zinc", 1.0F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerOre("copper", 1.0F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerOre("tin", 0.8F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerOre("lead", 0.8F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerOre("iron", 0.8F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerOre("nickel", 0.6F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerOre("tungsten", 0.6F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerOre("silver", 0.6F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerOre("gold", 0.4F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerOre("titanium", 0.4F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerOre("platinum", 0.4F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerAlloy("brass", "copper", "zinc", 1.0F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerAlloy("bronze", "copper", "tin", 0.8F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerAlloy("steel", "coal", "iron", 0.8F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerAlloy("invar", "nickel", "iron", 0.6F, 1, 6, 4, 0.1F, 5F, 1F);
+		registerAlloy("electrum", "gold", "silver", 0.4F, 1, 6, 4, 0.1F, 5F, 1F);
 		ImmutableList<IMCMessage> list = FMLInterModComms.fetchRuntimeMessages(CommonOres.instance);
 		List<NBTTagCompound> metals = new ArrayList<NBTTagCompound>();
 		List<NBTTagCompound> alloys = new ArrayList<NBTTagCompound>();
@@ -59,23 +59,23 @@ public class MetalRegistry {
 		}
 		for (NBTTagCompound tag : metals) {
 			try {
-				registerOre(tag.getString("name"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"));
+				registerOre(tag.getString("name"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"));
 			} catch (Exception e) {}
 		}
 		for (NBTTagCompound tag : alloys) {
 			try {
-				registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getString("secondary"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"));
+				registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getString("secondary"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"));
 			} catch (Exception e) {}
 		}
 	}
 
 	public void initialize() {
 		for (Metal metal : metals) {
-			GameRegistry.registerBlock(metal.ore, metal.ore.getName());
-			GameRegistry.registerItem(metal.dust, metal.dust.getName());
-			GameRegistry.registerItem(metal.ingot, metal.ingot.getName());
-			GameRegistry.registerItem(metal.nugget, metal.nugget.getName());
-			GameRegistry.registerBlock(metal.storage, metal.storage.getName());
+			GameRegistry.registerBlock(metal.ore, "ore" + metal.name);
+			GameRegistry.registerItem(metal.dust, "dust" + metal.name);
+			GameRegistry.registerItem(metal.ingot, "ingot" + metal.name);
+			GameRegistry.registerItem(metal.nugget, "nugget" + metal.name);
+			GameRegistry.registerBlock(metal.storage, "storage" + metal.name);
 			OreDictionary.registerOre("ore" + metal.name, metal.ore);
 			OreDictionary.registerOre("dust" + metal.name, metal.dust);
 			OreDictionary.registerOre("pulv" + metal.name, metal.dust);
@@ -98,16 +98,16 @@ public class MetalRegistry {
 
 	public void postInitialize() {}
 
-	public void registerOre(String name, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread) {
+	public void registerOre(String name, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {
 		Metal metal = new Metal(name);
-		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread);
+		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
 		metals.add(metal);
-		metalMap.put(name, metal);
+		metalMap.put(metal.name, metal);
 	}
 
-	public void registerAlloy(String name, String first, String second, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread) {
+	public void registerAlloy(String name, String first, String second, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {
 		Metal metal = new Metal(name);
-		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread);
+		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
 		Metal primary = metalMap.get(first);
 		Metal secondary = metalMap.get(second);
 		metal.setComponents(primary, secondary);

@@ -11,6 +11,7 @@ import com.genuineminecraft.ores.items.Nugget;
 public class Metal implements IOre, IAlloy {
 
 	public final String name;
+	public final String nameFixed;
 	public final Ore ore;
 	public final Storage storage;
 	public final Dust dust;
@@ -21,25 +22,32 @@ public class Metal implements IOre, IAlloy {
 	private int nodesPerChunk;
 	private int nodeSize;
 	private float spread;
+	private float hardness;
+	private float resistance;
 	private Metal primary;
 	private Metal secondary;
 
 	public Metal(String name) {
 		this.name = name;
-		String nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-		ore = new Ore(nameFixed);
-		dust = new Dust(nameFixed);
-		ingot = new Ingot(nameFixed);
-		nugget = new Nugget(nameFixed);
-		storage = new Storage(nameFixed);
+		this.nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+		this.ore = new Ore(this);
+		this.dust = new Dust(this);
+		this.ingot = new Ingot(this);
+		this.nugget = new Nugget(this);
+		this.storage = new Storage(this);
 	}
 
-	public void setup(float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread) {
+	public Metal setup(float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {
 		this.chunkRarity = chunkRarity;
 		this.depth = depth;
 		this.nodesPerChunk = nodesPerChunk;
 		this.nodeSize = nodeSize;
 		this.spread = spread;
+		this.hardness = hardness;
+		this.resistance = resistance;
+		this.ore.setup();
+		this.storage.setup();
+		return this;
 	}
 
 	@Override
@@ -76,6 +84,16 @@ public class Metal implements IOre, IAlloy {
 	@Override
 	public int getNodeSize() {
 		return nodeSize;
+	}
+
+	@Override
+	public float getHardness() {
+		return hardness;
+	}
+
+	@Override
+	public float getResistance() {
+		return resistance;
 	}
 
 	@Override

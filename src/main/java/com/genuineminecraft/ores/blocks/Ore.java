@@ -4,28 +4,23 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.creativetab.CreativeTabs;
 
+import com.genuineminecraft.ores.metals.Metal;
+
 public class Ore extends BlockOre {
 
-	public String name;
+	public final Metal metal;
 
-	public Ore(String name) {
+	public Ore(Metal metal) {
 		super();
-		name = "ore" + name;
-		this.name = name;
-		this.setBlockName(name);
-		this.setHardness(5F);
-		this.setResistance(1F);
+		this.metal = metal;
+		this.setBlockName("ore" + metal.nameFixed);
 		this.setCreativeTab(CreativeTabs.tabBlock);
 		this.setStepSound(Block.soundTypeStone);
-		this.setBlockTextureName("CommonOres:ores/" + name.substring(3));
+		this.setBlockTextureName("CommonOres:ores/" + metal.nameFixed);
 	}
 
-	public Ore setHarvest(int harvestLevel) {
-		this.setHarvestLevel("pickaxe", harvestLevel);
-		return this;
-	}
-
-	public String getName() {
-		return this.name;
+	public void setup() {
+		this.setHardness(metal.getHardness());
+		this.setResistance(metal.getResistance());
 	}
 }

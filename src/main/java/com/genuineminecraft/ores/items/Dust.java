@@ -3,19 +3,16 @@ package com.genuineminecraft.ores.items;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
+import com.genuineminecraft.ores.metals.Metal;
+
 public class Dust extends Item {
 
-	private String name;
+	public final Metal metal;
 
-	public Dust(String name) {
-		name = "dust" + name;
-		this.name = name;
-		this.setUnlocalizedName(name);
+	public Dust(Metal metal) {
+		this.metal = metal;
+		this.setUnlocalizedName("dust" + metal.nameFixed);
 		this.setCreativeTab(CreativeTabs.tabMaterials);
-		this.setTextureName("CommonOres:dusts/" + name.substring(4));
-	}
-
-	public String getName() {
-		return name;
+		this.setTextureName("CommonOres:dusts/" + metal.nameFixed);
 	}
 }

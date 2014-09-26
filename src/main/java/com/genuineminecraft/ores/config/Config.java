@@ -38,7 +38,9 @@ public class Config {
 			int nodes = oreGenCfg.getInt("nodesPerChunk", metal.name, 4, 0, 8, "How many nodeshave a chance to generate in a chunk");
 			int size = oreGenCfg.getInt("nodeSize", metal.name, 6, 0, 16, "Node size");
 			float spread = oreGenCfg.getFloat("spread", metal.name, 0.1F, 0, 1F, "How far can the ore deviate from its depth");
-			metal.setup(rarity, depth, nodes, size, spread);
+			float hardness = oreGenCfg.getFloat("hardness", metal.name, 4F, 0, 100F, "How easy is this metal to harvest");
+			float resistance = oreGenCfg.getFloat("resistance", metal.name, 1F, 0, 100F, "How resistant is it to explosions");
+			metal.setup(rarity, depth, nodes, size, spread, hardness, resistance);
 		}
 		oreGenCfg.save();
 	}

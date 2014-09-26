@@ -3,19 +3,16 @@ package com.genuineminecraft.ores.items;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
+import com.genuineminecraft.ores.metals.Metal;
+
 public class Ingot extends Item {
 
-	private String name;
+	public final Metal metal;
 
-	public Ingot(String name) {
-		name = "ingot" + name;
-		this.name = name;
-		this.setUnlocalizedName(name);
+	public Ingot(Metal metal) {
+		this.metal = metal;
+		this.setUnlocalizedName("ingot" + metal.nameFixed);
 		this.setCreativeTab(CreativeTabs.tabMaterials);
-		this.setTextureName("CommonOres:ingots/" + name.substring(5));
-	}
-
-	public String getName() {
-		return name;
+		this.setTextureName("CommonOres:ingots/" + metal.nameFixed);
 	}
 }

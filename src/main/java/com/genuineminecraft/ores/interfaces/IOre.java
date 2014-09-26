@@ -13,4 +13,8 @@ public interface IOre {
 	public float getSpread();
 
 	public int getNodeSize();
+
+	public float getHardness();
+
+	public float getResistance();
 }

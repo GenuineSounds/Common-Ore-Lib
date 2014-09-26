@@ -3,19 +3,16 @@ package com.genuineminecraft.ores.items;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
+import com.genuineminecraft.ores.metals.Metal;
+
 public class Nugget extends Item {
 
-	private String name;
+	public final Metal metal;
 
-	public Nugget(String name) {
-		name = "nugget" + name;
-		this.name = name;
-		this.setUnlocalizedName(name);
+	public Nugget(Metal metal) {
+		this.metal = metal;
+		this.setUnlocalizedName("nugget" + metal.nameFixed);
 		this.setCreativeTab(CreativeTabs.tabMaterials);
-		this.setTextureName("CommonOres:nuggets/" + name.substring(6));
-	}
-
-	public String getName() {
-		return name;
+		this.setTextureName("CommonOres:nuggets/" + metal.nameFixed);
 	}
 }

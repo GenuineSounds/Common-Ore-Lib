@@ -30,22 +30,20 @@ public class Config {
 		mainCfg.save();
 	}
 
-	public void load() {
+	public void load() {}
+
+	public void post() {
 		for (int i = 0; i < MetalRegistry.getInstance().metals.size(); i++) {
 			Metal metal = MetalRegistry.getInstance().metals.get(i);
-			float rarity = oreGenCfg.getFloat("chunkRarity", metal.name, 1, 0, 1, "Chance percent of generating in any chunk");
-			float depth = oreGenCfg.getFloat("depth", metal.name, (float) i / (float) MetalRegistry.getInstance().metals.size(), 0, 1F, "Depth at which the ore is most common");
-			int nodes = oreGenCfg.getInt("nodesPerChunk", metal.name, 4, 0, 8, "How many nodeshave a chance to generate in a chunk");
-			int size = oreGenCfg.getInt("nodeSize", metal.name, 6, 0, 16, "Node size");
-			float spread = oreGenCfg.getFloat("spread", metal.name, 0.1F, 0, 1F, "How far can the ore deviate from its depth");
-			float hardness = oreGenCfg.getFloat("hardness", metal.name, 4F, 0, 100F, "How easy is this metal to harvest");
-			float resistance = oreGenCfg.getFloat("resistance", metal.name, 1F, 0, 100F, "How resistant is it to explosions");
+			float rarity = oreGenCfg.getFloat("chunkRarity", metal.name, metal.getChunkRarity(), 0, 1, "Chance percent of generating in any chunk");
+			float depth = oreGenCfg.getFloat("depth", metal.name, metal.getDepth(), 0, 1F, "Depth at which the ore is most common");
+			int nodes = oreGenCfg.getInt("nodesPerChunk", metal.name, metal.getNodesPerChunk(), 0, 8, "How many nodeshave a chance to generate in a chunk");
+			int size = oreGenCfg.getInt("nodeSize", metal.name, metal.getNodeSize(), 0, 16, "Node size");
+			float spread = oreGenCfg.getFloat("spread", metal.name, metal.getSpread(), 0, 1F, "How far can the ore deviate from its depth");
+			float hardness = oreGenCfg.getFloat("hardness", metal.name, metal.getHardness(), 0, 100F, "How easy is this metal to harvest");
+			float resistance = oreGenCfg.getFloat("resistance", metal.name, metal.getResistance(), 0, 100F, "How resistant is it to explosions");
 			metal.setup(rarity, depth, nodes, size, spread, hardness, resistance);
 		}
 		oreGenCfg.save();
-	}
-
-	public void post() {
-		for (Metal metal : MetalRegistry.getInstance().metals) {}
 	}
 }

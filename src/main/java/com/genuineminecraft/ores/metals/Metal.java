@@ -3,12 +3,12 @@ package com.genuineminecraft.ores.metals;
 import com.genuineminecraft.ores.blocks.Ore;
 import com.genuineminecraft.ores.blocks.Storage;
 import com.genuineminecraft.ores.interfaces.IAlloy;
-import com.genuineminecraft.ores.interfaces.IMinable;
+import com.genuineminecraft.ores.interfaces.IOre;
 import com.genuineminecraft.ores.items.Dust;
 import com.genuineminecraft.ores.items.Ingot;
 import com.genuineminecraft.ores.items.Nugget;
 
-public class Metal implements IMinable, IAlloy {
+public class Metal implements IOre, IAlloy {
 
 	public final String name;
 	public final Ore ore;

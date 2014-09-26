@@ -1,6 +1,6 @@
 package com.genuineminecraft.ores.interfaces;
 
-public interface IMinable {
+public interface IOre {
 
 	public String getName();
 

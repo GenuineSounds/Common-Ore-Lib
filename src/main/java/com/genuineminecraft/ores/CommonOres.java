@@ -1,10 +1,10 @@
 package com.genuineminecraft.ores;
 
 import com.genuineminecraft.ores.config.Config;
-import com.genuineminecraft.ores.generator.AlloyOreWorldGenerator;
-import com.genuineminecraft.ores.generator.FlatBedrockWorldGenerator;
-import com.genuineminecraft.ores.generator.StandardOreWorldGenerator;
-import com.genuineminecraft.ores.registry.OreRegistry;
+import com.genuineminecraft.ores.generator.GeneratorAlloyOre;
+import com.genuineminecraft.ores.generator.GeneratorCommonOre;
+import com.genuineminecraft.ores.generator.GeneratorFlatBedrock;
+import com.genuineminecraft.ores.registry.MetalRegistry;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -21,29 +21,29 @@ public class CommonOres {
 	public static CommonOres instance;
 	public static final String MODID = "CommonOres";
 	public static final String NAME = "Common Ores";
-	public static final String VERSION = "1.7.10-r2";
+	public static final String VERSION = "1.7.10-r3";
 	public static Config config;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		config = new Config(event);
-		OreRegistry.getInstance().preInitialize();
+		MetalRegistry.getInstance().preInitialize();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		OreRegistry.getInstance().initialize();
+		MetalRegistry.getInstance().initialize();
 		config.load();
 		if (config.flatBedrock)
-			GameRegistry.registerWorldGenerator(new FlatBedrockWorldGenerator(), 0);
-		GameRegistry.registerWorldGenerator(new StandardOreWorldGenerator(), 30);
+			GameRegistry.registerWorldGenerator(new GeneratorFlatBedrock(), 0);
+		GameRegistry.registerWorldGenerator(new GeneratorCommonOre(), 30);
 		if (config.genAlloys)
-			GameRegistry.registerWorldGenerator(new AlloyOreWorldGenerator(config.rareAlloys, config.searchRadius), 50);
+			GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(config.rareAlloys, config.searchRadius), 50);
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		OreRegistry.getInstance().postInitialize();
+		MetalRegistry.getInstance().postInitialize();
 		config.post();
 	}
 }

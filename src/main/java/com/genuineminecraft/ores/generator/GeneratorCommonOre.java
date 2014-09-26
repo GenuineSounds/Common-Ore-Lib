@@ -9,11 +9,11 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 
 import com.genuineminecraft.ores.metals.Metal;
-import com.genuineminecraft.ores.registry.OreRegistry;
+import com.genuineminecraft.ores.registry.MetalRegistry;
 
 import cpw.mods.fml.common.IWorldGenerator;
 
-public class StandardOreWorldGenerator implements IWorldGenerator {
+public class GeneratorCommonOre implements IWorldGenerator {
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
@@ -41,7 +41,7 @@ public class StandardOreWorldGenerator implements IWorldGenerator {
 	private void genOverworld(World world, Random random, int chunkX, int chunkZ) {
 		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
 		WorldGenMinable gen = null;
-		for (Metal metal : OreRegistry.getInstance().metals) {
+		for (Metal metal : MetalRegistry.getInstance().metals) {
 			if (metal.isAlloy())
 				continue;
 			gen = new WorldGenMinable(metal.ore, metal.getNodeSize());

@@ -17,13 +17,13 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLInterModComms.IMCMessage;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class OreRegistry {
+public class MetalRegistry {
 
-	private static OreRegistry instance;
+	private static MetalRegistry instance;
 
-	public static OreRegistry getInstance() {
+	public static MetalRegistry getInstance() {
 		if (instance == null)
-			instance = new OreRegistry();
+			instance = new MetalRegistry();
 		return instance;
 	}
 

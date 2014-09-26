@@ -5,7 +5,7 @@ import java.io.File;
 import net.minecraftforge.common.config.Configuration;
 
 import com.genuineminecraft.ores.metals.Metal;
-import com.genuineminecraft.ores.registry.OreRegistry;
+import com.genuineminecraft.ores.registry.MetalRegistry;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
@@ -31,10 +31,10 @@ public class Config {
 	}
 
 	public void load() {
-		for (int i = 0; i < OreRegistry.getInstance().metals.size(); i++) {
-			Metal metal = OreRegistry.getInstance().metals.get(i);
+		for (int i = 0; i < MetalRegistry.getInstance().metals.size(); i++) {
+			Metal metal = MetalRegistry.getInstance().metals.get(i);
 			float rarity = oreGenCfg.getFloat("chunkRarity", metal.name, 1, 0, 1, "Chance percent of generating in any chunk");
-			float depth = oreGenCfg.getFloat("depth", metal.name, (float) i / (float) OreRegistry.getInstance().metals.size(), 0, 1F, "Depth at which the ore is most common");
+			float depth = oreGenCfg.getFloat("depth", metal.name, (float) i / (float) MetalRegistry.getInstance().metals.size(), 0, 1F, "Depth at which the ore is most common");
 			int nodes = oreGenCfg.getInt("nodesPerChunk", metal.name, 4, 0, 8, "How many nodeshave a chance to generate in a chunk");
 			int size = oreGenCfg.getInt("nodeSize", metal.name, 6, 0, 16, "Node size");
 			float spread = oreGenCfg.getFloat("spread", metal.name, 0.1F, 0, 1F, "How far can the ore deviate from its depth");
@@ -44,6 +44,6 @@ public class Config {
 	}
 
 	public void post() {
-		for (Metal metal : OreRegistry.getInstance().metals) {}
+		for (Metal metal : MetalRegistry.getInstance().metals) {}
 	}
 }

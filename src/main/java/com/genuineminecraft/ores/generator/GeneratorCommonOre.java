@@ -2,7 +2,6 @@ package com.genuineminecraft.ores.generator;
 
 import java.util.Random;
 
-import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -40,23 +39,16 @@ public class GeneratorCommonOre implements IWorldGenerator {
 
 	private void genOverworld(World world, Random random, int chunkX, int chunkZ) {
 		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
-		WorldGenMinable gen = null;
+		int yMax = Utility.findHighestBlock(chunk);
 		for (Metal metal : MetalRegistry.getInstance().metals) {
 			if (metal.isAlloy())
 				continue;
-			gen = new WorldGenMinable(metal.ore, metal.getNodeSize());
-			for (int i = 0; i < metal.getNodesPerChunk(); i++) {
+			WorldGenMinable gen = new WorldGenMinable(metal.ore, metal.getNodeSize());
+			for (int i = 0; i < (yMax / 64D) * metal.getNodesPerChunk(); i++) {
 				if (metal.getChunkRarity() < random.nextDouble())
 					continue;
 				int x = chunkX * 16 + random.nextInt(16);
 				int z = chunkZ * 16 + random.nextInt(16);
-				int yMax = 255;
-				for (int yCheck = 255; yCheck > 0; yCheck--) {
-					if (chunk.getBlock(x - chunkX * 16, yCheck, z - chunkZ * 16).equals(Blocks.air))
-						yMax--;
-					else
-						break;
-				}
 				int y = (int) (((random.nextGaussian() - 0.5) * metal.getSpread() * yMax) + metal.getDepth() * yMax);
 				if (y < 0)
 					continue;

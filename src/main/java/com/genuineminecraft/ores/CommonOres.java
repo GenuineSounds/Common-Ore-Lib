@@ -1,6 +1,9 @@
 package com.genuineminecraft.ores;
 
+import net.minecraftforge.common.MinecraftForge;
+
 import com.genuineminecraft.ores.config.Config;
+import com.genuineminecraft.ores.events.OreEvents;
 import com.genuineminecraft.ores.generator.GeneratorAlloyOre;
 import com.genuineminecraft.ores.generator.GeneratorCommonOre;
 import com.genuineminecraft.ores.generator.GeneratorFlatBedrock;
@@ -46,5 +49,6 @@ public class CommonOres {
 	public void postInitialize(FMLPostInitializationEvent event) {
 		MetalRegistry.getInstance().postInitialize();
 		config.postInit();
+		MinecraftForge.ORE_GEN_BUS.register(new OreEvents());
 	}
 }

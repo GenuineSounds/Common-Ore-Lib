@@ -28,10 +28,10 @@ public class Config {
 	}
 
 	public void preInit() {
-		genAlloys = mainCfg.getBoolean("genAlloys", "Options", true, "Generate alloy ores in world. Might break balance if rare alloys is not enabled. (recommended)");
-		rareAlloys = mainCfg.getBoolean("rareAlloys", "Options", true, "Generation of alloy ores only occur when the two major component of the ore appear close together. (recommended)");
-		flatBedrock = mainCfg.getBoolean("flatBedrock", "Options", true, "Generate flat bedrock in the Overworld and nether.");
-		searchRadius = mainCfg.getInt("searchRadius", "Options", 5, 0, 16, "Radius for rare alloys to search in each direction to find their component ores");
+		genAlloys = mainCfg.getBoolean("genAlloys", "Options", true, "Generate alloy ores in world. Will break balance of other mods if rareAlloys is disabled (recommended)");
+		rareAlloys = mainCfg.getBoolean("rareAlloys", "Options", true, "Generation of alloy ores only occur when the two components of the ore appear close together (recommended)");
+		flatBedrock = mainCfg.getBoolean("flatBedrock", "Options", false, "Generate flat bedrock in the Over-world and Nether");
+		searchRadius = mainCfg.getInt("searchRadius", "Options", 4, 0, 16, "Radius for rare alloys to search in each direction to find their component ores. Higher numbers will take longer to generate");
 		mainCfg.save();
 	}
 
@@ -40,13 +40,13 @@ public class Config {
 	public void postInit() {
 		for (int i = 0; i < MetalRegistry.getInstance().metals.size(); i++) {
 			Metal metal = MetalRegistry.getInstance().metals.get(i);
-			float rarity = oreGenCfg.getFloat("chunkRarity", metal.name, metal.getChunkRarity(), 0, 1, "Chance percent of generating in any chunk");
-			float depth = oreGenCfg.getFloat("depth", metal.name, metal.getDepth(), 0, 1F, "Depth at which the ore is most common");
-			int nodes = oreGenCfg.getInt("nodesPerChunk", metal.name, metal.getNodesPerChunk(), 0, 8, "How many nodeshave a chance to generate in a chunk");
-			int size = oreGenCfg.getInt("nodeSize", metal.name, metal.getNodeSize(), 0, 16, "Node size");
-			float spread = oreGenCfg.getFloat("spread", metal.name, metal.getSpread(), 0, 1F, "How far can the ore deviate from its depth");
+			float rarity = oreGenCfg.getFloat("chunkRarity", metal.name, metal.getChunkRarity(), 0, 1F, "Chance of generating in any chunk (Percentage)");
+			float depth = oreGenCfg.getFloat("depth", metal.name, metal.getDepth(), 0, 1F, "Depth at which the ore is most common (Percentage)");
+			int nodes = oreGenCfg.getInt("nodesPerChunk", metal.name, metal.getNodesPerChunk(), 0, 8, "How many nodes have a chance to generate in a chunk");
+			int size = oreGenCfg.getInt("nodeSize", metal.name, metal.getNodeSize(), 0, 16, "How many ore can generate in each node");
+			float spread = oreGenCfg.getFloat("spread", metal.name, metal.getSpread(), 0, 1F, "How far can the ore deviate from its depth (Percentage)");
 			float hardness = oreGenCfg.getFloat("hardness", metal.name, metal.getHardness(), 0, 100F, "How easy is this metal to harvest");
-			float resistance = oreGenCfg.getFloat("resistance", metal.name, metal.getResistance(), 0, 100F, "How resistant is it to explosions");
+			float resistance = oreGenCfg.getFloat("resistance", metal.name, metal.getResistance(), 0, 100F, "How resistant are the blocks to explosions");
 			metal.setup(rarity, depth, nodes, size, spread, hardness, resistance);
 		}
 		oreGenCfg.save();

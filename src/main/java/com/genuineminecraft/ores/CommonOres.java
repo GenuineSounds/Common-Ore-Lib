@@ -25,15 +25,16 @@ public class CommonOres {
 	public static Config config;
 
 	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
+	public void preInitialize(FMLPreInitializationEvent event) {
 		config = new Config(event);
 		MetalRegistry.getInstance().preInitialize();
+		config.preInit();
 	}
 
 	@EventHandler
-	public void init(FMLInitializationEvent event) {
+	public void initialize(FMLInitializationEvent event) {
 		MetalRegistry.getInstance().initialize();
-		config.load();
+		config.init();
 		if (config.flatBedrock)
 			GameRegistry.registerWorldGenerator(new GeneratorFlatBedrock(), 0);
 		GameRegistry.registerWorldGenerator(new GeneratorCommonOre(), 30);
@@ -42,8 +43,8 @@ public class CommonOres {
 	}
 
 	@EventHandler
-	public void postInit(FMLPostInitializationEvent event) {
+	public void postInitialize(FMLPostInitializationEvent event) {
 		MetalRegistry.getInstance().postInitialize();
-		config.post();
+		config.postInit();
 	}
 }

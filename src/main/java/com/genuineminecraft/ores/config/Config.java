@@ -22,7 +22,12 @@ public class Config {
 		File folder = new File(event.getModConfigurationDirectory(), "CommonOre");
 		folder.mkdirs();
 		mainCfg = new Configuration(new File(folder, "Main.cfg"));
+		mainCfg.save();
 		oreGenCfg = new Configuration(new File(folder, "Ore Generation.cfg"));
+		oreGenCfg.save();
+	}
+
+	public void preInit() {
 		genAlloys = mainCfg.getBoolean("genAlloys", "Options", true, "Generate alloy ores in world. Might break balance if rare alloys is not enabled. (recommended)");
 		rareAlloys = mainCfg.getBoolean("rareAlloys", "Options", true, "Generation of alloy ores only occur when the two major component of the ore appear close together. (recommended)");
 		flatBedrock = mainCfg.getBoolean("flatBedrock", "Options", true, "Generate flat bedrock in the Overworld and nether.");
@@ -30,9 +35,9 @@ public class Config {
 		mainCfg.save();
 	}
 
-	public void load() {}
+	public void init() {}
 
-	public void post() {
+	public void postInit() {
 		for (int i = 0; i < MetalRegistry.getInstance().metals.size(); i++) {
 			Metal metal = MetalRegistry.getInstance().metals.get(i);
 			float rarity = oreGenCfg.getFloat("chunkRarity", metal.name, metal.getChunkRarity(), 0, 1, "Chance percent of generating in any chunk");

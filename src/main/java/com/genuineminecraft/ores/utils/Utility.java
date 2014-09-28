@@ -1,4 +1,4 @@
-package com.genuineminecraft.ores.generator;
+package com.genuineminecraft.ores.utils;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -9,7 +9,7 @@ import com.genuineminecraft.ores.metals.Metal;
 
 public class Utility {
 
-	public static boolean areComponentsFound(World world, Metal metal, int x, int y, int z, int radius) {
+	public static boolean areComponentsFound(Metal metal, World world, int x, int y, int z, int radius) {
 		boolean foundPrimary = false;
 		boolean foundSecondary = false;
 		int count = 0;
@@ -44,5 +44,11 @@ public class Utility {
 			}
 		}
 		return yMax;
+	}
+
+	public static boolean genIsCapable(Metal metal, World world, int x, int y, int z, int radius, boolean rareAlloys, boolean genAlloys) {
+		if (genAlloys)
+			return !rareAlloys || areComponentsFound(metal, world, x, y, z, radius);
+		return true;
 	}
 }

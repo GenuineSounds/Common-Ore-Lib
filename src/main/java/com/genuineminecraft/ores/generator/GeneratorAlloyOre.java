@@ -9,6 +9,7 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 
 import com.genuineminecraft.ores.metals.Metal;
 import com.genuineminecraft.ores.registry.MetalRegistry;
+import com.genuineminecraft.ores.utils.Utility;
 
 import cpw.mods.fml.common.IWorldGenerator;
 
@@ -22,41 +23,17 @@ public class GeneratorAlloyOre implements IWorldGenerator {
 		this.radius = radius;
 	}
 
-	private void genEnd(World world, Random random, int chunkX, int chunkZ) {}
-
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-		long time = System.currentTimeMillis();
-		switch (world.provider.dimensionId) {
-			case -1:
-				this.genNether(world, random, chunkX, chunkZ);
-				break;
-			case 0:
-				this.genOverworld(world, random, chunkX, chunkZ);
-				break;
-			case 1:
-				this.genEnd(world, random, chunkX, chunkZ);
-				break;
-			default:
-				break;
-		}
-		long newTime = System.currentTimeMillis() - time;
-		if (newTime > 1)
-			System.out.println("Alloy generation: " + newTime + " milliseconds");
-	}
-
-	private void genNether(World world, Random random, int chunkX, int chunkZ) {}
-
-	private void genOverworld(World world, Random random, int chunkX, int chunkZ) {
+		if (world.provider.dimensionId != 0)
+			return;
 		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
 		int yMax = Utility.findHighestBlock(chunk);
 		for (Metal metal : MetalRegistry.getInstance().metals) {
 			if (!metal.isAlloy())
 				continue;
-			int nodes = (int) (metal.getNodesPerChunk() / 2D);
-			if (nodes < 1)
-				nodes = 1;
-			WorldGenMinable gen = new WorldGenMinable(metal.ore, nodes);
+			int nodes = (int) (metal.getNodesPerChunk() / 2D) + 1;
+			WorldGenMinable gen = new WorldGenMinable(metal.ore, metal.getNodeSize());
 			for (int i = 0; i < (yMax / 64D) * nodes; i++) {
 				if (metal.getChunkRarity() < random.nextDouble())
 					continue;
@@ -65,7 +42,7 @@ public class GeneratorAlloyOre implements IWorldGenerator {
 				int y = (int) (((random.nextGaussian() - 0.5) * metal.getSpread() * yMax) + metal.getDepth() * yMax);
 				if (y < 0)
 					continue;
-				else if (!this.rareAlloys || Utility.areComponentsFound(world, metal, x, y, z, this.radius))
+				if (Utility.genIsCapable(metal, world, x, y, z, i, rareAlloys, true))
 					gen.generate(world, random, x, y, z);
 			}
 		}

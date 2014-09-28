@@ -11,7 +11,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 
 public class OreEvents {
 
-	private Map<ChunkCoordIntPair, Chunk> map = new HashMap<ChunkCoordIntPair, Chunk>();
+	private static Map<ChunkCoordIntPair, Chunk> map = new HashMap<ChunkCoordIntPair, Chunk>();
 
 	@EventHandler
 	public void minable(OreGenEvent.GenerateMinable event) {
@@ -21,7 +21,6 @@ public class OreEvents {
 			case DIRT:
 			case GRAVEL:
 				event.setCanceled(true);
-				break;
 			case COAL:
 			case DIAMOND:
 			case LAPIS:
@@ -35,17 +34,17 @@ public class OreEvents {
 
 	@EventHandler
 	public void postGen(OreGenEvent.Post event) {
-		World world = event.world;
-		ChunkCoordIntPair pair = new ChunkCoordIntPair(event.worldX, event.worldZ);
-		Chunk chunk = this.map.get(pair);
-		if (chunk != null) {
-			this.map.remove(pair);
-			System.out.println("Removed cached chunk");
-		}
+		//		World world = event.world;
+		//		ChunkCoordIntPair pair = new ChunkCoordIntPair(event.worldX, event.worldZ);
+		//		Chunk chunk = this.map.get(pair);
+		//		if (chunk != null) {
+		//			System.out.println("Removed cached chunk");
+		//			this.map.remove(pair);
+		//		}
 	}
 
 	@EventHandler
 	public void preGen(OreGenEvent.Pre event) {
-		this.map.put(new ChunkCoordIntPair(event.worldX, event.worldZ), event.world.getChunkFromChunkCoords(event.worldX, event.worldZ));
+		//		this.map.put(new ChunkCoordIntPair(event.worldX, event.worldZ), event.world.getChunkFromBlockCoords(event.worldX, event.worldZ));
 	}
 }

@@ -1,9 +1,6 @@
 package com.genuineminecraft.ores;
 
-import net.minecraftforge.common.MinecraftForge;
-
 import com.genuineminecraft.ores.config.Config;
-import com.genuineminecraft.ores.events.OreEvents;
 import com.genuineminecraft.ores.generator.GeneratorAlloyOre;
 import com.genuineminecraft.ores.generator.GeneratorCommonOre;
 import com.genuineminecraft.ores.generator.GeneratorFlatBedrock;
@@ -33,16 +30,15 @@ public class CommonOres {
 		config.init();
 		if (config.flatBedrock)
 			GameRegistry.registerWorldGenerator(new GeneratorFlatBedrock(), 0);
-		GameRegistry.registerWorldGenerator(new GeneratorCommonOre(), 30);
+		GameRegistry.registerWorldGenerator(new GeneratorCommonOre(config.rareAlloys, config.searchRadius), 0);
 		if (config.genAlloys)
-			GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(config.rareAlloys, config.searchRadius), 50);
+			GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(config.rareAlloys, config.searchRadius), 1);
 	}
 
 	@EventHandler
 	public void postInitialize(FMLPostInitializationEvent event) {
 		MetalRegistry.getInstance().postInitialize();
 		config.postInit();
-		MinecraftForge.ORE_GEN_BUS.register(new OreEvents());
 	}
 
 	@EventHandler

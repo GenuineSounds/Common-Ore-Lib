@@ -2,19 +2,19 @@ package com.genuineminecraft.ores.interfaces;
 
 public interface IOre {
 
-	public String getName();
-
-	public int getNodesPerChunk();
-
 	public float getChunkRarity();
 
 	public float getDepth();
 
-	public float getSpread();
+	public float getHardness();
+
+	public String getName();
 
 	public int getNodeSize();
 
-	public float getHardness();
+	public int getNodesPerChunk();
 
 	public float getResistance();
+
+	public float getSpread();
 }

@@ -20,7 +20,7 @@ public class Ore extends BlockOre {
 	}
 
 	public void setup() {
-		this.setHardness(metal.getHardness());
-		this.setResistance(metal.getResistance());
+		this.setHardness(this.metal.getHardness());
+		this.setResistance(this.metal.getResistance());
 	}
 }

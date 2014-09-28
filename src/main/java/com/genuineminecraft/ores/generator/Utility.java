@@ -9,21 +9,6 @@ import com.genuineminecraft.ores.metals.Metal;
 
 public class Utility {
 
-	public static int findHighestBlock(Chunk chunk) {
-		int yMax = chunk.getTopFilledSegment() + 15;
-		for (int y = yMax; y > 0; y--) {
-			for (int x = 0; x < 16; x++) {
-				for (int z = 0; z < 16; z++) {
-					if (chunk.getBlock(x, y, z).equals(Blocks.air))
-						yMax = y;
-					else
-						return yMax;
-				}
-			}
-		}
-		return yMax;
-	}
-
 	public static boolean areComponentsFound(World world, Metal metal, int x, int y, int z, int radius) {
 		boolean foundPrimary = false;
 		boolean foundSecondary = false;
@@ -44,5 +29,20 @@ public class Utility {
 		if (foundPrimary && foundSecondary)
 			return true;
 		return false;
+	}
+
+	public static int findHighestBlock(Chunk chunk) {
+		int yMax = chunk.getTopFilledSegment() + 15;
+		for (int y = yMax; y > 0; y--) {
+			for (int x = 0; x < 16; x++) {
+				for (int z = 0; z < 16; z++) {
+					if (chunk.getBlock(x, y, z).equals(Blocks.air))
+						yMax = y;
+					else
+						return yMax;
+				}
+			}
+		}
+		return yMax;
 	}
 }

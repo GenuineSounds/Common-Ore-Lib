@@ -10,19 +10,21 @@ import cpw.mods.fml.common.IWorldGenerator;
 
 public class GeneratorFlatBedrock implements IWorldGenerator {
 
+	private void genEnd(World world, Random random, int chunkX, int chunkZ, boolean isHellBiome) {}
+
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 		long time = System.currentTimeMillis();
 		boolean isHellBiome = world.getBiomeGenForCoords(chunkX, chunkZ) == BiomeGenBase.hell;
 		switch (world.provider.dimensionId) {
 			case -1:
-				genNether(world, random, chunkX, chunkZ, isHellBiome);
+				this.genNether(world, random, chunkX, chunkZ, isHellBiome);
 				break;
 			case 0:
-				genOverworld(world, random, chunkX, chunkZ, isHellBiome);
+				this.genOverworld(world, random, chunkX, chunkZ, isHellBiome);
 				break;
 			case 1:
-				genEnd(world, random, chunkX, chunkZ, isHellBiome);
+				this.genEnd(world, random, chunkX, chunkZ, isHellBiome);
 				break;
 			default:
 				break;
@@ -60,6 +62,4 @@ public class GeneratorFlatBedrock implements IWorldGenerator {
 			}
 		}
 	}
-
-	private void genEnd(World world, Random random, int chunkX, int chunkZ, boolean isHellBiome) {}
 }

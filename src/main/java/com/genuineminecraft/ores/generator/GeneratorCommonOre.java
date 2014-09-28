@@ -14,18 +14,20 @@ import cpw.mods.fml.common.IWorldGenerator;
 
 public class GeneratorCommonOre implements IWorldGenerator {
 
+	private void genEnd(World world, Random random, int chunkX, int chunkZ) {}
+
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 		long time = System.currentTimeMillis();
 		switch (world.provider.dimensionId) {
 			case -1:
-				genNether(world, random, chunkX, chunkZ);
+				this.genNether(world, random, chunkX, chunkZ);
 				break;
 			case 0:
-				genOverworld(world, random, chunkX, chunkZ);
+				this.genOverworld(world, random, chunkX, chunkZ);
 				break;
 			case 1:
-				genEnd(world, random, chunkX, chunkZ);
+				this.genEnd(world, random, chunkX, chunkZ);
 				break;
 			default:
 				break;
@@ -56,6 +58,4 @@ public class GeneratorCommonOre implements IWorldGenerator {
 			}
 		}
 	}
-
-	private void genEnd(World world, Random random, int chunkX, int chunkZ) {}
 }

@@ -37,6 +37,67 @@ public class Metal implements IOre, IAlloy {
 		this.storage = new Storage(this);
 	}
 
+	@Override
+	public float getChunkRarity() {
+		return this.chunkRarity;
+	}
+
+	@Override
+	public float getDepth() {
+		return this.depth;
+	}
+
+	@Override
+	public float getHardness() {
+		return this.hardness;
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public int getNodeSize() {
+		return this.nodeSize;
+	}
+
+	@Override
+	public int getNodesPerChunk() {
+		return this.nodesPerChunk;
+	}
+
+	@Override
+	public Metal getPrimaryComponent() {
+		return this.primary;
+	}
+
+	@Override
+	public float getResistance() {
+		return this.resistance;
+	}
+
+	@Override
+	public Metal getSecondaryComponent() {
+		return this.secondary;
+	}
+
+	@Override
+	public float getSpread() {
+		return this.spread;
+	}
+
+	@Override
+	public boolean isAlloy() {
+		return this.primary != null && this.secondary != null;
+	}
+
+	@Override
+	public void setComponents(Metal primary, Metal secondary) {
+		this.primary = primary;
+		this.secondary = secondary;
+	}
+
 	public Metal setup(float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {
 		this.chunkRarity = chunkRarity;
 		this.depth = depth;
@@ -48,66 +109,5 @@ public class Metal implements IOre, IAlloy {
 		this.ore.setup();
 		this.storage.setup();
 		return this;
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public void setComponents(Metal primary, Metal secondary) {
-		this.primary = primary;
-		this.secondary = secondary;
-	}
-
-	@Override
-	public int getNodesPerChunk() {
-		return nodesPerChunk;
-	}
-
-	@Override
-	public float getChunkRarity() {
-		return chunkRarity;
-	}
-
-	@Override
-	public float getDepth() {
-		return depth;
-	}
-
-	@Override
-	public float getSpread() {
-		return spread;
-	}
-
-	@Override
-	public int getNodeSize() {
-		return nodeSize;
-	}
-
-	@Override
-	public float getHardness() {
-		return hardness;
-	}
-
-	@Override
-	public float getResistance() {
-		return resistance;
-	}
-
-	@Override
-	public Metal getPrimaryComponent() {
-		return primary;
-	}
-
-	@Override
-	public Metal getSecondaryComponent() {
-		return secondary;
-	}
-
-	@Override
-	public boolean isAlloy() {
-		return primary != null && secondary != null;
 	}
 }

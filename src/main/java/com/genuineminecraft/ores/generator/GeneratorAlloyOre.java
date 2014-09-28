@@ -22,18 +22,20 @@ public class GeneratorAlloyOre implements IWorldGenerator {
 		this.radius = radius;
 	}
 
+	private void genEnd(World world, Random random, int chunkX, int chunkZ) {}
+
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 		long time = System.currentTimeMillis();
 		switch (world.provider.dimensionId) {
 			case -1:
-				genNether(world, random, chunkX, chunkZ);
+				this.genNether(world, random, chunkX, chunkZ);
 				break;
 			case 0:
-				genOverworld(world, random, chunkX, chunkZ);
+				this.genOverworld(world, random, chunkX, chunkZ);
 				break;
 			case 1:
-				genEnd(world, random, chunkX, chunkZ);
+				this.genEnd(world, random, chunkX, chunkZ);
 				break;
 			default:
 				break;
@@ -63,11 +65,9 @@ public class GeneratorAlloyOre implements IWorldGenerator {
 				int y = (int) (((random.nextGaussian() - 0.5) * metal.getSpread() * yMax) + metal.getDepth() * yMax);
 				if (y < 0)
 					continue;
-				else if (!rareAlloys || Utility.areComponentsFound(world, metal, x, y, z, radius))
+				else if (!this.rareAlloys || Utility.areComponentsFound(world, metal, x, y, z, this.radius))
 					gen.generate(world, random, x, y, z);
 			}
 		}
 	}
-
-	private void genEnd(World world, Random random, int chunkX, int chunkZ) {}
 }

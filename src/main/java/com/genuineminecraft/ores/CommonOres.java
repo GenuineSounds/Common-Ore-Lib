@@ -28,13 +28,6 @@ public class CommonOres {
 	public static Config config;
 
 	@EventHandler
-	public void preInitialize(FMLPreInitializationEvent event) {
-		config = new Config(event);
-		MetalRegistry.getInstance().preInitialize();
-		config.preInit();
-	}
-
-	@EventHandler
 	public void initialize(FMLInitializationEvent event) {
 		MetalRegistry.getInstance().initialize();
 		config.init();
@@ -50,5 +43,12 @@ public class CommonOres {
 		MetalRegistry.getInstance().postInitialize();
 		config.postInit();
 		MinecraftForge.ORE_GEN_BUS.register(new OreEvents());
+	}
+
+	@EventHandler
+	public void preInitialize(FMLPreInitializationEvent event) {
+		config = new Config(event);
+		MetalRegistry.getInstance().preInitialize();
+		config.preInit();
 	}
 }

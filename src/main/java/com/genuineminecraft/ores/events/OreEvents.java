@@ -34,18 +34,18 @@ public class OreEvents {
 	}
 
 	@EventHandler
-	public void preGen(OreGenEvent.Pre event) {
-		map.put(new ChunkCoordIntPair(event.worldX, event.worldZ), event.world.getChunkFromChunkCoords(event.worldX, event.worldZ));
-	}
-
-	@EventHandler
 	public void postGen(OreGenEvent.Post event) {
 		World world = event.world;
 		ChunkCoordIntPair pair = new ChunkCoordIntPair(event.worldX, event.worldZ);
-		Chunk chunk = map.get(pair);
+		Chunk chunk = this.map.get(pair);
 		if (chunk != null) {
-			map.remove(pair);
+			this.map.remove(pair);
 			System.out.println("Removed cached chunk");
 		}
+	}
+
+	@EventHandler
+	public void preGen(OreGenEvent.Pre event) {
+		this.map.put(new ChunkCoordIntPair(event.worldX, event.worldZ), event.world.getChunkFromChunkCoords(event.worldX, event.worldZ));
 	}
 }

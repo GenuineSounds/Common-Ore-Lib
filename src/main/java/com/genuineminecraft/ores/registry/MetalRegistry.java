@@ -88,12 +88,14 @@ public class MetalRegistry {
 		for (NBTTagCompound tag : metals) {
 			try {
 				this.registerOre(tag.getString("name"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"));
-			} catch (Exception e) {}
+			}
+			catch (Exception e) {}
 		}
 		for (NBTTagCompound tag : alloys) {
 			try {
 				this.registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getString("secondary"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"));
-			} catch (Exception e) {}
+			}
+			catch (Exception e) {}
 		}
 	}
 

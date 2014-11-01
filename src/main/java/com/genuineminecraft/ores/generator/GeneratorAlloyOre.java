@@ -28,6 +28,7 @@ public class GeneratorAlloyOre implements IWorldGenerator {
 		if (world.provider.dimensionId != 0)
 			return;
 		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
+		// TODO Improve speeds if possible
 		int yMax = Utility.findHighestBlock(chunk);
 		for (Metal metal : MetalRegistry.getInstance().metals) {
 			if (!metal.isAlloy())
@@ -42,6 +43,7 @@ public class GeneratorAlloyOre implements IWorldGenerator {
 				int y = (int) (((random.nextGaussian() - 0.5) * metal.getSpread() * yMax) + metal.getDepth() * yMax);
 				if (y < 0)
 					continue;
+				// TODO Improve speeds if possible
 				if (Utility.genIsCapable(metal, world, x, y, z, i, rareAlloys, true))
 					gen.generate(world, random, x, y, z);
 			}

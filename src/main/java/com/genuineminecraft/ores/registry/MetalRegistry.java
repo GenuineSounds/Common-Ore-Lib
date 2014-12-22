@@ -59,9 +59,9 @@ public class MetalRegistry {
 	public void postInitialize() {}
 
 	public void preInitialize() {
-		this.registerOre("aluminium", 1.0F, 1.0F, 6, 6, 0.2F, 3F, 2F);
-		this.registerOre("zinc", 1.0F, 0.9375F, 6, 6, 0.2F, 2.5F, 2F);
-		this.registerOre("copper", 1.0F, 0.8125F, 6, 6, 0.2F, 3F, 2F);
+		this.registerOre("aluminium", 1F, 1F, 6, 6, 0.2F, 3F, 2F);
+		this.registerOre("zinc", 1F, 0.9375F, 6, 6, 0.2F, 2.5F, 2F);
+		this.registerOre("copper", 1F, 0.8125F, 6, 6, 0.2F, 3F, 2F);
 		this.registerOre("tin", 0.8F, 0.6875F, 6, 6, 0.2F, 1.5F, 2F);
 		this.registerOre("lead", 0.8F, 0.625F, 6, 6, 0.2F, 1.5F, 2F);
 		this.registerOre("iron", 0.8F, 0.5F, 6, 6, 0.2F, 4F, 2F);
@@ -70,8 +70,8 @@ public class MetalRegistry {
 		this.registerOre("silver", 0.6F, 0.25F, 6, 6, 0.2F, 2.5F, 2F);
 		this.registerOre("gold", 0.4F, 0.125F, 6, 6, 0.2F, 2.75F, 2F);
 		this.registerOre("titanium", 0.4F, 0.0625F, 6, 6, 0.2F, 6F, 2F);
-		this.registerOre("platinum", 0.4F, 0.0F, 6, 6, 0.2F, 3.5F, 2F);
-		this.registerAlloy("brass", "copper", "zinc", 1.0F, 0.875F, 6, 6, 0.2F, 3.5F, 2F);
+		this.registerOre("platinum", 0.4F, 0F, 6, 6, 0.2F, 3.5F, 2F);
+		this.registerAlloy("brass", "copper", "zinc", 1F, 0.875F, 6, 6, 0.2F, 3.5F, 2F);
 		this.registerAlloy("bronze", "copper", "tin", 0.8F, 0.75F, 6, 6, 0.2F, 3F, 2F);
 		this.registerAlloy("steel", "coal", "iron", 0.8F, 0.5625F, 6, 6, 0.2F, 7.25F, 2F);
 		this.registerAlloy("invar", "nickel", "iron", 0.6F, 0.4375F, 6, 6, 0.2F, 4F, 2F);

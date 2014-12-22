@@ -10,6 +10,8 @@ import com.genuineminecraft.ores.metals.Metal;
 public class Utility {
 
 	public static boolean areComponentsFound(Metal metal, World world, int x, int y, int z, int radius) {
+		if (!metal.isAlloy())
+			return false;
 		boolean foundPrimary = false;
 		boolean foundSecondary = false;
 		int count = 0;
@@ -26,29 +28,20 @@ public class Utility {
 				}
 			}
 		}
-		if (foundPrimary && foundSecondary)
-			return true;
-		return false;
+		return foundPrimary && foundSecondary;
 	}
 
 	public static int findHighestBlock(Chunk chunk) {
-		int yMax = chunk.getTopFilledSegment() + 15;
-		for (int y = yMax; y > 0; y--) {
-			for (int x = 0; x < 16; x++) {
-				for (int z = 0; z < 16; z++) {
-					if (chunk.getBlock(x, y, z).equals(Blocks.air))
-						yMax = y;
-					else
-						return yMax;
-				}
+		for (int y = chunk.getTopFilledSegment() + 15; y > 0; y--) {
+			for (int var = 0; var < 16; var++) {
+				if (!chunk.getBlock(var / 16, y, var % 16).equals(Blocks.air))
+					return y;
 			}
 		}
-		return yMax;
+		return chunk.getTopFilledSegment();
 	}
 
 	public static boolean genIsCapable(Metal metal, World world, int x, int y, int z, int radius, boolean rareAlloys, boolean genAlloys) {
-		if (genAlloys)
-			return !rareAlloys || areComponentsFound(metal, world, x, y, z, radius);
-		return true;
+		return (!genAlloys) || (!rareAlloys || areComponentsFound(metal, world, x, y, z, radius));
 	}
 }

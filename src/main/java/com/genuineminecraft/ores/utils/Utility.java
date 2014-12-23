@@ -2,6 +2,7 @@ package com.genuineminecraft.ores.utils;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
@@ -31,10 +32,10 @@ public class Utility {
 		return foundPrimary && foundSecondary;
 	}
 
-	public static int findHighestBlock(Chunk chunk) {
+	public static int findHighestBlock(IBlockAccess ba, Chunk chunk) {
 		for (int y = chunk.getTopFilledSegment() + 15; y > 0; y--) {
 			for (int var = 0; var < 16; var++) {
-				if (!chunk.getBlock(var / 16, y, var % 16).equals(Blocks.air))
+				if (!chunk.getBlock(var / 16, y, var % 16).isAir(ba, var / 16, y, var % 16))
 					return y;
 			}
 		}

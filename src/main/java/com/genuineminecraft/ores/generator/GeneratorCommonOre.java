@@ -29,7 +29,7 @@ public class GeneratorCommonOre implements IWorldGenerator {
 			return;
 		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
 		// TODO Improve speeds if possible
-		int yMax = Utility.findHighestBlock(chunk);
+		int yMax = Utility.findHighestBlock(world, chunk);
 		for (Metal metal : MetalRegistry.getInstance().metals) {
 			if (metal.isAlloy())
 				continue;

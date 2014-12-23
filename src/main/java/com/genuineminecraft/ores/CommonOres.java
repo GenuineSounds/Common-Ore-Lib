@@ -4,6 +4,7 @@ import com.genuineminecraft.ores.config.Config;
 import com.genuineminecraft.ores.generator.GeneratorAlloyOre;
 import com.genuineminecraft.ores.generator.GeneratorCommonOre;
 import com.genuineminecraft.ores.generator.GeneratorFlatBedrock;
+import com.genuineminecraft.ores.items.MagicWand;
 import com.genuineminecraft.ores.registry.MetalRegistry;
 
 import cpw.mods.fml.common.Mod;
@@ -25,26 +26,28 @@ public class CommonOres {
 	public static Config config;
 
 	@EventHandler
+	public void preInitialize(FMLPreInitializationEvent event) {
+		config = new Config(event);
+		MetalRegistry.getInstance().preInitialize();
+		config.preInit();
+	}
+
+	@EventHandler
 	public void initialize(FMLInitializationEvent event) {
+		MagicWand.instance = new MagicWand();
+		GameRegistry.registerItem(MagicWand.instance, "magicWand");
 		MetalRegistry.getInstance().initialize();
 		config.init();
 		if (config.flatBedrock)
 			GameRegistry.registerWorldGenerator(new GeneratorFlatBedrock(), 0);
-		GameRegistry.registerWorldGenerator(new GeneratorCommonOre(config.rareAlloys, config.searchRadius), 0);
+		GameRegistry.registerWorldGenerator(new GeneratorCommonOre(config.rareAlloys, config.searchRadius), 5000);
 		if (config.genAlloys)
-			GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(config.rareAlloys, config.searchRadius), 1);
+			GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(config.rareAlloys, config.searchRadius), 5001);
 	}
 
 	@EventHandler
 	public void postInitialize(FMLPostInitializationEvent event) {
 		MetalRegistry.getInstance().postInitialize();
 		config.postInit();
-	}
-
-	@EventHandler
-	public void preInitialize(FMLPreInitializationEvent event) {
-		config = new Config(event);
-		MetalRegistry.getInstance().preInitialize();
-		config.preInit();
 	}
 }

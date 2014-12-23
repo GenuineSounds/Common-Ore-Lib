@@ -30,8 +30,8 @@ public class Config {
 	public void init() {}
 
 	public void postInit() {
-		for (int i = 0; i < MetalRegistry.getInstance().metals.size(); i++) {
-			Metal metal = MetalRegistry.getInstance().metals.get(i);
+		for (int i = 0; i < MetalRegistry.getMetals().size(); i++) {
+			Metal metal = MetalRegistry.getMetals().get(i);
 			float rarity = this.oreGenCfg.getFloat("chunkRarity", metal.name, metal.getChunkRarity(), 0, 1F, "Chance of generating in any chunk (Percentage)");
 			float depth = this.oreGenCfg.getFloat("depth", metal.name, metal.getDepth(), 0, 1F, "Depth at which the ore is most common (Percentage)");
 			int nodes = this.oreGenCfg.getInt("nodesPerChunk", metal.name, metal.getNodesPerChunk(), 0, 8, "How many nodes have a chance to generate in a chunk");

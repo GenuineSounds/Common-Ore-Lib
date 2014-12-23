@@ -24,8 +24,9 @@ public class Metal implements IOre, IAlloy {
 	private float spread;
 	private float hardness;
 	private float resistance;
-	private Metal primary;
-	private Metal secondary;
+	private String primary;
+	private String secondary;
+	private boolean alloy;
 
 	public Metal(String name) {
 		this.name = name;
@@ -68,7 +69,7 @@ public class Metal implements IOre, IAlloy {
 	}
 
 	@Override
-	public Metal getPrimaryComponent() {
+	public String getPrimaryComponent() {
 		return this.primary;
 	}
 
@@ -78,7 +79,7 @@ public class Metal implements IOre, IAlloy {
 	}
 
 	@Override
-	public Metal getSecondaryComponent() {
+	public String getSecondaryComponent() {
 		return this.secondary;
 	}
 
@@ -89,13 +90,20 @@ public class Metal implements IOre, IAlloy {
 
 	@Override
 	public boolean isAlloy() {
-		return this.primary != null && this.secondary != null;
+		return alloy;
+	}
+
+	private void setComponents(Metal primary, Metal secondary) {
+		this.primary = primary.name;
+		this.secondary = secondary.name;
+		this.alloy = true;
 	}
 
 	@Override
-	public void setComponents(Metal primary, Metal secondary) {
+	public void setComponents(String primary, String secondary) {
 		this.primary = primary;
 		this.secondary = secondary;
+		this.alloy = true;
 	}
 
 	public Metal setup(float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {

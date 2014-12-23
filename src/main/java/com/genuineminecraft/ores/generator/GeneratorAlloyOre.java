@@ -30,17 +30,17 @@ public class GeneratorAlloyOre implements IWorldGenerator {
 		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
 		// TODO Improve speeds if possible
 		int yMax = Utility.findHighestBlock(world, chunk);
-		for (Metal metal : MetalRegistry.getInstance().metals) {
+		for (Metal metal : MetalRegistry.getMetals()) {
 			if (!metal.isAlloy())
 				continue;
-			int nodes = (int) (metal.getNodesPerChunk() / 2D) + 1;
+			int nodes = (int) (metal.getNodesPerChunk() / 2F) + 1;
 			WorldGenMinable gen = new WorldGenMinable(metal.ore, metal.getNodeSize());
-			for (int i = 0; i < (yMax / 64D) * nodes; i++) {
+			for (int i = 0; i < (yMax / 64F) * nodes; i++) {
 				if (metal.getChunkRarity() < random.nextDouble())
 					continue;
 				int x = chunkX * 16 + random.nextInt(16);
 				int z = chunkZ * 16 + random.nextInt(16);
-				int y = (int) (((random.nextGaussian() - 0.5) * metal.getSpread() * yMax) + metal.getDepth() * yMax);
+				int y = (int) ((((float) random.nextGaussian() - 0.5F) * metal.getSpread() * yMax) + metal.getDepth() * yMax);
 				if (y < 0)
 					continue;
 				// TODO Improve speeds if possible

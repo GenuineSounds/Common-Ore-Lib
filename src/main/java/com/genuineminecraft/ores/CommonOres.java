@@ -26,14 +26,14 @@ public class CommonOres {
 	public static Config config;
 
 	@EventHandler
-	public void preInitialize(FMLPreInitializationEvent event) {
+	public void pre(FMLPreInitializationEvent event) {
 		config = new Config(event);
 		MetalRegistry.getInstance().preInitialize();
 		config.preInit();
 	}
 
 	@EventHandler
-	public void initialize(FMLInitializationEvent event) {
+	public void init(FMLInitializationEvent event) {
 		MagicWand.instance = new MagicWand();
 		GameRegistry.registerItem(MagicWand.instance, "magicWand");
 		MetalRegistry.getInstance().initialize();
@@ -46,7 +46,7 @@ public class CommonOres {
 	}
 
 	@EventHandler
-	public void postInitialize(FMLPostInitializationEvent event) {
+	public void post(FMLPostInitializationEvent event) {
 		MetalRegistry.getInstance().postInitialize();
 		config.postInit();
 	}

@@ -53,35 +53,6 @@ public class MetalRegistry {
 	private List<Metal> metals = new ArrayList<Metal>();
 	private Map<String, Metal> metalMap = new HashMap<String, Metal>();
 
-	public void initialize() {
-		for (Metal metal : metals) {
-			GameRegistry.registerBlock(metal.ore, "ore" + metal.name);
-			GameRegistry.registerItem(metal.dust, "dust" + metal.name);
-			GameRegistry.registerItem(metal.ingot, "ingot" + metal.name);
-			GameRegistry.registerItem(metal.nugget, "nugget" + metal.name);
-			GameRegistry.registerBlock(metal.storage, "storage" + metal.name);
-			OreDictionary.registerOre("ore" + metal.name, metal.ore);
-			OreDictionary.registerOre("dust" + metal.name, metal.dust);
-			OreDictionary.registerOre("pulv" + metal.name, metal.dust);
-			OreDictionary.registerOre("ingot" + metal.name, metal.ingot);
-			OreDictionary.registerOre("nugget" + metal.name, metal.nugget);
-			OreDictionary.registerOre("storage" + metal.name, metal.storage);
-			GameRegistry.addSmelting(metal.ore, new ItemStack(metal.ingot), 10);
-			GameRegistry.addSmelting(metal.dust, new ItemStack(metal.ingot), 10);
-			GameRegistry.addShapelessRecipe(new ItemStack(metal.nugget, 9), metal.ingot);
-			GameRegistry.addShapelessRecipe(new ItemStack(metal.storage), metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot);
-			GameRegistry.addShapelessRecipe(new ItemStack(metal.ingot), metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget);
-			GameRegistry.addShapelessRecipe(new ItemStack(metal.ingot, 9), metal.storage);
-			ItemStack stack;
-			stack = new ItemStack(metal.ore);
-			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", stack);
-			stack = new ItemStack(metal.storage);
-			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", stack);
-		}
-	}
-
-	public void postInitialize() {}
-
 	public void preInitialize() {
 		registerOre("aluminium", 1F, 1F, 6, 6, 0.2F, 3F, 2F);
 		registerOre("zinc", 1F, 0.9375F, 6, 6, 0.2F, 2.5F, 2F);
@@ -126,6 +97,35 @@ public class MetalRegistry {
 			}
 		}
 	}
+
+	public void initialize() {
+		for (Metal metal : metals) {
+			GameRegistry.registerBlock(metal.ore, "ore" + metal.name);
+			GameRegistry.registerItem(metal.dust, "dust" + metal.name);
+			GameRegistry.registerItem(metal.ingot, "ingot" + metal.name);
+			GameRegistry.registerItem(metal.nugget, "nugget" + metal.name);
+			GameRegistry.registerBlock(metal.storage, "storage" + metal.name);
+			OreDictionary.registerOre("ore" + metal.name, metal.ore);
+			OreDictionary.registerOre("dust" + metal.name, metal.dust);
+			OreDictionary.registerOre("pulv" + metal.name, metal.dust);
+			OreDictionary.registerOre("ingot" + metal.name, metal.ingot);
+			OreDictionary.registerOre("nugget" + metal.name, metal.nugget);
+			OreDictionary.registerOre("storage" + metal.name, metal.storage);
+			GameRegistry.addSmelting(metal.ore, new ItemStack(metal.ingot), 10);
+			GameRegistry.addSmelting(metal.dust, new ItemStack(metal.ingot), 10);
+			GameRegistry.addShapelessRecipe(new ItemStack(metal.nugget, 9), metal.ingot);
+			GameRegistry.addShapelessRecipe(new ItemStack(metal.storage), metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot);
+			GameRegistry.addShapelessRecipe(new ItemStack(metal.ingot), metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget);
+			GameRegistry.addShapelessRecipe(new ItemStack(metal.ingot, 9), metal.storage);
+			ItemStack stack;
+			stack = new ItemStack(metal.ore);
+			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", stack);
+			stack = new ItemStack(metal.storage);
+			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", stack);
+		}
+	}
+
+	public void postInitialize() {}
 
 	public void registerAlloy(String name, String primary, String secondary, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {
 		Metal metal = new Metal(name);

@@ -93,16 +93,16 @@ public class Metal implements IOre, IAlloy {
 		return alloy;
 	}
 
-	private void setComponents(Metal primary, Metal secondary) {
-		this.primary = primary.name;
-		this.secondary = secondary.name;
-		this.alloy = true;
-	}
-
 	@Override
 	public void setComponents(String primary, String secondary) {
 		this.primary = primary;
 		this.secondary = secondary;
+		this.alloy = true;
+	}
+
+	private void setComponents(Metal primary, Metal secondary) {
+		this.primary = primary.name;
+		this.secondary = secondary.name;
 		this.alloy = true;
 	}
 

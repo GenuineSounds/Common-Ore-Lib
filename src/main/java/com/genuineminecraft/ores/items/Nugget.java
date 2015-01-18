@@ -11,8 +11,8 @@ public class Nugget extends Item {
 
 	public Nugget(Metal metal) {
 		this.metal = metal;
-		this.setUnlocalizedName("nugget" + metal.nameFixed);
-		this.setCreativeTab(CreativeTabs.tabMaterials);
-		this.setTextureName("CommonOres:nuggets/" + metal.nameFixed);
+		setUnlocalizedName("nugget" + metal.nameFixed);
+		setCreativeTab(CreativeTabs.tabMaterials);
+		setTextureName("CommonOres:nuggets/" + metal.nameFixed);
 	}
 }

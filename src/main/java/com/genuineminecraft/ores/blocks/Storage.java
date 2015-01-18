@@ -14,14 +14,14 @@ public class Storage extends BlockCompressed {
 	public Storage(Metal metal) {
 		super(MapColor.ironColor);
 		this.metal = metal;
-		this.setBlockName("block" + metal.nameFixed);
-		this.setCreativeTab(CreativeTabs.tabBlock);
-		this.setStepSound(Block.soundTypeMetal);
-		this.setBlockTextureName("CommonOres:blocks/" + metal.nameFixed);
+		setBlockName("block" + metal.nameFixed);
+		setCreativeTab(CreativeTabs.tabBlock);
+		setStepSound(Block.soundTypeMetal);
+		setBlockTextureName("CommonOres:blocks/" + metal.nameFixed);
 	}
 
 	public void setup() {
-		this.setHardness(this.metal.getHardness());
-		this.setResistance(this.metal.getResistance());
+		setHardness(metal.getHardness());
+		setResistance(metal.getResistance());
 	}
 }

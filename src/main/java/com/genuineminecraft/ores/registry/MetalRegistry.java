@@ -22,17 +22,17 @@ public class MetalRegistry {
 	private static MetalRegistry instance;
 
 	public static MetalRegistry getInstance() {
-		if (instance == null)
-			instance = new MetalRegistry();
-		return instance;
+		if (MetalRegistry.instance == null)
+			MetalRegistry.instance = new MetalRegistry();
+		return MetalRegistry.instance;
 	}
 
 	public static List<Metal> getMetals() {
-		return instance.metals;
+		return MetalRegistry.instance.metals;
 	}
 
 	public static boolean isCommon(String name) {
-		return instance.metalMap.containsKey(cleanName(name));
+		return MetalRegistry.instance.metalMap.containsKey(MetalRegistry.cleanName(name));
 	}
 
 	public static String cleanName(String name) {
@@ -47,7 +47,7 @@ public class MetalRegistry {
 	}
 
 	public static Metal getCommon(String name) {
-		return instance.metalMap.get(cleanName(name));
+		return MetalRegistry.instance.metalMap.get(MetalRegistry.cleanName(name));
 	}
 
 	private List<Metal> metals = new ArrayList<Metal>();
@@ -80,22 +80,20 @@ public class MetalRegistry {
 			if (imc.key.equalsIgnoreCase("commonAlloy"))
 				alloys.add(imc.getNBTValue());
 		}
-		for (NBTTagCompound tag : metals) {
+		for (NBTTagCompound tag : metals)
 			try {
 				registerOre(tag.getString("name"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"));
 			}
 			catch (Exception e) {
 				System.err.println("CommonOre has detected a badly formatted metal registration.");
 			}
-		}
-		for (NBTTagCompound tag : alloys) {
+		for (NBTTagCompound tag : alloys)
 			try {
 				registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getString("secondary"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"));
 			}
 			catch (Exception e) {
 				System.err.println("CommonOre has detected a badly formatted alloy registration.");
 			}
-		}
 	}
 
 	public void initialize() {

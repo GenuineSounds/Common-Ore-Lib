@@ -30,62 +30,62 @@ public class Metal implements IOre, IAlloy {
 
 	public Metal(String name) {
 		this.name = name;
-		this.nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-		this.ore = new Ore(this);
-		this.dust = new Dust(this);
-		this.ingot = new Ingot(this);
-		this.nugget = new Nugget(this);
-		this.storage = new Storage(this);
+		nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+		ore = new Ore(this);
+		dust = new Dust(this);
+		ingot = new Ingot(this);
+		nugget = new Nugget(this);
+		storage = new Storage(this);
 	}
 
 	@Override
 	public float getChunkRarity() {
-		return this.chunkRarity;
+		return chunkRarity;
 	}
 
 	@Override
 	public float getDepth() {
-		return this.depth;
+		return depth;
 	}
 
 	@Override
 	public float getHardness() {
-		return this.hardness;
+		return hardness;
 	}
 
 	@Override
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	@Override
 	public int getNodeSize() {
-		return this.nodeSize;
+		return nodeSize;
 	}
 
 	@Override
 	public int getNodesPerChunk() {
-		return this.nodesPerChunk;
+		return nodesPerChunk;
 	}
 
 	@Override
 	public String getPrimaryComponent() {
-		return this.primary;
+		return primary;
 	}
 
 	@Override
 	public float getResistance() {
-		return this.resistance;
+		return resistance;
 	}
 
 	@Override
 	public String getSecondaryComponent() {
-		return this.secondary;
+		return secondary;
 	}
 
 	@Override
 	public float getSpread() {
-		return this.spread;
+		return spread;
 	}
 
 	@Override
@@ -97,13 +97,13 @@ public class Metal implements IOre, IAlloy {
 	public void setComponents(String primary, String secondary) {
 		this.primary = primary;
 		this.secondary = secondary;
-		this.alloy = true;
+		alloy = true;
 	}
 
 	private void setComponents(Metal primary, Metal secondary) {
 		this.primary = primary.name;
 		this.secondary = secondary.name;
-		this.alloy = true;
+		alloy = true;
 	}
 
 	public Metal setup(float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {
@@ -114,8 +114,8 @@ public class Metal implements IOre, IAlloy {
 		this.spread = spread;
 		this.hardness = hardness;
 		this.resistance = resistance;
-		this.ore.setup();
-		this.storage.setup();
+		ore.setup();
+		storage.setup();
 		return this;
 	}
 }

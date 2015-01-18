@@ -19,15 +19,13 @@ public class MagicWand extends ItemShears {
 		int x = (int) Math.floor(player.posX);
 		int y = (int) Math.floor(player.posY - 0.5);
 		int z = (int) Math.floor(player.posZ);
-		for (int bx = x - size; bx < x + size; bx++) {
-			for (int bz = z - size; bz < z + size; bz++) {
+		for (int bx = x - size; bx < x + size; bx++)
+			for (int bz = z - size; bz < z + size; bz++)
 				for (int by = 1; by < 96; by++) {
 					Block block = world.getBlock(bx, by, bz);
 					if (!MetalRegistry.isCommon(block.getUnlocalizedName()))
 						world.setBlock(bx, by, bz, Blocks.air, 0, 6);
 				}
-			}
-		}
 		return stack;
 	}
 }

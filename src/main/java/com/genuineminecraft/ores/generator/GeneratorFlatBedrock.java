@@ -18,20 +18,20 @@ public class GeneratorFlatBedrock implements IWorldGenerator {
 		boolean isHellBiome = world.getBiomeGenForCoords(chunkX, chunkZ) == BiomeGenBase.hell;
 		switch (world.provider.dimensionId) {
 			case -1:
-				this.genNether(world, random, chunkX, chunkZ, isHellBiome);
+				genNether(world, random, chunkX, chunkZ, isHellBiome);
 				break;
 			case 0:
-				this.genOverworld(world, random, chunkX, chunkZ, isHellBiome);
+				genOverworld(world, random, chunkX, chunkZ, isHellBiome);
 				break;
 			case 1:
-				this.genEnd(world, random, chunkX, chunkZ, isHellBiome);
+				genEnd(world, random, chunkX, chunkZ, isHellBiome);
 				break;
 		}
 		System.out.println("Bedrock generation: " + (System.nanoTime() - time) + " milliseconds");
 	}
 
 	private void genNether(World world, Random random, int chunkX, int chunkZ, boolean isHellBiome) {
-		for (int x = 0; x < 16; x++) {
+		for (int x = 0; x < 16; x++)
 			for (int z = 0; z < 16; z++) {
 				for (int y = 121; y < 125; y++)
 					if (world.getBlock(chunkX * 16 + x, y, chunkZ * 16 + z) == Blocks.bedrock)
@@ -40,11 +40,10 @@ public class GeneratorFlatBedrock implements IWorldGenerator {
 					if (world.getBlock(chunkX * 16 + x, y, chunkZ * 16 + z) == Blocks.bedrock)
 						world.setBlock(chunkX * 16 + x, y, chunkZ * 16 + z, Blocks.netherrack, 0, 2);
 			}
-		}
 	}
 
 	private void genOverworld(World world, Random random, int chunkX, int chunkZ, boolean isHellBiome) {
-		for (int x = 0; x < 16; x++) {
+		for (int x = 0; x < 16; x++)
 			for (int z = 0; z < 16; z++) {
 				if (isHellBiome)
 					for (int y = 121; y < 125; y++)
@@ -56,6 +55,5 @@ public class GeneratorFlatBedrock implements IWorldGenerator {
 				if (world.getBlock(chunkX * 16 + x, 0, chunkZ * 16 + z) != Blocks.bedrock)
 					world.setBlock(chunkX * 16 + x, 0, chunkZ * 16 + z, Blocks.bedrock, 0, 2);
 			}
-		}
 	}
 }

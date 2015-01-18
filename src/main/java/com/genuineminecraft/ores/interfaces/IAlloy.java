@@ -1,6 +1,5 @@
 package com.genuineminecraft.ores.interfaces;
 
-
 public interface IAlloy {
 
 	public String getPrimaryComponent();

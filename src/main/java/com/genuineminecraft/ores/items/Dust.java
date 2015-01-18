@@ -11,8 +11,8 @@ public class Dust extends Item {
 
 	public Dust(Metal metal) {
 		this.metal = metal;
-		this.setUnlocalizedName("dust" + metal.nameFixed);
-		this.setCreativeTab(CreativeTabs.tabMaterials);
-		this.setTextureName("CommonOres:dusts/" + metal.nameFixed);
+		setUnlocalizedName("dust" + metal.nameFixed);
+		setCreativeTab(CreativeTabs.tabMaterials);
+		setTextureName("CommonOres:dusts/" + metal.nameFixed);
 	}
 }

@@ -13,14 +13,14 @@ public class Ore extends BlockOre {
 	public Ore(Metal metal) {
 		super();
 		this.metal = metal;
-		this.setBlockName("ore" + metal.nameFixed);
-		this.setCreativeTab(CreativeTabs.tabBlock);
-		this.setStepSound(Block.soundTypeStone);
-		this.setBlockTextureName("CommonOres:ores/" + metal.nameFixed);
+		setBlockName("ore" + metal.nameFixed);
+		setCreativeTab(CreativeTabs.tabBlock);
+		setStepSound(Block.soundTypeStone);
+		setBlockTextureName("CommonOres:ores/" + metal.nameFixed);
 	}
 
 	public void setup() {
-		this.setHardness(this.metal.getHardness());
-		this.setResistance(this.metal.getResistance());
+		setHardness(metal.getHardness());
+		setResistance(metal.getResistance());
 	}
 }

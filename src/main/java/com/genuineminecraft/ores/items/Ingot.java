@@ -11,8 +11,8 @@ public class Ingot extends Item {
 
 	public Ingot(Metal metal) {
 		this.metal = metal;
-		this.setUnlocalizedName("ingot" + metal.nameFixed);
-		this.setCreativeTab(CreativeTabs.tabMaterials);
-		this.setTextureName("CommonOres:ingots/" + metal.nameFixed);
+		setUnlocalizedName("ingot" + metal.nameFixed);
+		setCreativeTab(CreativeTabs.tabMaterials);
+		setTextureName("CommonOres:ingots/" + metal.nameFixed);
 	}
 }

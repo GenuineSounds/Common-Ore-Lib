@@ -27,9 +27,9 @@ public class CommonOres {
 
 	@EventHandler
 	public void pre(FMLPreInitializationEvent event) {
-		config = new Config(event);
+		CommonOres.config = new Config(event);
 		MetalRegistry.getInstance().preInitialize();
-		config.preInit();
+		CommonOres.config.preInit();
 	}
 
 	@EventHandler
@@ -37,17 +37,17 @@ public class CommonOres {
 		MagicWand.instance = new MagicWand();
 		GameRegistry.registerItem(MagicWand.instance, "magicWand");
 		MetalRegistry.getInstance().initialize();
-		config.init();
-		if (config.flatBedrock)
+		CommonOres.config.init();
+		if (CommonOres.config.flatBedrock)
 			GameRegistry.registerWorldGenerator(new GeneratorFlatBedrock(), 0);
-		GameRegistry.registerWorldGenerator(new GeneratorCommonOre(config.rareAlloys, config.searchRadius), 5000);
-		if (config.genAlloys)
-			GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(config.rareAlloys, config.searchRadius), 5001);
+		GameRegistry.registerWorldGenerator(new GeneratorCommonOre(CommonOres.config.rareAlloys, CommonOres.config.searchRadius), 5000);
+		if (CommonOres.config.genAlloys)
+			GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(CommonOres.config.rareAlloys, CommonOres.config.searchRadius), 5001);
 	}
 
 	@EventHandler
 	public void post(FMLPostInitializationEvent event) {
 		MetalRegistry.getInstance().postInitialize();
-		config.postInit();
+		CommonOres.config.postInit();
 	}
 }

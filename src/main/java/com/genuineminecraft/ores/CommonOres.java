@@ -1,6 +1,10 @@
 package com.genuineminecraft.ores;
 
+import net.minecraftforge.common.MinecraftForge;
+
 import com.genuineminecraft.ores.config.Config;
+import com.genuineminecraft.ores.events.OreGenerationEvent;
+import com.genuineminecraft.ores.events.RegisterOreEvent;
 import com.genuineminecraft.ores.generator.GeneratorAlloyOre;
 import com.genuineminecraft.ores.generator.GeneratorCommonOre;
 import com.genuineminecraft.ores.generator.GeneratorFlatBedrock;
@@ -28,26 +32,28 @@ public class CommonOres {
 	@EventHandler
 	public void pre(FMLPreInitializationEvent event) {
 		CommonOres.config = new Config(event);
-		MetalRegistry.getInstance().preInitialize();
-		CommonOres.config.preInit();
+		MinecraftForge.EVENT_BUS.register(new RegisterOreEvent());
+		MinecraftForge.ORE_GEN_BUS.register(new OreGenerationEvent());
+		MetalRegistry.getInstance().pre();
+		CommonOres.config.pre();
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		MagicWand.instance = new MagicWand();
 		GameRegistry.registerItem(MagicWand.instance, "magicWand");
-		MetalRegistry.getInstance().initialize();
+		MetalRegistry.getInstance().init();
 		CommonOres.config.init();
-		if (CommonOres.config.flatBedrock)
-			GameRegistry.registerWorldGenerator(new GeneratorFlatBedrock(), 0);
-		GameRegistry.registerWorldGenerator(new GeneratorCommonOre(CommonOres.config.rareAlloys, CommonOres.config.searchRadius), 5000);
-		if (CommonOres.config.genAlloys)
-			GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(CommonOres.config.rareAlloys, CommonOres.config.searchRadius), 5001);
+		//		if (CommonOres.config.flatBedrock)
+		GameRegistry.registerWorldGenerator(new GeneratorFlatBedrock(), Integer.MIN_VALUE);
+		GameRegistry.registerWorldGenerator(new GeneratorCommonOre(CommonOres.config.searchRadius), 300);
+		//		if (CommonOres.config.genAlloys)
+		GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(CommonOres.config.rareAlloys, CommonOres.config.searchRadius), 5001);
 	}
 
 	@EventHandler
 	public void post(FMLPostInitializationEvent event) {
-		MetalRegistry.getInstance().postInitialize();
-		CommonOres.config.postInit();
+		MetalRegistry.getInstance().post();
+		CommonOres.config.post();
 	}
 }

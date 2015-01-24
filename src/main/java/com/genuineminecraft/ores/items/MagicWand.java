@@ -1,31 +1,46 @@
 package com.genuineminecraft.ores.items;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 import com.genuineminecraft.ores.registry.MetalRegistry;
+import com.genuineminecraft.ores.utils.Utility;
 
 public class MagicWand extends ItemShears {
 
 	public static MagicWand instance;
 
+	public MagicWand() {
+		setUnlocalizedName("magicWand");
+		setTextureName("CommonOres:debug/Wand");
+	}
+
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-		int size = 16;
-		int x = (int) Math.floor(player.posX);
-		int y = (int) Math.floor(player.posY - 0.5);
-		int z = (int) Math.floor(player.posZ);
-		for (int bx = x - size; bx < x + size; bx++)
-			for (int bz = z - size; bz < z + size; bz++)
-				for (int by = 1; by < 96; by++) {
-					Block block = world.getBlock(bx, by, bz);
-					if (!MetalRegistry.isCommon(block.getUnlocalizedName()))
-						world.setBlock(bx, by, bz, Blocks.air, 0, 6);
-				}
+		if (world.isRemote)
+			return stack;
+		int commonTotal = 0;
+		final int square = 1;
+		for (int ix = -square; ix <= square; ix++) {
+			for (int iy = -square; iy <= square; iy++) {
+				int commonCount = 0;
+				Chunk chunk = world.getChunkFromBlockCoords((int) Math.floor(player.posX + (ix * 16)), (int) Math.floor(player.posZ + (iy * 16)));
+				int yMax = Utility.findHighestBlock(world, chunk);
+				for (int x = 0; x < 16; x++)
+					for (int z = 0; z < 16; z++)
+						for (int y = yMax; y > 0; y--)
+							if (!MetalRegistry.isCommon(chunk.getBlock(x, y, z).getUnlocalizedName()))
+								world.setBlock(chunk.xPosition * 16 + x, y, chunk.zPosition * 16 + z, Blocks.air);
+							else
+								commonCount++;
+				commonTotal += commonCount;
+				System.out.println("Max Block Height: " + yMax + ", " + commonCount + " Common Ores found.");
+			}
+		}
 		return stack;
 	}
 }

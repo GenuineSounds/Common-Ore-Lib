@@ -28,23 +28,21 @@ public class GeneratorAlloyOre implements IWorldGenerator {
 		if (world.provider.dimensionId != 0)
 			return;
 		Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
-		// TODO Improve speeds if possible
 		int yMax = Utility.findHighestBlock(world, chunk);
 		for (Metal metal : MetalRegistry.getMetals()) {
-			if (!metal.isAlloy())
+			if (!metal.isAlloy() || !metal.willGenerate())
 				continue;
 			int nodes = (int) (metal.getNodesPerChunk() / 2F) + 1;
 			WorldGenMinable gen = new WorldGenMinable(metal.ore, metal.getNodeSize());
 			for (int i = 0; i < yMax / 64F * nodes; i++) {
 				if (metal.getChunkRarity() < random.nextDouble())
 					continue;
-				int x = chunkX * 16 + random.nextInt(16);
-				int z = chunkZ * 16 + random.nextInt(16);
 				int y = (int) (((float) random.nextGaussian() - 0.5F) * metal.getSpread() * yMax + metal.getDepth() * yMax);
 				if (y < 0)
 					continue;
-				// TODO Improve speeds if possible
-				if (Utility.genIsCapable(metal, world, x, y, z, i, rareAlloys, true))
+				int x = chunkX * 16 + random.nextInt(16);
+				int z = chunkZ * 16 + random.nextInt(16);
+				if (!rareAlloys || (Utility.presentInChunk(metal, chunk) && Utility.areComponentsFound(metal, world, x, y, z, radius)))
 					gen.generate(world, random, x, y, z);
 			}
 		}

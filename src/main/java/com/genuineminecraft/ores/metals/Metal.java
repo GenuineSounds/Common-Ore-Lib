@@ -27,6 +27,7 @@ public class Metal implements IOre, IAlloy {
 	private String primary;
 	private String secondary;
 	private boolean alloy;
+	private boolean generate = false;
 
 	public Metal(String name) {
 		this.name = name;
@@ -36,6 +37,14 @@ public class Metal implements IOre, IAlloy {
 		ingot = new Ingot(this);
 		nugget = new Nugget(this);
 		storage = new Storage(this);
+	}
+
+	public void setGeneration(boolean generate) {
+		this.generate = generate;
+	}
+
+	public boolean willGenerate() {
+		return generate;
 	}
 
 	@Override

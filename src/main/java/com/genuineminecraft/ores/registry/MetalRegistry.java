@@ -52,25 +52,28 @@ public class MetalRegistry {
 
 	private List<Metal> metals = new ArrayList<Metal>();
 	private Map<String, Metal> metalMap = new HashMap<String, Metal>();
+	private List<ItemStack> oresRegistered = new ArrayList<ItemStack>();
+	private List<String> namesRegistered = new ArrayList<String>();
+	private boolean available = true;
 
-	public void preInitialize() {
-		registerOre("aluminium", 1F, 1F, 6, 6, 0.2F, 3F, 2F);
-		registerOre("zinc", 1F, 0.9375F, 6, 6, 0.2F, 2.5F, 2F);
-		registerOre("copper", 1F, 0.8125F, 6, 6, 0.2F, 3F, 2F);
-		registerOre("tin", 0.8F, 0.6875F, 6, 6, 0.2F, 1.5F, 2F);
-		registerOre("lead", 0.8F, 0.625F, 6, 6, 0.2F, 1.5F, 2F);
-		registerOre("iron", 0.8F, 0.5F, 6, 6, 0.2F, 4F, 2F);
-		registerOre("nickel", 0.6F, 0.375F, 6, 6, 0.2F, 4F, 2F);
-		registerOre("tungsten", 0.6F, 0.3125F, 6, 6, 0.2F, 7.5F, 2F);
-		registerOre("silver", 0.6F, 0.25F, 6, 6, 0.2F, 2.5F, 2F);
-		registerOre("gold", 0.4F, 0.125F, 6, 6, 0.2F, 2.75F, 2F);
-		registerOre("titanium", 0.4F, 0.0625F, 6, 6, 0.2F, 6F, 2F);
-		registerOre("platinum", 0.4F, 0F, 6, 6, 0.2F, 3.5F, 2F);
-		registerAlloy("brass", "copper", "zinc", 1F, 0.875F, 6, 6, 0.2F, 3.5F, 2F);
-		registerAlloy("bronze", "copper", "tin", 0.8F, 0.75F, 6, 6, 0.2F, 3F, 2F);
-		registerAlloy("steel", "coal", "iron", 0.8F, 0.5625F, 6, 6, 0.2F, 7.25F, 2F);
-		registerAlloy("invar", "nickel", "iron", 0.6F, 0.4375F, 6, 6, 0.2F, 4F, 2F);
-		registerAlloy("electrum", "gold", "silver", 0.4F, 0.1875F, 6, 6, 0.2F, 2.5F, 2F);
+	public void pre() {
+		registerOre("aluminium", 1F, 1F, 6, 6, 0.2F, 3F, 2F, true);
+		registerOre("zinc", 1F, 0.9375F, 6, 6, 0.2F, 2.5F, 2F, true);
+		registerOre("copper", 1F, 0.8125F, 6, 6, 0.2F, 3F, 2F, true);
+		registerOre("tin", 0.8F, 0.6875F, 6, 6, 0.2F, 1.5F, 2F, true);
+		registerOre("lead", 0.8F, 0.625F, 6, 6, 0.2F, 1.5F, 2F, true);
+		registerOre("iron", 0.8F, 0.5F, 6, 6, 0.2F, 4F, 2F, true);
+		registerOre("nickel", 0.6F, 0.375F, 6, 6, 0.2F, 4F, 2F, true);
+		registerOre("tungsten", 0.6F, 0.3125F, 6, 6, 0.2F, 7.5F, 2F, true);
+		registerOre("silver", 0.6F, 0.25F, 6, 6, 0.2F, 2.5F, 2F, true);
+		registerOre("gold", 0.4F, 0.125F, 6, 6, 0.2F, 2.75F, 2F, true);
+		registerOre("titanium", 0.4F, 0.0625F, 6, 6, 0.2F, 6F, 2F, true);
+		registerOre("platinum", 0.4F, 0F, 6, 6, 0.2F, 3.5F, 2F, true);
+		registerAlloy("brass", "copper", "zinc", 1F, 0.875F, 6, 6, 0.2F, 3.5F, 2F, true);
+		registerAlloy("bronze", "copper", "tin", 0.8F, 0.75F, 6, 6, 0.2F, 3F, 2F, true);
+		registerAlloy("steel", "coal", "iron", 0.8F, 0.5625F, 6, 6, 0.2F, 7.25F, 2F, true);
+		registerAlloy("invar", "nickel", "iron", 0.6F, 0.4375F, 6, 6, 0.2F, 4F, 2F, true);
+		registerAlloy("electrum", "gold", "silver", 0.4F, 0.1875F, 6, 6, 0.2F, 2.5F, 2F, true);
 		ImmutableList<IMCMessage> list = FMLInterModComms.fetchRuntimeMessages(CommonOres.instance);
 		List<NBTTagCompound> metals = new ArrayList<NBTTagCompound>();
 		List<NBTTagCompound> alloys = new ArrayList<NBTTagCompound>();
@@ -82,21 +85,28 @@ public class MetalRegistry {
 		}
 		for (NBTTagCompound tag : metals)
 			try {
-				registerOre(tag.getString("name"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"));
+				boolean generate = false;
+				if (tag.hasKey("generate"))
+					generate = tag.getBoolean("generate");
+				registerOre(tag.getString("name"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"), generate);
 			}
 			catch (Exception e) {
 				System.err.println("CommonOre has detected a badly formatted metal registration.");
 			}
 		for (NBTTagCompound tag : alloys)
 			try {
-				registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getString("secondary"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"));
+				boolean generate = false;
+				if (tag.hasKey("generate"))
+					generate = tag.getBoolean("generate");
+				registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getString("secondary"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"), generate);
 			}
 			catch (Exception e) {
 				System.err.println("CommonOre has detected a badly formatted alloy registration.");
 			}
 	}
 
-	public void initialize() {
+	public void init() {
+		available = false;
 		for (Metal metal : metals) {
 			GameRegistry.registerBlock(metal.ore, "ore" + metal.name);
 			GameRegistry.registerItem(metal.dust, "dust" + metal.name);
@@ -121,21 +131,49 @@ public class MetalRegistry {
 			stack = new ItemStack(metal.storage);
 			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", stack);
 		}
+		available = true;
 	}
 
-	public void postInitialize() {}
+	public void post() {
+		for (String name : namesRegistered) {
+			Metal metal = getCommon(name);
+			if (metal == null) {
+				System.out.println(name + " was not found to be a suitable CommoneOre");
+				continue;
+			}
+			System.out.println(name + " was found to be a suitable CommoneOre");
+			metal.setGeneration(true);
+		}
+	}
+
+	public void registerGeneration(String name, ItemStack ore) {
+		if (!available)
+			return;
+		namesRegistered.add(name);
+		oresRegistered.add(ore);
+	}
 
 	public void registerAlloy(String name, String primary, String secondary, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {
+		registerAlloy(name, primary, secondary, chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance, false);
+	}
+
+	public void registerAlloy(String name, String primary, String secondary, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance, boolean generate) {
 		Metal metal = new Metal(name);
 		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
+		metal.setGeneration(generate);
 		metal.setComponents(primary, secondary);
 		metals.add(metal);
 		metalMap.put(name, metal);
 	}
 
 	public void registerOre(String name, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {
+		registerOre(name, chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance, false);
+	}
+
+	public void registerOre(String name, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance, boolean generate) {
 		Metal metal = new Metal(name);
 		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
+		metal.setGeneration(generate);
 		metals.add(metal);
 		metalMap.put(metal.name, metal);
 	}

@@ -114,24 +114,8 @@ public class MetalRegistry {
 
 	public void init() {
 		available = false;
-		for (final Metal metal : completeMetalList) {
-			GameRegistry.registerBlock(metal.ore, "ore" + metal.name);
-			GameRegistry.registerItem(metal.dust, "dust" + metal.name);
-			GameRegistry.registerItem(metal.ingot, "ingot" + metal.name);
-			GameRegistry.registerItem(metal.nugget, "nugget" + metal.name);
-			GameRegistry.registerBlock(metal.storage, "storage" + metal.name);
-			GameRegistry.addSmelting(metal.ore, new ItemStack(metal.ingot), 10);
-			GameRegistry.addSmelting(metal.dust, new ItemStack(metal.ingot), 10);
-			GameRegistry.addShapelessRecipe(new ItemStack(metal.nugget, 9), metal.ingot);
-			GameRegistry.addShapelessRecipe(new ItemStack(metal.storage), metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot, metal.ingot);
-			GameRegistry.addShapelessRecipe(new ItemStack(metal.ingot), metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget, metal.nugget);
-			GameRegistry.addShapelessRecipe(new ItemStack(metal.ingot, 9), metal.storage);
-			ItemStack stack;
-			stack = new ItemStack(metal.ore);
-			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", stack);
-			stack = new ItemStack(metal.storage);
-			FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", stack);
-		}
+		for (final Metal metal : completeMetalList)
+			metal.registerRecipes();
 		available = true;
 	}
 

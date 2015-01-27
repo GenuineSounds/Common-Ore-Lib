@@ -1,5 +1,6 @@
 package com.genuineflix.co.metals;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.genuineflix.co.blocks.Ore;
@@ -9,6 +10,9 @@ import com.genuineflix.co.interfaces.IOre;
 import com.genuineflix.co.items.Dust;
 import com.genuineflix.co.items.Ingot;
 import com.genuineflix.co.items.Nugget;
+
+import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class Metal implements IOre, IAlloy {
 
@@ -129,13 +133,29 @@ public class Metal implements IOre, IAlloy {
 		storage.setup();
 		return this;
 	}
-	
+
 	public void registerOres() {
+		GameRegistry.registerBlock(ore, "ore" + name);
+		GameRegistry.registerItem(dust, "dust" + name);
+		GameRegistry.registerItem(ingot, "ingot" + name);
+		GameRegistry.registerItem(nugget, "nugget" + name);
+		GameRegistry.registerBlock(storage, "storage" + name);
 		OreDictionary.registerOre("ore" + name, ore);
 		OreDictionary.registerOre("dust" + name, dust);
 		OreDictionary.registerOre("pulv" + name, dust);
 		OreDictionary.registerOre("ingot" + name, ingot);
 		OreDictionary.registerOre("nugget" + name, nugget);
 		OreDictionary.registerOre("storage" + name, storage);
+		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(ore));
+		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(storage));
+	}
+
+	public void registerRecipes() {
+		GameRegistry.addSmelting(ore, new ItemStack(ingot), 10);
+		GameRegistry.addSmelting(dust, new ItemStack(ingot), 10);
+		GameRegistry.addShapelessRecipe(new ItemStack(nugget, 9), ingot);
+		GameRegistry.addShapelessRecipe(new ItemStack(storage), ingot, ingot, ingot, ingot, ingot, ingot, ingot, ingot, ingot);
+		GameRegistry.addShapelessRecipe(new ItemStack(ingot), nugget, nugget, nugget, nugget, nugget, nugget, nugget, nugget, nugget);
+		GameRegistry.addShapelessRecipe(new ItemStack(ingot, 9), storage);
 	}
 }

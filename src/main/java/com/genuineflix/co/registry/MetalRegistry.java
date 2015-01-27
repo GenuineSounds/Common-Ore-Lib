@@ -31,7 +31,7 @@ public class MetalRegistry {
 	}
 
 	public static boolean isCommon(final Block block) {
-		return MetalRegistry.isCommon(block.getUnlocalizedName());
+		return block != null && MetalRegistry.isCommon(block.getUnlocalizedName());
 	}
 
 	public static boolean isCommon(final String name) {

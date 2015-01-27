@@ -143,11 +143,9 @@ public class MetalRegistry {
 	public void post() {
 		for (final String name : namesRegistered) {
 			final Metal metal = MetalRegistry.getCommon(name);
-			if (metal == null) {
-				System.out.println(name + " was not found to be a suitable CommoneOre");
+			if (metal == null)
 				continue;
-			}
-			System.out.println(name + " was found to be a suitable CommoneOre");
+			System.out.println("[CommoneOre]: " + name + " was found to be a suitable.");
 			metal.setGeneration(true);
 			generatedMetalList.add(metal);
 		}

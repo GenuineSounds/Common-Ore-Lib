@@ -19,10 +19,10 @@ public class OreGenerationEvent {
 		if (event.generator != null && event.generator instanceof WorldGenMinable && !(event.generator instanceof CommonGenMinable))
 			try {
 				final WorldGenMinable gen = (WorldGenMinable) event.generator;
-				final Field blockField = WorldGenMinable.class.getFields()[0];
+				final Field blockField = WorldGenMinable.class.getDeclaredFields()[0];
 				blockField.setAccessible(true);
 				final Block block = (Block) blockField.get(event.generator);
-				if (MetalRegistry.isCommon(block))
+				if (block != null && MetalRegistry.isCommon(block))
 					event.setResult(Result.DENY);
 			}
 			catch (final Exception e) {

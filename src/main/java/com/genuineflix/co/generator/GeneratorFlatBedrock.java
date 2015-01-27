@@ -6,9 +6,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
-
-import com.genuineflix.co.CommonOre;
-
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class GeneratorFlatBedrock implements IWorldGenerator {
@@ -17,8 +14,6 @@ public class GeneratorFlatBedrock implements IWorldGenerator {
 
 	@Override
 	public void generate(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
-		if (CommonOre.isDisabled())
-			return;
 		final boolean isHellBiome = world.getBiomeGenForCoords(chunkX, chunkZ) == BiomeGenBase.hell;
 		switch (world.provider.dimensionId) {
 			case -1:

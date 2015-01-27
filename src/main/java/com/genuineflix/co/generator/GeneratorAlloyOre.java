@@ -5,9 +5,8 @@ import java.util.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.feature.WorldGenMinable;
 
-import com.genuineflix.co.CommonOre;
+import com.genuineflix.co.generator.feature.CommonGenMinable;
 import com.genuineflix.co.metals.Metal;
 import com.genuineflix.co.registry.MetalRegistry;
 import com.genuineflix.co.utils.Utility;
@@ -26,8 +25,6 @@ public class GeneratorAlloyOre implements IWorldGenerator {
 
 	@Override
 	public void generate(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
-		if (CommonOre.isDisabled())
-			return;
 		if (world.provider.dimensionId != 0)
 			return;
 		final Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
@@ -36,7 +33,7 @@ public class GeneratorAlloyOre implements IWorldGenerator {
 			if (!metal.isAlloy() || !metal.willGenerate())
 				continue;
 			final int nodes = (int) (metal.getNodesPerChunk() / 2F) + 1;
-			final WorldGenMinable gen = new WorldGenMinable(metal.ore, metal.getNodeSize());
+			final CommonGenMinable gen = new CommonGenMinable(metal.ore, metal.getNodeSize());
 			for (int i = 0; i < yMax / 64F * nodes; i++) {
 				if (metal.getChunkRarity() < random.nextDouble())
 					continue;

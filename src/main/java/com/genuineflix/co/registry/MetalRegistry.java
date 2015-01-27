@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
@@ -29,6 +30,10 @@ public class MetalRegistry {
 
 	public static List<Metal> getMetals() {
 		return MetalRegistry.instance.completeMetalList;
+	}
+
+	public static boolean isCommon(final Block block) {
+		return MetalRegistry.isCommon(block.getUnlocalizedName());
 	}
 
 	public static boolean isCommon(final String name) {
@@ -91,9 +96,9 @@ public class MetalRegistry {
 					generate = tag.getBoolean("generate");
 				registerOre(tag.getString("name"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"), generate);
 			}
-		catch (final Exception e) {
-			System.err.println("CommonOre has detected a badly formatted metal registration.");
-		}
+			catch (final Exception e) {
+				System.err.println("CommonOre has detected a badly formatted metal registration.");
+			}
 		for (final NBTTagCompound tag : alloys)
 			try {
 				boolean generate = false;
@@ -101,9 +106,9 @@ public class MetalRegistry {
 					generate = tag.getBoolean("generate");
 				registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getString("secondary"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"), generate);
 			}
-		catch (final Exception e) {
-			System.err.println("CommonOre has detected a badly formatted alloy registration.");
-		}
+			catch (final Exception e) {
+				System.err.println("CommonOre has detected a badly formatted alloy registration.");
+			}
 	}
 
 	public void init() {

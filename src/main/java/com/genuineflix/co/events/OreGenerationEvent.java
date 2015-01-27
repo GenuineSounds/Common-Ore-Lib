@@ -1,41 +1,32 @@
 package com.genuineflix.co.events;
 
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+import java.lang.reflect.Field;
+
+import net.minecraft.block.Block;
+import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 
-import com.genuineflix.co.utils.ChunkMap;
+import com.genuineflix.co.generator.feature.CommonGenMinable;
+import com.genuineflix.co.registry.MetalRegistry;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class OreGenerationEvent {
 
-	public static ChunkMap<Chunk> chunkCache = new ChunkMap<Chunk>();
-
 	@SubscribeEvent
 	public void minable(final OreGenEvent.GenerateMinable event) {
-		switch (event.type) {
-			case IRON:
-			case GOLD:
-			case DIRT:
-			case GRAVEL:
-				event.setResult(Result.DENY);
-			case COAL:
-			case DIAMOND:
-			case LAPIS:
-			case QUARTZ:
-			case REDSTONE:
-			case CUSTOM:
-			default:
-				break;
-		}
-	}
-
-	@SubscribeEvent
-	public void cancelShit(final OreGenEvent.Pre event) {
-		final World world = event.world;
-		final Chunk chunk = world.getChunkFromBlockCoords(event.worldX, event.worldZ);
-		OreGenerationEvent.chunkCache.put(chunk, chunk);
+		if (event.generator != null && event.generator instanceof WorldGenMinable && !(event.generator instanceof CommonGenMinable))
+			try {
+				final WorldGenMinable gen = (WorldGenMinable) event.generator;
+				final Field blockField = WorldGenMinable.class.getFields()[0];
+				blockField.setAccessible(true);
+				final Block block = (Block) blockField.get(event.generator);
+				if (MetalRegistry.isCommon(block))
+					event.setResult(Result.DENY);
+			}
+			catch (final Exception e) {
+				e.printStackTrace();
+			}
 	}
 }

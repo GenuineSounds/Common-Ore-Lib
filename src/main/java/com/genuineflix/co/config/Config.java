@@ -1,11 +1,11 @@
-package com.genuineminecraft.ores.config;
+package com.genuineflix.co.config;
 
 import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
 
-import com.genuineminecraft.ores.metals.Metal;
-import com.genuineminecraft.ores.registry.MetalRegistry;
+import com.genuineflix.co.metals.Metal;
+import com.genuineflix.co.registry.MetalRegistry;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
@@ -18,8 +18,8 @@ public class Config {
 	public Configuration oreGenCfg;
 	public Configuration mainCfg;
 
-	public Config(FMLPreInitializationEvent event) {
-		File folder = new File(event.getModConfigurationDirectory(), "CommonOre");
+	public Config(final FMLPreInitializationEvent event) {
+		final File folder = new File(event.getModConfigurationDirectory(), "CommonOre");
 		folder.mkdirs();
 		mainCfg = new Configuration(new File(folder, "Main.cfg"));
 		mainCfg.save();
@@ -31,14 +31,14 @@ public class Config {
 
 	public void post() {
 		for (int i = 0; i < MetalRegistry.getMetals().size(); i++) {
-			Metal metal = MetalRegistry.getMetals().get(i);
-			float rarity = oreGenCfg.getFloat("chunkRarity", metal.name, metal.getChunkRarity(), 0, 1F, "Chance of generating in any chunk (Percentage)");
-			float depth = oreGenCfg.getFloat("depth", metal.name, metal.getDepth(), 0, 1F, "Depth at which the ore is most common (Percentage)");
-			int nodes = oreGenCfg.getInt("nodesPerChunk", metal.name, metal.getNodesPerChunk(), 0, 8, "How many nodes have a chance to generate in a chunk");
-			int size = oreGenCfg.getInt("nodeSize", metal.name, metal.getNodeSize(), 0, 16, "How many ore can generate in each node");
-			float spread = oreGenCfg.getFloat("spread", metal.name, metal.getSpread(), 0, 1F, "How far can the ore deviate from its depth (Percentage)");
-			float hardness = oreGenCfg.getFloat("hardness", metal.name, metal.getHardness(), 0, 100F, "How easy is this metal to harvest");
-			float resistance = oreGenCfg.getFloat("resistance", metal.name, metal.getResistance(), 0, 100F, "How resistant are the blocks to explosions");
+			final Metal metal = MetalRegistry.getMetals().get(i);
+			final float rarity = oreGenCfg.getFloat("chunkRarity", metal.name, metal.getChunkRarity(), 0, 1F, "Chance of generating in any chunk (Percentage)");
+			final float depth = oreGenCfg.getFloat("depth", metal.name, metal.getDepth(), 0, 1F, "Depth at which the ore is most common (Percentage)");
+			final int nodes = oreGenCfg.getInt("nodesPerChunk", metal.name, metal.getNodesPerChunk(), 0, 8, "How many nodes have a chance to generate in a chunk");
+			final int size = oreGenCfg.getInt("nodeSize", metal.name, metal.getNodeSize(), 0, 16, "How many ore can generate in each node");
+			final float spread = oreGenCfg.getFloat("spread", metal.name, metal.getSpread(), 0, 1F, "How far can the ore deviate from its depth (Percentage)");
+			final float hardness = oreGenCfg.getFloat("hardness", metal.name, metal.getHardness(), 0, 100F, "How easy is this metal to harvest");
+			final float resistance = oreGenCfg.getFloat("resistance", metal.name, metal.getResistance(), 0, 100F, "How resistant are the blocks to explosions");
 			metal.setup(rarity, depth, nodes, size, spread, hardness, resistance);
 		}
 		oreGenCfg.save();

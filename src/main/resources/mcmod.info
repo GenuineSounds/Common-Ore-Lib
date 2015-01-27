@@ -1,15 +1,15 @@
 [
 {
-  "modid": "CommonOres",
-  "name": "Common Ores",
-  "description": "Common Ores is a library of widely used ores, dusts, ingots, nuggets, and blocks.",
-  "version": "1.7.10-r3",
+  "modid": "CommonOre",
+  "name": "Common Ore",
+  "description": "CommonOre is a library of widely used ores, dusts, ingots, nuggets, and blocks.",
+  "version": "1.0.8",
   "mcversion": "1.7.10",
   "url": "",
   "updateUrl": "",
   "authorList": ["GenuineSounds"],
   "credits": "",
-  "logoFile": "assets/commonores/logo.png",
+  "logoFile": "assets/commonore/logo.png",
   "screenshots": [],
   "dependencies": []
 }

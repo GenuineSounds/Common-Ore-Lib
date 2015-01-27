@@ -1,4 +1,4 @@
-package com.genuineminecraft.ores.registry;
+package com.genuineflix.co.registry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.genuineminecraft.ores.CommonOres;
-import com.genuineminecraft.ores.metals.Metal;
+import com.genuineflix.co.CommonOre;
+import com.genuineflix.co.metals.Metal;
 import com.google.common.collect.ImmutableList;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -28,10 +28,10 @@ public class MetalRegistry {
 	}
 
 	public static List<Metal> getMetals() {
-		return MetalRegistry.instance.metals;
+		return MetalRegistry.instance.completeMetalList;
 	}
 
-	public static boolean isCommon(String name) {
+	public static boolean isCommon(final String name) {
 		return MetalRegistry.instance.metalMap.containsKey(MetalRegistry.cleanName(name));
 	}
 
@@ -46,14 +46,15 @@ public class MetalRegistry {
 		return name.toLowerCase();
 	}
 
-	public static Metal getCommon(String name) {
+	public static Metal getCommon(final String name) {
 		return MetalRegistry.instance.metalMap.get(MetalRegistry.cleanName(name));
 	}
 
-	private List<Metal> metals = new ArrayList<Metal>();
-	private Map<String, Metal> metalMap = new HashMap<String, Metal>();
-	private List<ItemStack> oresRegistered = new ArrayList<ItemStack>();
-	private List<String> namesRegistered = new ArrayList<String>();
+	private final List<Metal> completeMetalList = new ArrayList<Metal>();
+	private final List<Metal> generatedMetalList = new ArrayList<Metal>();
+	private final Map<String, Metal> metalMap = new HashMap<String, Metal>();
+	private final List<ItemStack> oresRegistered = new ArrayList<ItemStack>();
+	private final List<String> namesRegistered = new ArrayList<String>();
 	private boolean available = true;
 
 	public void pre() {
@@ -74,40 +75,40 @@ public class MetalRegistry {
 		registerAlloy("steel", "coal", "iron", 0.8F, 0.5625F, 6, 6, 0.2F, 7.25F, 2F, true);
 		registerAlloy("invar", "nickel", "iron", 0.6F, 0.4375F, 6, 6, 0.2F, 4F, 2F, true);
 		registerAlloy("electrum", "gold", "silver", 0.4F, 0.1875F, 6, 6, 0.2F, 2.5F, 2F, true);
-		ImmutableList<IMCMessage> list = FMLInterModComms.fetchRuntimeMessages(CommonOres.instance);
-		List<NBTTagCompound> metals = new ArrayList<NBTTagCompound>();
-		List<NBTTagCompound> alloys = new ArrayList<NBTTagCompound>();
-		for (IMCMessage imc : list) {
+		final ImmutableList<IMCMessage> list = FMLInterModComms.fetchRuntimeMessages(CommonOre.instance);
+		final List<NBTTagCompound> metals = new ArrayList<NBTTagCompound>();
+		final List<NBTTagCompound> alloys = new ArrayList<NBTTagCompound>();
+		for (final IMCMessage imc : list) {
 			if (imc.key.equalsIgnoreCase("commonMetal"))
 				metals.add(imc.getNBTValue());
 			if (imc.key.equalsIgnoreCase("commonAlloy"))
 				alloys.add(imc.getNBTValue());
 		}
-		for (NBTTagCompound tag : metals)
+		for (final NBTTagCompound tag : metals)
 			try {
 				boolean generate = false;
 				if (tag.hasKey("generate"))
 					generate = tag.getBoolean("generate");
 				registerOre(tag.getString("name"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"), generate);
 			}
-			catch (Exception e) {
-				System.err.println("CommonOre has detected a badly formatted metal registration.");
-			}
-		for (NBTTagCompound tag : alloys)
+		catch (final Exception e) {
+			System.err.println("CommonOre has detected a badly formatted metal registration.");
+		}
+		for (final NBTTagCompound tag : alloys)
 			try {
 				boolean generate = false;
 				if (tag.hasKey("generate"))
 					generate = tag.getBoolean("generate");
 				registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getString("secondary"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"), generate);
 			}
-			catch (Exception e) {
-				System.err.println("CommonOre has detected a badly formatted alloy registration.");
-			}
+		catch (final Exception e) {
+			System.err.println("CommonOre has detected a badly formatted alloy registration.");
+		}
 	}
 
 	public void init() {
 		available = false;
-		for (Metal metal : metals) {
+		for (final Metal metal : completeMetalList) {
 			GameRegistry.registerBlock(metal.ore, "ore" + metal.name);
 			GameRegistry.registerItem(metal.dust, "dust" + metal.name);
 			GameRegistry.registerItem(metal.ingot, "ingot" + metal.name);
@@ -135,46 +136,47 @@ public class MetalRegistry {
 	}
 
 	public void post() {
-		for (String name : namesRegistered) {
-			Metal metal = getCommon(name);
+		for (final String name : namesRegistered) {
+			final Metal metal = MetalRegistry.getCommon(name);
 			if (metal == null) {
 				System.out.println(name + " was not found to be a suitable CommoneOre");
 				continue;
 			}
 			System.out.println(name + " was found to be a suitable CommoneOre");
 			metal.setGeneration(true);
+			generatedMetalList.add(metal);
 		}
 	}
 
-	public void registerGeneration(String name, ItemStack ore) {
+	public void registerGeneration(final String name, final ItemStack ore) {
 		if (!available)
 			return;
 		namesRegistered.add(name);
 		oresRegistered.add(ore);
 	}
 
-	public void registerAlloy(String name, String primary, String secondary, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {
+	public void registerAlloy(final String name, final String primary, final String secondary, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {
 		registerAlloy(name, primary, secondary, chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance, false);
 	}
 
-	public void registerAlloy(String name, String primary, String secondary, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance, boolean generate) {
-		Metal metal = new Metal(name);
+	public void registerAlloy(final String name, final String primary, final String secondary, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance, final boolean generate) {
+		final Metal metal = new Metal(name);
 		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
 		metal.setGeneration(generate);
 		metal.setComponents(primary, secondary);
-		metals.add(metal);
+		completeMetalList.add(metal);
 		metalMap.put(name, metal);
 	}
 
-	public void registerOre(String name, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {
+	public void registerOre(final String name, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {
 		registerOre(name, chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance, false);
 	}
 
-	public void registerOre(String name, float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance, boolean generate) {
-		Metal metal = new Metal(name);
+	public void registerOre(final String name, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance, final boolean generate) {
+		final Metal metal = new Metal(name);
 		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
 		metal.setGeneration(generate);
-		metals.add(metal);
+		completeMetalList.add(metal);
 		metalMap.put(metal.name, metal);
 	}
 }

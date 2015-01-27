@@ -1,4 +1,4 @@
-package com.genuineminecraft.ores.interfaces;
+package com.genuineflix.co.interfaces;
 
 public interface IOre {
 

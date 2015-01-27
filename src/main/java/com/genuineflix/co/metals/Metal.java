@@ -1,12 +1,12 @@
-package com.genuineminecraft.ores.metals;
+package com.genuineflix.co.metals;
 
-import com.genuineminecraft.ores.blocks.Ore;
-import com.genuineminecraft.ores.blocks.Storage;
-import com.genuineminecraft.ores.interfaces.IAlloy;
-import com.genuineminecraft.ores.interfaces.IOre;
-import com.genuineminecraft.ores.items.Dust;
-import com.genuineminecraft.ores.items.Ingot;
-import com.genuineminecraft.ores.items.Nugget;
+import com.genuineflix.co.blocks.Ore;
+import com.genuineflix.co.blocks.Storage;
+import com.genuineflix.co.interfaces.IAlloy;
+import com.genuineflix.co.interfaces.IOre;
+import com.genuineflix.co.items.Dust;
+import com.genuineflix.co.items.Ingot;
+import com.genuineflix.co.items.Nugget;
 
 public class Metal implements IOre, IAlloy {
 
@@ -29,7 +29,7 @@ public class Metal implements IOre, IAlloy {
 	private boolean alloy;
 	private boolean generate = false;
 
-	public Metal(String name) {
+	public Metal(final String name) {
 		this.name = name;
 		nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 		ore = new Ore(this);
@@ -39,7 +39,7 @@ public class Metal implements IOre, IAlloy {
 		storage = new Storage(this);
 	}
 
-	public void setGeneration(boolean generate) {
+	public void setGeneration(final boolean generate) {
 		this.generate = generate;
 	}
 
@@ -103,19 +103,19 @@ public class Metal implements IOre, IAlloy {
 	}
 
 	@Override
-	public void setComponents(String primary, String secondary) {
+	public void setComponents(final String primary, final String secondary) {
 		this.primary = primary;
 		this.secondary = secondary;
 		alloy = true;
 	}
 
-	private void setComponents(Metal primary, Metal secondary) {
+	private void setComponents(final Metal primary, final Metal secondary) {
 		this.primary = primary.name;
 		this.secondary = secondary.name;
 		alloy = true;
 	}
 
-	public Metal setup(float chunkRarity, float depth, int nodesPerChunk, int nodeSize, float spread, float hardness, float resistance) {
+	public Metal setup(final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {
 		this.chunkRarity = chunkRarity;
 		this.depth = depth;
 		this.nodesPerChunk = nodesPerChunk;

@@ -1,15 +1,15 @@
-package com.genuineminecraft.ores.items;
+package com.genuineflix.co.items;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
-import com.genuineminecraft.ores.metals.Metal;
+import com.genuineflix.co.metals.Metal;
 
 public class Ingot extends Item {
 
 	public final Metal metal;
 
-	public Ingot(Metal metal) {
+	public Ingot(final Metal metal) {
 		this.metal = metal;
 		setUnlocalizedName("ingot" + metal.nameFixed);
 		setCreativeTab(CreativeTabs.tabMaterials);

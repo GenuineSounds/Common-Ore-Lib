@@ -1,4 +1,4 @@
-package com.genuineminecraft.ores.generator;
+package com.genuineflix.co.generator;
 
 import java.util.Random;
 
@@ -6,19 +6,20 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
+
+import com.genuineflix.co.CommonOre;
+
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class GeneratorFlatBedrock implements IWorldGenerator {
 
-	private void genEnd(World world, Random random, int chunkX, int chunkZ, boolean isHellBiome) {}
+	private void genEnd(final World world, final Random random, final int chunkX, final int chunkZ, final boolean isHellBiome) {}
 
 	@Override
-	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-		if (!chunkProvider.chunkExists(chunkX, chunkZ)) {
-			System.out.println("Skipping chunk at " + chunkX + ", " + chunkZ);
+	public void generate(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
+		if (CommonOre.isDisabled())
 			return;
-		}
-		boolean isHellBiome = world.getBiomeGenForCoords(chunkX, chunkZ) == BiomeGenBase.hell;
+		final boolean isHellBiome = world.getBiomeGenForCoords(chunkX, chunkZ) == BiomeGenBase.hell;
 		switch (world.provider.dimensionId) {
 			case -1:
 				genNether(world, random, chunkX, chunkZ, isHellBiome);
@@ -32,7 +33,7 @@ public class GeneratorFlatBedrock implements IWorldGenerator {
 		}
 	}
 
-	private void genNether(World world, Random random, int chunkX, int chunkZ, boolean isHellBiome) {
+	private void genNether(final World world, final Random random, final int chunkX, final int chunkZ, final boolean isHellBiome) {
 		for (int x = 0; x < 16; x++)
 			for (int z = 0; z < 16; z++) {
 				for (int y = 121; y < 125; y++)
@@ -44,7 +45,7 @@ public class GeneratorFlatBedrock implements IWorldGenerator {
 			}
 	}
 
-	private void genOverworld(World world, Random random, int chunkX, int chunkZ, boolean isHellBiome) {
+	private void genOverworld(final World world, final Random random, final int chunkX, final int chunkZ, final boolean isHellBiome) {
 		for (int x = 0; x < 16; x++)
 			for (int z = 0; z < 16; z++)
 				for (int y = 1; y < 6; y++)

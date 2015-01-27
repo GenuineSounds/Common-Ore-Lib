@@ -1,16 +1,16 @@
-package com.genuineminecraft.ores.blocks;
+package com.genuineflix.co.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.creativetab.CreativeTabs;
 
-import com.genuineminecraft.ores.metals.Metal;
+import com.genuineflix.co.metals.Metal;
 
 public class Ore extends BlockOre {
 
 	public final Metal metal;
 
-	public Ore(Metal metal) {
+	public Ore(final Metal metal) {
 		super();
 		this.metal = metal;
 		setBlockName("ore" + metal.nameFixed);

@@ -1,16 +1,15 @@
-package com.genuineminecraft.ores.events;
+package com.genuineflix.co.events;
 
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 
-import com.genuineminecraft.ores.registry.MetalRegistry;
+import com.genuineflix.co.registry.MetalRegistry;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class RegisterOreEvent {
 
 	@SubscribeEvent
-	public void registerOreEvent(OreRegisterEvent event) {
+	public void registerOreEvent(final OreRegisterEvent event) {
 		MetalRegistry.getInstance().registerGeneration(event.Name, event.Ore);
 	}
 }

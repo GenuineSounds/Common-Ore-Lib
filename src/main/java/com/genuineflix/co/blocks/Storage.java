@@ -5,6 +5,7 @@ import net.minecraft.block.BlockCompressed;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.creativetab.CreativeTabs;
 
+import com.genuineflix.co.CommonOre;
 import com.genuineflix.co.metals.Metal;
 
 public class Storage extends BlockCompressed {
@@ -17,7 +18,7 @@ public class Storage extends BlockCompressed {
 		setBlockName("block" + metal.nameFixed);
 		setCreativeTab(CreativeTabs.tabBlock);
 		setStepSound(Block.soundTypeMetal);
-		setBlockTextureName("CommonOres:blocks/" + metal.nameFixed);
+		setBlockTextureName(CommonOre.MODID + ":blocks/" + metal.nameFixed);
 	}
 
 	public void setup() {

@@ -3,6 +3,7 @@ package com.genuineflix.co.items;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
+import com.genuineflix.co.CommonOre;
 import com.genuineflix.co.metals.Metal;
 
 public class Dust extends Item {
@@ -13,6 +14,6 @@ public class Dust extends Item {
 		this.metal = metal;
 		setUnlocalizedName("dust" + metal.nameFixed);
 		setCreativeTab(CreativeTabs.tabMaterials);
-		setTextureName("CommonOres:dusts/" + metal.nameFixed);
+		setTextureName(CommonOre.MODID + ":dusts/" + metal.nameFixed);
 	}
 }

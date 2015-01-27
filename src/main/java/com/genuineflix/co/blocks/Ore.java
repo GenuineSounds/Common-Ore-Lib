@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockOre;
 import net.minecraft.creativetab.CreativeTabs;
 
+import com.genuineflix.co.CommonOre;
 import com.genuineflix.co.metals.Metal;
 
 public class Ore extends BlockOre {
@@ -16,7 +17,7 @@ public class Ore extends BlockOre {
 		setBlockName("ore" + metal.nameFixed);
 		setCreativeTab(CreativeTabs.tabBlock);
 		setStepSound(Block.soundTypeStone);
-		setBlockTextureName("CommonOres:ores/" + metal.nameFixed);
+		setBlockTextureName(CommonOre.MODID + ":ores/" + metal.nameFixed);
 	}
 
 	public void setup() {

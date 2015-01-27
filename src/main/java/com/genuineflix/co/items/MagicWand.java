@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
+import com.genuineflix.co.CommonOre;
 import com.genuineflix.co.registry.MetalRegistry;
 import com.genuineflix.co.utils.Utility;
 
@@ -16,7 +17,7 @@ public class MagicWand extends ItemShears {
 
 	public MagicWand() {
 		setUnlocalizedName("magicWand");
-		setTextureName("CommonOres:debug/Wand");
+		setTextureName(CommonOre.MODID + ":debug/Wand");
 	}
 
 	@Override

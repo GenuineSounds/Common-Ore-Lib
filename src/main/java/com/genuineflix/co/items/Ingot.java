@@ -3,6 +3,7 @@ package com.genuineflix.co.items;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
+import com.genuineflix.co.CommonOre;
 import com.genuineflix.co.metals.Metal;
 
 public class Ingot extends Item {
@@ -13,6 +14,6 @@ public class Ingot extends Item {
 		this.metal = metal;
 		setUnlocalizedName("ingot" + metal.nameFixed);
 		setCreativeTab(CreativeTabs.tabMaterials);
-		setTextureName("CommonOres:ingots/" + metal.nameFixed);
+		setTextureName(CommonOre.MODID + ":ingots/" + metal.nameFixed);
 	}
 }

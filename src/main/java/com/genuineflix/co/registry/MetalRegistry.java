@@ -8,7 +8,6 @@ import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.OreDictionary;
 
 import com.genuineflix.co.CommonOre;
 import com.genuineflix.co.metals.Metal;
@@ -63,6 +62,7 @@ public class MetalRegistry {
 	private boolean available = true;
 
 	public void pre() {
+		available = false;
 		registerOre("aluminium", 1F, 1F, 6, 6, 0.2F, 3F, 2F, true);
 		registerOre("zinc", 1F, 0.9375F, 6, 6, 0.2F, 2.5F, 2F, true);
 		registerOre("copper", 1F, 0.8125F, 6, 6, 0.2F, 3F, 2F, true);
@@ -109,6 +109,7 @@ public class MetalRegistry {
 			catch (final Exception e) {
 				System.err.println("CommonOre has detected a badly formatted alloy registration.");
 			}
+		available = true;
 	}
 
 	public void init() {
@@ -119,12 +120,6 @@ public class MetalRegistry {
 			GameRegistry.registerItem(metal.ingot, "ingot" + metal.name);
 			GameRegistry.registerItem(metal.nugget, "nugget" + metal.name);
 			GameRegistry.registerBlock(metal.storage, "storage" + metal.name);
-			OreDictionary.registerOre("ore" + metal.name, metal.ore);
-			OreDictionary.registerOre("dust" + metal.name, metal.dust);
-			OreDictionary.registerOre("pulv" + metal.name, metal.dust);
-			OreDictionary.registerOre("ingot" + metal.name, metal.ingot);
-			OreDictionary.registerOre("nugget" + metal.name, metal.nugget);
-			OreDictionary.registerOre("storage" + metal.name, metal.storage);
 			GameRegistry.addSmelting(metal.ore, new ItemStack(metal.ingot), 10);
 			GameRegistry.addSmelting(metal.dust, new ItemStack(metal.ingot), 10);
 			GameRegistry.addShapelessRecipe(new ItemStack(metal.nugget, 9), metal.ingot);
@@ -167,6 +162,7 @@ public class MetalRegistry {
 		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
 		metal.setGeneration(generate);
 		metal.setComponents(primary, secondary);
+		metal.registerOres();
 		completeMetalList.add(metal);
 		metalMap.put(name, metal);
 	}
@@ -179,6 +175,7 @@ public class MetalRegistry {
 		final Metal metal = new Metal(name);
 		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
 		metal.setGeneration(generate);
+		metal.registerOres();
 		completeMetalList.add(metal);
 		metalMap.put(metal.name, metal);
 	}

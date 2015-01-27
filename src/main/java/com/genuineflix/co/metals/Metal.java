@@ -1,5 +1,7 @@
 package com.genuineflix.co.metals;
 
+import net.minecraftforge.oredict.OreDictionary;
+
 import com.genuineflix.co.blocks.Ore;
 import com.genuineflix.co.blocks.Storage;
 import com.genuineflix.co.interfaces.IAlloy;
@@ -126,5 +128,14 @@ public class Metal implements IOre, IAlloy {
 		ore.setup();
 		storage.setup();
 		return this;
+	}
+	
+	public void registerOres() {
+		OreDictionary.registerOre("ore" + name, ore);
+		OreDictionary.registerOre("dust" + name, dust);
+		OreDictionary.registerOre("pulv" + name, dust);
+		OreDictionary.registerOre("ingot" + name, ingot);
+		OreDictionary.registerOre("nugget" + name, nugget);
+		OreDictionary.registerOre("storage" + name, storage);
 	}
 }

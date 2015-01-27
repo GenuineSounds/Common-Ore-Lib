@@ -134,18 +134,18 @@ public class Metal implements IOre, IAlloy {
 		return this;
 	}
 
-	public void registerOres() {
-		GameRegistry.registerBlock(ore, "ore" + name);
-		GameRegistry.registerItem(dust, "dust" + name);
-		GameRegistry.registerItem(ingot, "ingot" + name);
-		GameRegistry.registerItem(nugget, "nugget" + name);
-		GameRegistry.registerBlock(storage, "storage" + name);
-		OreDictionary.registerOre("ore" + name, ore);
-		OreDictionary.registerOre("dust" + name, dust);
-		OreDictionary.registerOre("pulv" + name, dust);
-		OreDictionary.registerOre("ingot" + name, ingot);
-		OreDictionary.registerOre("nugget" + name, nugget);
-		OreDictionary.registerOre("storage" + name, storage);
+	public void registerOre() {
+		GameRegistry.registerBlock(ore, "ore" + nameFixed);
+		GameRegistry.registerItem(dust, "dust" + nameFixed);
+		GameRegistry.registerItem(ingot, "ingot" + nameFixed);
+		GameRegistry.registerItem(nugget, "nugget" + nameFixed);
+		GameRegistry.registerBlock(storage, "storage" + nameFixed);
+		OreDictionary.registerOre("ore" + nameFixed, ore);
+		OreDictionary.registerOre("dust" + nameFixed, dust);
+		OreDictionary.registerOre("pulv" + nameFixed, dust);
+		OreDictionary.registerOre("ingot" + nameFixed, ingot);
+		OreDictionary.registerOre("nugget" + nameFixed, nugget);
+		OreDictionary.registerOre("storage" + nameFixed, storage);
 		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(ore));
 		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(storage));
 	}

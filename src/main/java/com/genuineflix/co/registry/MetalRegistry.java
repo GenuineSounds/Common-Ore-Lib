@@ -15,7 +15,6 @@ import com.google.common.collect.ImmutableList;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLInterModComms.IMCMessage;
-import cpw.mods.fml.common.registry.GameRegistry;
 
 public class MetalRegistry {
 
@@ -146,7 +145,7 @@ public class MetalRegistry {
 		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
 		metal.setGeneration(generate);
 		metal.setComponents(primary, secondary);
-		metal.registerOres();
+		metal.registerOre();
 		completeMetalList.add(metal);
 		metalMap.put(name, metal);
 	}
@@ -159,7 +158,7 @@ public class MetalRegistry {
 		final Metal metal = new Metal(name);
 		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
 		metal.setGeneration(generate);
-		metal.registerOres();
+		metal.registerOre();
 		completeMetalList.add(metal);
 		metalMap.put(metal.name, metal);
 	}

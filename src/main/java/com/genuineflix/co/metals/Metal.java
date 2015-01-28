@@ -1,5 +1,7 @@
 package com.genuineflix.co.metals;
 
+import java.util.ArrayList;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -10,6 +12,7 @@ import com.genuineflix.co.interfaces.IOre;
 import com.genuineflix.co.items.Dust;
 import com.genuineflix.co.items.Ingot;
 import com.genuineflix.co.items.Nugget;
+import com.genuineflix.co.utils.Utility;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -33,6 +36,7 @@ public class Metal implements IOre, IAlloy {
 	private String primary;
 	private String secondary;
 	private boolean alloy;
+	private boolean nonCommonAlloy;
 	private boolean generate;
 
 	public Metal(final String name) {
@@ -46,6 +50,8 @@ public class Metal implements IOre, IAlloy {
 	}
 
 	public void setGeneration(final boolean generate) {
+		if (!this.generate && generate)
+			System.out.println("[CommonOre] Setting " + nameFixed + " to generate");
 		this.generate = generate;
 	}
 
@@ -88,6 +94,10 @@ public class Metal implements IOre, IAlloy {
 		return primary;
 	}
 
+	public String getPrimaryOreDict() {
+		return Utility.fixCamelCase("ore", getPrimaryComponent());
+	}
+
 	@Override
 	public float getResistance() {
 		return resistance;
@@ -96,6 +106,10 @@ public class Metal implements IOre, IAlloy {
 	@Override
 	public String getSecondaryComponent() {
 		return secondary;
+	}
+
+	public String getSecondaryOreDict() {
+		return Utility.fixCamelCase("ore", getSecondaryComponent());
 	}
 
 	@Override
@@ -109,16 +123,31 @@ public class Metal implements IOre, IAlloy {
 	}
 
 	@Override
+	public boolean isNonCommon() {
+		return nonCommonAlloy;
+	};
+
+	public void setComponents(final Metal primary, final Metal secondary) {
+		setComponents(primary.name, secondary.name, false);
+	}
+
 	public void setComponents(final String primary, final String secondary) {
+		setComponents(primary, secondary, true);
+	}
+
+	private void setComponents(final String primary, final String secondary, final boolean nonCommon) {
 		this.primary = primary;
 		this.secondary = secondary;
 		alloy = true;
+		nonCommonAlloy = nonCommon;
 	}
 
-	private void setComponents(final Metal primary, final Metal secondary) {
-		this.primary = primary.name;
-		this.secondary = secondary.name;
-		alloy = true;
+	public ArrayList<ItemStack> getOreListFromPrimaryComponent() {
+		return OreDictionary.getOres(Utility.fixCamelCase("ore", getPrimaryComponent()));
+	}
+
+	public ArrayList<ItemStack> getOreListFromSecondaryComponent() {
+		return OreDictionary.getOres(Utility.fixCamelCase("ore", getSecondaryComponent()));
 	}
 
 	public Metal setup(final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {

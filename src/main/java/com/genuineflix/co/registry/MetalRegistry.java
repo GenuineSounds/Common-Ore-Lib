@@ -5,14 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 
 import com.genuineflix.co.CommonOre;
 import com.genuineflix.co.metals.Metal;
+import com.genuineflix.co.utils.Utility;
 import com.google.common.collect.ImmutableList;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -21,70 +19,30 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class MetalRegistry {
 
-	public static String cleanName(String name) {
-		name = name.replaceAll("^(.+?)\\.", "");
-		name = name.replaceAll("^ore|ore$", "");
-		name = name.replaceAll("^dust|dust$", "");
-		name = name.replaceAll("^pulv|pulv$", "");
-		name = name.replaceAll("^ingot|ingot$", "");
-		name = name.replaceAll("^nugget|nugget$", "");
-		name = name.replaceAll("^storage|storage$", "");
-		return name.toLowerCase();
-	}
-
 	public static final MetalRegistry instance = new MetalRegistry();
-
-	public static List<Metal> getAllMetals() {
-		return MetalRegistry.instance.completeMetalList;
-	}
+	private final List<Metal> completeMetalList = new ArrayList<Metal>();
+	private final List<Metal> generatedMetalList = new ArrayList<Metal>();
+	private final Map<String, Metal> nameToMetal = new HashMap<String, Metal>();
+	private final List<String> oresRegistered = new ArrayList<String>();
+	private boolean available = true;
 
 	public List<Metal> getGeneratedMetals() {
 		return generatedMetalList;
 	}
 
-	public boolean isCommon(final Block block) {
-		return block != null && isCommon(block.getUnlocalizedName());
+	public List<Metal> getAllMetals() {
+		return completeMetalList;
 	}
 
-	public boolean isCommon(final Item item) {
-		return item != null && isCommon(item.getUnlocalizedName());
+	@SubscribeEvent
+	public void registerOreEvent(final OreRegisterEvent event) {
+		if (Utility.isCommonName(event.Name)) {
+			Utility.cacheCommon(event.Ore);
+			if (!available)
+				return;
+			oresRegistered.add(Utility.cleanName(event.Name));
+		}
 	}
-
-	public boolean isCommon(final ItemStack stack) {
-		return stack != null && isCommon(stack.getUnlocalizedName());
-	}
-
-	public boolean isCommon(final String name) {
-		return metalMap.containsKey(MetalRegistry.cleanName(name));
-	}
-
-	public Metal getCommon(final Block block) {
-		if (block == null)
-			return null;
-		return getCommon(block.getUnlocalizedName());
-	}
-
-	public Metal getCommon(final Item item) {
-		if (item == null)
-			return null;
-		return getCommon(item.getUnlocalizedName());
-	}
-
-	public Metal getCommon(final ItemStack stack) {
-		if (stack == null)
-			return null;
-		return getCommon(stack.getUnlocalizedName());
-	}
-
-	public Metal getCommon(final String name) {
-		return metalMap.get(MetalRegistry.cleanName(name));
-	}
-
-	private final List<Metal> completeMetalList = new ArrayList<Metal>();
-	private final List<Metal> generatedMetalList = new ArrayList<Metal>();
-	private final Map<String, Metal> metalMap = new HashMap<String, Metal>();
-	private final List<ItemStack> oresRegistered = new ArrayList<ItemStack>();
-	private boolean available = true;
 
 	public void pre() {
 		available = false;
@@ -143,22 +101,14 @@ public class MetalRegistry {
 	}
 
 	public void post() {
-		for (final ItemStack stack : oresRegistered) {
-			final Metal metal = getCommon(stack);
+		for (final String name : oresRegistered) {
+			final Metal metal = getCommonMetal(name);
 			if (metal == null)
 				continue;
-			System.out.println("[CommoneOre]: " + stack + " was found to be a suitable.");
 			metal.setGeneration(true);
-			generatedMetalList.add(metal);
+			if (!generatedMetalList.contains(metal))
+				generatedMetalList.add(metal);
 		}
-	}
-
-	@SubscribeEvent
-	public void registerOreEvent(final OreRegisterEvent event) {
-		System.out.println("[CommonOre]: " + available + ": " + event.Name);
-		if (!available)
-			return;
-		oresRegistered.add(event.Ore);
 	}
 
 	public void registerAlloy(final String name, final String primary, final String secondary, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {
@@ -169,10 +119,13 @@ public class MetalRegistry {
 		final Metal metal = new Metal(name);
 		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
 		metal.setGeneration(generate);
-		metal.setComponents(primary, secondary);
-		metal.registerOre();
+		if (!isCommonMetal(primary) || !isCommonMetal(secondary))
+			metal.setComponents(primary, secondary);
+		else
+			metal.setComponents(getCommonMetal(primary), getCommonMetal(secondary));
 		completeMetalList.add(metal);
-		metalMap.put(name, metal);
+		nameToMetal.put(name, metal);
+		metal.registerOre();
 	}
 
 	public void registerOre(final String name, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {
@@ -183,8 +136,16 @@ public class MetalRegistry {
 		final Metal metal = new Metal(name);
 		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
 		metal.setGeneration(generate);
-		metal.registerOre();
 		completeMetalList.add(metal);
-		metalMap.put(metal.name, metal);
+		nameToMetal.put(metal.name, metal);
+		metal.registerOre();
+	}
+
+	private boolean isCommonMetal(final String name) {
+		return nameToMetal.containsKey(name);
+	}
+
+	private Metal getCommonMetal(final String name) {
+		return nameToMetal.get(name);
 	}
 }

@@ -3,21 +3,29 @@ package com.genuineflix.co.utils;
 import gnu.trove.map.hash.TIntIntHashMap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import com.genuineflix.co.metals.Metal;
-import com.genuineflix.co.registry.MetalRegistry;
 
 public class Utility {
 
-	public static TIntIntHashMap cachedHeight = new TIntIntHashMap();
-	public static ChunkMap<List<Metal>> metalsGenerated = new ChunkMap<List<Metal>>();
+	public static final List<String> commonList = Arrays.asList(new String[] {
+			"coal", "aluminium", "zinc", "copper", "tin", "lead", "iron", "nickel", "tungsten", "silver", "gold", "titanium", "platinum", "brass", "bronze", "steel", "invar", "electrum"
+	});
+	private static TIntIntHashMap cachedHeight = new TIntIntHashMap();
+	private static ChunkMap<List<Metal>> metalsGenerated = new ChunkMap<List<Metal>>();
+	private static Map<String, String> componentCache = new HashMap<String, String>();
+	private static List<String> commonCache = new ArrayList<String>();
 
 	public static int findHighestBlock(final IBlockAccess ba, final Chunk chunk) {
 		final int hash = Utility.hashChunk(chunk);
@@ -47,6 +55,18 @@ public class Utility {
 		}
 	}
 
+	public static void cacheCommon(final ItemStack stack) {
+		Utility.commonCache.add(stack.getUnlocalizedName());
+	}
+
+	public static boolean isCached(final ItemStack stack) {
+		return stack != null && Utility.commonCache.contains(stack.getUnlocalizedName());
+	}
+
+	public static boolean isCommonName(final String name) {
+		return Utility.commonList.contains(Utility.cleanName(name));
+	}
+
 	public static boolean presentInChunk(final Metal metal, final Chunk chunk) {
 		if (!Utility.metalsGenerated.contains(chunk))
 			return false;
@@ -71,13 +91,53 @@ public class Utility {
 					if (!world.blockExists(x + xd, y + yd, z + zd))
 						continue;
 					final Block block = world.getBlock(x + xd, y + yd, z + zd);
-					if (block == MetalRegistry.instance.getCommon(metal.getPrimaryComponent()).ore)
-						foundPrimary = true;
-					if (block == MetalRegistry.instance.getCommon(metal.getSecondaryComponent()).ore)
-						foundSecondary = true;
+					final int meta = world.getBlockMetadata(x + xd, y + yd, z + zd);
+					final ItemStack stack = new ItemStack(block, 1, meta);
+					if (Utility.componentCache.containsKey(stack.getUnlocalizedName())) {
+						if (Utility.componentCache.get(stack.getUnlocalizedName()).equals(metal.getPrimaryOreDict()))
+							foundPrimary = true;
+						if (Utility.componentCache.get(stack.getUnlocalizedName()).equals(metal.getSecondaryOreDict()))
+							foundSecondary = true;
+					} else {
+						final ArrayList<ItemStack> priStacks = metal.getOreListFromPrimaryComponent();
+						final ArrayList<ItemStack> secStacks = metal.getOreListFromSecondaryComponent();
+						for (final ItemStack testStack : priStacks) {
+							if (!testStack.isItemEqual(stack))
+								continue;
+							foundPrimary = true;
+							Utility.componentCache.put(stack.getUnlocalizedName(), metal.getPrimaryOreDict());
+						}
+						for (final ItemStack testStack : secStacks) {
+							if (!testStack.isItemEqual(stack))
+								continue;
+							foundSecondary = true;
+							Utility.componentCache.put(stack.getUnlocalizedName(), metal.getSecondaryOreDict());
+						}
+					}
 					if (foundPrimary && foundSecondary)
 						return true;
 				}
 		return false;
 	}
+
+	public static String cleanName(String name) {
+		final String old = name;
+		name = name.replaceAll("^(.+?)\\.", "");
+		for (final String string : Utility.fixes) {
+			name = name.replaceAll("^" + string, "");
+			name = name.replaceAll(string + "$", "");
+		}
+		if ("aluminum".equalsIgnoreCase(name))
+			name = "aluminium";
+		name = name.toLowerCase();
+		return name;
+	}
+
+	public static String fixCamelCase(final String prefix, final String str) {
+		return prefix.toLowerCase() + str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+	}
+
+	public static final String[] fixes = {
+			"ore", "dust", "pulv(erized*)*", "ingot", "nugget", "storage", "compress(ed)*"
+	};
 }

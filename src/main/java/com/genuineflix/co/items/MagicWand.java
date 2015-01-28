@@ -1,5 +1,6 @@
 package com.genuineflix.co.items;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemShears;
@@ -8,7 +9,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import com.genuineflix.co.CommonOre;
-import com.genuineflix.co.registry.MetalRegistry;
 import com.genuineflix.co.utils.Utility;
 
 public class MagicWand extends ItemShears {
@@ -21,9 +21,9 @@ public class MagicWand extends ItemShears {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(final ItemStack stack, final World world, final EntityPlayer player) {
+	public ItemStack onItemRightClick(final ItemStack thisStack, final World world, final EntityPlayer player) {
 		if (world.isRemote)
-			return stack;
+			return thisStack;
 		int commonTotal = 0;
 		final int square = 1;
 		for (int ix = -square; ix <= square; ix++)
@@ -33,14 +33,21 @@ public class MagicWand extends ItemShears {
 				final int yMax = Utility.findHighestBlock(world, chunk);
 				for (int x = 0; x < 16; x++)
 					for (int z = 0; z < 16; z++)
-						for (int y = yMax; y > 0; y--)
-							if (!MetalRegistry.instance.isCommon(chunk.getBlock(x, y, z)))
-								world.setBlock(chunk.xPosition * 16 + x, y, chunk.zPosition * 16 + z, Blocks.air);
+						for (int y = yMax; y > 0; y--) {
+							final int worldX = chunk.xPosition * 16 + x;
+							final int worldZ = chunk.zPosition * 16 + z;
+							final Block block = chunk.getBlock(x, y, z);
+							if (block.isAir(world, worldX, y, worldZ))
+								continue;
+							final int meta = world.getBlockMetadata(worldX, y, worldZ);
+							final ItemStack stack = new ItemStack(block, 1, meta);
+							if (!Utility.isCached(stack))
+								world.setBlock(worldX, y, worldZ, Blocks.air);
 							else
 								commonCount++;
+						}
 				commonTotal += commonCount;
-				System.out.println("Max Block Height: " + yMax + ", " + commonCount + " Common Ores found.");
 			}
-		return stack;
+		return thisStack;
 	}
 }

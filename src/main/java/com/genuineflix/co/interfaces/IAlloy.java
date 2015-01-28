@@ -8,5 +8,5 @@ public interface IAlloy {
 
 	public boolean isAlloy();
 
-	public void setComponents(String primary, String secondary);
+	public boolean isNonCommon();
 }

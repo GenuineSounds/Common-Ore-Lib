@@ -26,21 +26,35 @@ public class MetalRegistry {
 	private final List<String> oresRegistered = new ArrayList<String>();
 	private boolean available = true;
 
-	public List<Metal> getGeneratedMetals() {
-		return generatedMetalList;
-	}
-
 	public List<Metal> getAllMetals() {
 		return completeMetalList;
 	}
 
-	@SubscribeEvent
-	public void registerOreEvent(final OreRegisterEvent event) {
-		if (Utility.isCommonName(event.Name)) {
-			Utility.cacheCommon(event.Ore);
-			if (!available)
-				return;
-			oresRegistered.add(Utility.cleanName(event.Name));
+	private Metal getCommonMetal(final String name) {
+		return nameToMetal.get(name);
+	}
+
+	public List<Metal> getGeneratedMetals() {
+		return generatedMetalList;
+	}
+
+	public void init() {
+		for (final Metal metal : completeMetalList)
+			metal.registerRecipes();
+	}
+
+	private boolean isCommonMetal(final String name) {
+		return nameToMetal.containsKey(name);
+	}
+
+	public void post() {
+		for (final String name : oresRegistered) {
+			final Metal metal = getCommonMetal(name);
+			if (metal == null)
+				continue;
+			metal.setGeneration(true);
+			if (!generatedMetalList.contains(metal))
+				generatedMetalList.add(metal);
 		}
 	}
 
@@ -95,22 +109,6 @@ public class MetalRegistry {
 		available = true;
 	}
 
-	public void init() {
-		for (final Metal metal : completeMetalList)
-			metal.registerRecipes();
-	}
-
-	public void post() {
-		for (final String name : oresRegistered) {
-			final Metal metal = getCommonMetal(name);
-			if (metal == null)
-				continue;
-			metal.setGeneration(true);
-			if (!generatedMetalList.contains(metal))
-				generatedMetalList.add(metal);
-		}
-	}
-
 	public void registerAlloy(final String name, final String primary, final String secondary, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {
 		registerAlloy(name, primary, secondary, chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance, false);
 	}
@@ -141,11 +139,13 @@ public class MetalRegistry {
 		metal.registerOre();
 	}
 
-	private boolean isCommonMetal(final String name) {
-		return nameToMetal.containsKey(name);
-	}
-
-	private Metal getCommonMetal(final String name) {
-		return nameToMetal.get(name);
+	@SubscribeEvent
+	public void registerOreEvent(final OreRegisterEvent event) {
+		if (Utility.isCommonName(event.Name)) {
+			Utility.cacheCommon(event.Ore);
+			if (!available)
+				return;
+			oresRegistered.add(Utility.cleanName(event.Name));
+		}
 	}
 }

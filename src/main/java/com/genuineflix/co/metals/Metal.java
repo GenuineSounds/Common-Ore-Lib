@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.genuineflix.co.CommonOre;
 import com.genuineflix.co.blocks.Ore;
 import com.genuineflix.co.blocks.Storage;
 import com.genuineflix.co.interfaces.IAlloy;
@@ -49,16 +50,6 @@ public class Metal implements IOre, IAlloy {
 		storage = new Storage(this);
 	}
 
-	public void setGeneration(final boolean generate) {
-		if (!this.generate && generate)
-			System.out.println("[CommonOre] Setting " + nameFixed + " to generate");
-		this.generate = generate;
-	}
-
-	public boolean willGenerate() {
-		return generate;
-	}
-
 	@Override
 	public float getChunkRarity() {
 		return chunkRarity;
@@ -87,6 +78,14 @@ public class Metal implements IOre, IAlloy {
 	@Override
 	public int getNodesPerChunk() {
 		return nodesPerChunk;
+	}
+
+	public ArrayList<ItemStack> getOreListFromPrimaryComponent() {
+		return OreDictionary.getOres(Utility.fixCamelCase("ore", getPrimaryComponent()));
+	}
+
+	public ArrayList<ItemStack> getOreListFromSecondaryComponent() {
+		return OreDictionary.getOres(Utility.fixCamelCase("ore", getSecondaryComponent()));
 	}
 
 	@Override
@@ -127,42 +126,6 @@ public class Metal implements IOre, IAlloy {
 		return nonCommonAlloy;
 	};
 
-	public void setComponents(final Metal primary, final Metal secondary) {
-		setComponents(primary.name, secondary.name, false);
-	}
-
-	public void setComponents(final String primary, final String secondary) {
-		setComponents(primary, secondary, true);
-	}
-
-	private void setComponents(final String primary, final String secondary, final boolean nonCommon) {
-		this.primary = primary;
-		this.secondary = secondary;
-		alloy = true;
-		nonCommonAlloy = nonCommon;
-	}
-
-	public ArrayList<ItemStack> getOreListFromPrimaryComponent() {
-		return OreDictionary.getOres(Utility.fixCamelCase("ore", getPrimaryComponent()));
-	}
-
-	public ArrayList<ItemStack> getOreListFromSecondaryComponent() {
-		return OreDictionary.getOres(Utility.fixCamelCase("ore", getSecondaryComponent()));
-	}
-
-	public Metal setup(final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {
-		this.chunkRarity = chunkRarity;
-		this.depth = depth;
-		this.nodesPerChunk = nodesPerChunk;
-		this.nodeSize = nodeSize;
-		this.spread = spread;
-		this.hardness = hardness;
-		this.resistance = resistance;
-		ore.setup();
-		storage.setup();
-		return this;
-	}
-
 	public void registerOre() {
 		GameRegistry.registerBlock(ore, "ore" + nameFixed);
 		GameRegistry.registerItem(dust, "dust" + nameFixed);
@@ -186,5 +149,43 @@ public class Metal implements IOre, IAlloy {
 		GameRegistry.addShapelessRecipe(new ItemStack(storage), ingot, ingot, ingot, ingot, ingot, ingot, ingot, ingot, ingot);
 		GameRegistry.addShapelessRecipe(new ItemStack(ingot), nugget, nugget, nugget, nugget, nugget, nugget, nugget, nugget, nugget);
 		GameRegistry.addShapelessRecipe(new ItemStack(ingot, 9), storage);
+	}
+
+	public void setComponents(final Metal primary, final Metal secondary) {
+		setComponents(primary.name, secondary.name, false);
+	}
+
+	public void setComponents(final String primary, final String secondary) {
+		setComponents(primary, secondary, true);
+	}
+
+	private void setComponents(final String primary, final String secondary, final boolean nonCommon) {
+		this.primary = primary;
+		this.secondary = secondary;
+		alloy = true;
+		nonCommonAlloy = nonCommon;
+	}
+
+	public void setGeneration(final boolean generate) {
+		if (!this.generate && generate)
+			CommonOre.log.info("[CommonOre] Setting " + nameFixed + " to generate");
+		this.generate = generate;
+	}
+
+	public Metal setup(final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {
+		this.chunkRarity = chunkRarity;
+		this.depth = depth;
+		this.nodesPerChunk = nodesPerChunk;
+		this.nodeSize = nodeSize;
+		this.spread = spread;
+		this.hardness = hardness;
+		this.resistance = resistance;
+		ore.setup();
+		storage.setup();
+		return this;
+	}
+
+	public boolean willGenerate() {
+		return generate;
 	}
 }

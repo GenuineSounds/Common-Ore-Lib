@@ -2,6 +2,9 @@ package com.genuineflix.co;
 
 import net.minecraftforge.common.MinecraftForge;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.genuineflix.co.config.Config;
 import com.genuineflix.co.events.OreGenerationEvent;
 import com.genuineflix.co.generator.GeneratorAlloyOre;
@@ -26,18 +29,11 @@ public class CommonOre {
 	public static final String MODID = "CommonOre";
 	public static final String NAME = "Common Ore";
 	public static final String VERSION = "1.0.8";
+	public static Logger log = LogManager.getLogger(MODID);
 	public static Config config;
 
 	public CommonOre() {
 		MinecraftForge.EVENT_BUS.register(MetalRegistry.instance);
-	}
-
-	@EventHandler
-	public void pre(final FMLPreInitializationEvent event) {
-		CommonOre.config = new Config(event);
-		MinecraftForge.ORE_GEN_BUS.register(new OreGenerationEvent());
-		MetalRegistry.instance.pre();
-		CommonOre.config.pre();
 	}
 
 	@EventHandler
@@ -57,5 +53,13 @@ public class CommonOre {
 	public void post(final FMLPostInitializationEvent event) {
 		MetalRegistry.instance.post();
 		CommonOre.config.post();
+	}
+
+	@EventHandler
+	public void pre(final FMLPreInitializationEvent event) {
+		CommonOre.config = new Config(event);
+		MinecraftForge.ORE_GEN_BUS.register(new OreGenerationEvent());
+		MetalRegistry.instance.pre();
+		CommonOre.config.pre();
 	}
 }

@@ -34,7 +34,7 @@ public class MagicWand extends ItemShears {
 				for (int x = 0; x < 16; x++)
 					for (int z = 0; z < 16; z++)
 						for (int y = yMax; y > 0; y--)
-							if (!MetalRegistry.isCommon(chunk.getBlock(x, y, z)))
+							if (!MetalRegistry.instance.isCommon(chunk.getBlock(x, y, z)))
 								world.setBlock(chunk.xPosition * 16 + x, y, chunk.zPosition * 16 + z, Blocks.air);
 							else
 								commonCount++;

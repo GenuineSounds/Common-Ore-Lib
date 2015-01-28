@@ -71,9 +71,9 @@ public class Utility {
 					if (!world.blockExists(x + xd, y + yd, z + zd))
 						continue;
 					final Block block = world.getBlock(x + xd, y + yd, z + zd);
-					if (MetalRegistry.getCommon(metal.getPrimaryComponent()).ore == block)
+					if (block == MetalRegistry.instance.getCommon(metal.getPrimaryComponent()).ore)
 						foundPrimary = true;
-					if (MetalRegistry.getCommon(metal.getSecondaryComponent()).ore == block)
+					if (block == MetalRegistry.instance.getCommon(metal.getSecondaryComponent()).ore)
 						foundSecondary = true;
 					if (foundPrimary && foundSecondary)
 						return true;

@@ -21,8 +21,8 @@ public class GeneratorCommonOre implements IWorldGenerator {
 			return;
 		final Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
 		final int yMax = Utility.findHighestBlock(world, chunk);
-		for (final Metal metal : MetalRegistry.getMetals()) {
-			if (metal.isAlloy() || !metal.willGenerate())
+		for (final Metal metal : MetalRegistry.instance.getGeneratedMetals()) {
+			if (metal.isAlloy())
 				continue;
 			final int nodes = metal.getNodesPerChunk() + 1;
 			final CommonGenMinable gen = new CommonGenMinable(metal.ore, metal.getNodeSize());

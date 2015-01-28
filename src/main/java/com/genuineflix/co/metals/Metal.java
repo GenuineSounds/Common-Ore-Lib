@@ -33,7 +33,7 @@ public class Metal implements IOre, IAlloy {
 	private String primary;
 	private String secondary;
 	private boolean alloy;
-	private boolean generate = false;
+	private boolean generate;
 
 	public Metal(final String name) {
 		this.name = name;

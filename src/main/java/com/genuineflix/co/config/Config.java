@@ -30,15 +30,15 @@ public class Config {
 	public void init() {}
 
 	public void post() {
-		for (int i = 0; i < MetalRegistry.getMetals().size(); i++) {
-			final Metal metal = MetalRegistry.getMetals().get(i);
-			final float rarity = oreGenCfg.getFloat("chunkRarity", metal.name, metal.getChunkRarity(), 0, 1F, "Chance of generating in any chunk (Percentage)");
-			final float depth = oreGenCfg.getFloat("depth", metal.name, metal.getDepth(), 0, 1F, "Depth at which the ore is most common (Percentage)");
-			final int nodes = oreGenCfg.getInt("nodesPerChunk", metal.name, metal.getNodesPerChunk(), 0, 8, "How many nodes have a chance to generate in a chunk");
-			final int size = oreGenCfg.getInt("nodeSize", metal.name, metal.getNodeSize(), 0, 16, "How many ore can generate in each node");
-			final float spread = oreGenCfg.getFloat("spread", metal.name, metal.getSpread(), 0, 1F, "How far can the ore deviate from its depth (Percentage)");
-			final float hardness = oreGenCfg.getFloat("hardness", metal.name, metal.getHardness(), 0, 100F, "How easy is this metal to harvest");
-			final float resistance = oreGenCfg.getFloat("resistance", metal.name, metal.getResistance(), 0, 100F, "How resistant are the blocks to explosions");
+		for (int i = 0; i < MetalRegistry.getAllMetals().size(); i++) {
+			final Metal metal = MetalRegistry.getAllMetals().get(i);
+			final float rarity = oreGenCfg.getFloat("chunkRarity", metal.nameFixed, metal.getChunkRarity(), 0, 1F, "Chance of generating in any chunk (Percentage)");
+			final float depth = oreGenCfg.getFloat("depth", metal.nameFixed, metal.getDepth(), 0, 1F, "Depth at which the ore is most common (Percentage)");
+			final int nodes = oreGenCfg.getInt("nodesPerChunk", metal.nameFixed, metal.getNodesPerChunk(), 0, 8, "How many nodes have a chance to generate in a chunk");
+			final int size = oreGenCfg.getInt("nodeSize", metal.nameFixed, metal.getNodeSize(), 0, 16, "How many ore can generate in each node");
+			final float spread = oreGenCfg.getFloat("spread", metal.nameFixed, metal.getSpread(), 0, 1F, "How far can the ore deviate from its depth (Percentage)");
+			final float hardness = oreGenCfg.getFloat("hardness", metal.nameFixed, metal.getHardness(), 0, 100F, "How easy is this metal to harvest");
+			final float resistance = oreGenCfg.getFloat("resistance", metal.nameFixed, metal.getResistance(), 0, 100F, "How resistant are the blocks to explosions");
 			metal.setup(rarity, depth, nodes, size, spread, hardness, resistance);
 		}
 		oreGenCfg.save();

@@ -1,4 +1,4 @@
-package com.genuineflix.co.utils;
+package com.genuineflix.metal.utils;
 
 import gnu.trove.map.hash.TIntIntHashMap;
 
@@ -15,7 +15,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
-import com.genuineflix.co.metals.Metal;
+import com.genuineflix.metal.metals.Metal;
 
 public class Utility {
 

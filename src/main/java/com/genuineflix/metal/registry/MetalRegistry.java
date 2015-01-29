@@ -1,4 +1,4 @@
-package com.genuineflix.co.registry;
+package com.genuineflix.metal.registry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,9 +8,9 @@ import java.util.Map;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 
-import com.genuineflix.co.CommonOre;
-import com.genuineflix.co.metals.Metal;
-import com.genuineflix.co.utils.Utility;
+import com.genuineflix.metal.CommonOre;
+import com.genuineflix.metal.metals.Metal;
+import com.genuineflix.metal.utils.Utility;
 import com.google.common.collect.ImmutableList;
 
 import cpw.mods.fml.common.event.FMLInterModComms;

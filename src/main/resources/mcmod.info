@@ -1,9 +1,9 @@
 [
 {
   "modid": "CommonOre",
-  "name": "Common Ore",
+  "name": "CommonOre",
   "description": "CommonOre is a library of widely used ores, dusts, ingots, nuggets, and blocks.",
-  "version": "1.0.8",
+  "version": "1.0.11",
   "mcversion": "1.7.10",
   "url": "",
   "updateUrl": "",

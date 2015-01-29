@@ -1,4 +1,4 @@
-package com.genuineflix.co.utils;
+package com.genuineflix.metal.utils;
 
 import gnu.trove.map.hash.TIntObjectHashMap;
 import net.minecraft.world.chunk.Chunk;

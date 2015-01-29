@@ -1,11 +1,11 @@
-package com.genuineflix.co.config;
+package com.genuineflix.metal.config;
 
 import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
 
-import com.genuineflix.co.metals.Metal;
-import com.genuineflix.co.registry.MetalRegistry;
+import com.genuineflix.metal.metals.Metal;
+import com.genuineflix.metal.registry.MetalRegistry;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
@@ -40,7 +40,7 @@ public class Config {
 			final float hardness = oreGenCfg.getFloat("hardness", metal.nameFixed, metal.getHardness(), 0, 100F, "How easy is this metal to harvest");
 			final float resistance = oreGenCfg.getFloat("resistance", metal.nameFixed, metal.getResistance(), 0, 100F, "How resistant are the blocks to explosions");
 			metal.setup(rarity, depth, nodes, size, spread, hardness, resistance);
-			final boolean generate = oreGenCfg.getBoolean("resistance", metal.nameFixed, metal.willGenerate(), "Whether this ore will generate");
+			final boolean generate = oreGenCfg.getBoolean("generate", metal.nameFixed, metal.willGenerate(), "Whether this ore will generate");
 			metal.setGeneration(generate);
 		}
 		oreGenCfg.save();

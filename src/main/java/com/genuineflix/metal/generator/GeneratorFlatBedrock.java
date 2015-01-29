@@ -1,4 +1,4 @@
-package com.genuineflix.co.generator;
+package com.genuineflix.metal.generator;
 
 import java.util.Random;
 

@@ -1,4 +1,4 @@
-package com.genuineflix.co.events;
+package com.genuineflix.metal.events;
 
 import java.lang.reflect.Field;
 
@@ -7,8 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 
-import com.genuineflix.co.generator.feature.CommonGenMinable;
-import com.genuineflix.co.utils.Utility;
+import com.genuineflix.metal.generator.feature.CommonGenMinable;
+import com.genuineflix.metal.utils.Utility;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;

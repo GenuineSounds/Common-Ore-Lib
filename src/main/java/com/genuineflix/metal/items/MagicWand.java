@@ -1,4 +1,4 @@
-package com.genuineflix.co.items;
+package com.genuineflix.metal.items;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
-import com.genuineflix.co.CommonOre;
-import com.genuineflix.co.utils.Utility;
+import com.genuineflix.metal.CommonOre;
+import com.genuineflix.metal.utils.Utility;
 
 public class MagicWand extends ItemShears {
 

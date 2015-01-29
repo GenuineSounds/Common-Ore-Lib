@@ -1,4 +1,4 @@
-package com.genuineflix.co.generator;
+package com.genuineflix.metal.generator;
 
 import java.util.Random;
 
@@ -6,10 +6,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 
-import com.genuineflix.co.generator.feature.CommonGenMinable;
-import com.genuineflix.co.metals.Metal;
-import com.genuineflix.co.registry.MetalRegistry;
-import com.genuineflix.co.utils.Utility;
+import com.genuineflix.metal.generator.feature.CommonGenMinable;
+import com.genuineflix.metal.metals.Metal;
+import com.genuineflix.metal.registry.MetalRegistry;
+import com.genuineflix.metal.utils.Utility;
 
 import cpw.mods.fml.common.IWorldGenerator;
 

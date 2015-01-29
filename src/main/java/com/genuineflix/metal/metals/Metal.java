@@ -1,19 +1,19 @@
-package com.genuineflix.co.metals;
+package com.genuineflix.metal.metals;
 
 import java.util.ArrayList;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.genuineflix.co.CommonOre;
-import com.genuineflix.co.blocks.Ore;
-import com.genuineflix.co.blocks.Storage;
-import com.genuineflix.co.interfaces.IAlloy;
-import com.genuineflix.co.interfaces.IOre;
-import com.genuineflix.co.items.Dust;
-import com.genuineflix.co.items.Ingot;
-import com.genuineflix.co.items.Nugget;
-import com.genuineflix.co.utils.Utility;
+import com.genuineflix.metal.CommonOre;
+import com.genuineflix.metal.blocks.Ore;
+import com.genuineflix.metal.blocks.Storage;
+import com.genuineflix.metal.interfaces.IAlloy;
+import com.genuineflix.metal.interfaces.IOre;
+import com.genuineflix.metal.items.Dust;
+import com.genuineflix.metal.items.Ingot;
+import com.genuineflix.metal.items.Nugget;
+import com.genuineflix.metal.utils.Utility;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.registry.GameRegistry;

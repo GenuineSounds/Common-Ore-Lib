@@ -1,12 +1,12 @@
-package com.genuineflix.co.blocks;
+package com.genuineflix.metal.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCompressed;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.creativetab.CreativeTabs;
 
-import com.genuineflix.co.CommonOre;
-import com.genuineflix.co.metals.Metal;
+import com.genuineflix.metal.CommonOre;
+import com.genuineflix.metal.metals.Metal;
 
 public class Storage extends BlockCompressed {
 

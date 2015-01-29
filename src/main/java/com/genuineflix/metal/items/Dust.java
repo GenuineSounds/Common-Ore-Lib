@@ -1,10 +1,10 @@
-package com.genuineflix.co.items;
+package com.genuineflix.metal.items;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 
-import com.genuineflix.co.CommonOre;
-import com.genuineflix.co.metals.Metal;
+import com.genuineflix.metal.CommonOre;
+import com.genuineflix.metal.metals.Metal;
 
 public class Dust extends Item {
 

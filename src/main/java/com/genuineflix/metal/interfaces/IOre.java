@@ -1,4 +1,4 @@
-package com.genuineflix.co.interfaces;
+package com.genuineflix.metal.interfaces;
 
 public interface IOre {
 

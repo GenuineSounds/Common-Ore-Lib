@@ -39,8 +39,11 @@ public class MetalRegistry {
 	}
 
 	public void init() {
-		for (final Metal metal : completeMetalList)
+		for (final Metal metal : completeMetalList) {
 			metal.registerRecipes();
+			if (metal.isAlloy())
+				metal.registerAlloyRecipes();
+		}
 	}
 
 	private boolean isCommonMetal(final String name) {
@@ -81,9 +84,9 @@ public class MetalRegistry {
 		final List<NBTTagCompound> metals = new ArrayList<NBTTagCompound>();
 		final List<NBTTagCompound> alloys = new ArrayList<NBTTagCompound>();
 		for (final IMCMessage imc : list) {
-			if (imc.key.equalsIgnoreCase("commonMetal"))
+			if (imc.key.equalsIgnoreCase("metal"))
 				metals.add(imc.getNBTValue());
-			if (imc.key.equalsIgnoreCase("commonAlloy"))
+			if (imc.key.equalsIgnoreCase("alloy"))
 				alloys.add(imc.getNBTValue());
 		}
 		for (final NBTTagCompound tag : metals)

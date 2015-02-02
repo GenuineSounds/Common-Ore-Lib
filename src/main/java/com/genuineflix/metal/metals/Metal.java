@@ -2,17 +2,19 @@ package com.genuineflix.metal.metals;
 
 import java.util.ArrayList;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockCompressed;
+import net.minecraft.block.BlockOre;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.genuineflix.metal.CommonOre;
-import com.genuineflix.metal.blocks.Ore;
-import com.genuineflix.metal.blocks.Storage;
 import com.genuineflix.metal.interfaces.IAlloy;
 import com.genuineflix.metal.interfaces.IOre;
-import com.genuineflix.metal.items.Dust;
-import com.genuineflix.metal.items.Ingot;
-import com.genuineflix.metal.items.Nugget;
 import com.genuineflix.metal.utils.Utility;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -22,11 +24,11 @@ public class Metal implements IOre, IAlloy {
 
 	public final String name;
 	public final String nameFixed;
-	public final Ore ore;
-	public final Storage storage;
-	public final Dust dust;
-	public final Ingot ingot;
-	public final Nugget nugget;
+	public final Block ore;
+	public final Block storage;
+	public final Item dust;
+	public final Item ingot;
+	public final Item nugget;
 	private float chunkRarity;
 	private float depth;
 	private int nodesPerChunk;
@@ -43,11 +45,11 @@ public class Metal implements IOre, IAlloy {
 	public Metal(final String name) {
 		this.name = name;
 		nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-		ore = new Ore(this);
-		dust = new Dust(this);
-		ingot = new Ingot(this);
-		nugget = new Nugget(this);
-		storage = new Storage(this);
+		ore = new BlockOre().setBlockName("ore" + nameFixed).setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeStone).setBlockTextureName(CommonOre.MODID + ":ores/" + nameFixed);
+		dust = new Item().setUnlocalizedName("dust" + nameFixed).setCreativeTab(CreativeTabs.tabMaterials).setTextureName(CommonOre.MODID + ":dusts/" + nameFixed);
+		ingot = new Item().setUnlocalizedName("ingot" + nameFixed).setCreativeTab(CreativeTabs.tabMaterials).setTextureName(CommonOre.MODID + ":ingots/" + nameFixed);
+		nugget = new Item().setUnlocalizedName("nugget" + nameFixed).setCreativeTab(CreativeTabs.tabMaterials).setTextureName(CommonOre.MODID + ":nuggets/" + nameFixed);
+		storage = new BlockCompressed(MapColor.ironColor).setBlockName("block" + nameFixed).setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeMetal).setBlockTextureName(CommonOre.MODID + ":blocks/" + nameFixed);
 	}
 
 	@Override
@@ -138,6 +140,7 @@ public class Metal implements IOre, IAlloy {
 		OreDictionary.registerOre("ingot" + nameFixed, ingot);
 		OreDictionary.registerOre("nugget" + nameFixed, nugget);
 		OreDictionary.registerOre("storage" + nameFixed, storage);
+		OreDictionary.registerOre("block" + nameFixed, storage);
 		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(ore));
 		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(storage));
 	}
@@ -145,10 +148,14 @@ public class Metal implements IOre, IAlloy {
 	public void registerRecipes() {
 		GameRegistry.addSmelting(ore, new ItemStack(ingot), 10);
 		GameRegistry.addSmelting(dust, new ItemStack(ingot), 10);
-		GameRegistry.addShapelessRecipe(new ItemStack(nugget, 9), ingot);
-		GameRegistry.addShapelessRecipe(new ItemStack(storage), ingot, ingot, ingot, ingot, ingot, ingot, ingot, ingot, ingot);
-		GameRegistry.addShapelessRecipe(new ItemStack(ingot), nugget, nugget, nugget, nugget, nugget, nugget, nugget, nugget, nugget);
-		GameRegistry.addShapelessRecipe(new ItemStack(ingot, 9), storage);
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nugget, 9), "ingot" + nameFixed));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(storage), "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingot), "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingot, 9), "block" + nameFixed));
+	}
+
+	public void registerAlloyRecipes() {
+		// TODO: Add alloy recipes.
 	}
 
 	public void setComponents(final Metal primary, final Metal secondary) {
@@ -180,8 +187,10 @@ public class Metal implements IOre, IAlloy {
 		this.spread = spread;
 		this.hardness = hardness;
 		this.resistance = resistance;
-		ore.setup();
-		storage.setup();
+		ore.setHardness(hardness);
+		ore.setResistance(resistance);
+		storage.setHardness(hardness);
+		storage.setResistance(resistance);
 		return this;
 	}
 

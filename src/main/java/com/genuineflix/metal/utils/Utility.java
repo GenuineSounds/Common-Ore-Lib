@@ -137,6 +137,6 @@ public class Utility {
 	private static Map<String, String> componentCache = new HashMap<String, String>();
 	private static List<String> commonCache = new ArrayList<String>();
 	public static final String[] fixes = {
-			"ore", "dust", "pulv(erized*)*", "ingot", "nugget", "storage", "compress(ed)*"
+			"ore", "dust", "pulv(erized*)*", "block", "ingot", "nugget", "storage", "compress(ed)*"
 	};
 }

@@ -130,7 +130,7 @@ public class Config {
 		metals.getCategory("depth").setComment("Depth at which the ore is most common (Percentage / 64) [range: 0.0 ~ 1.0]");
 		metals.getCategory("nodes").setComment("How many nodes have a chance to generate in a chunk [range: 1 ~ 8]");
 		metals.getCategory("size").setComment("How many ore can generate in each node [range: 1 ~ 16]");
-		metals.getCategory("spread").setComment("How far can the ore gneration deviate from its depth (Percentage / 64) [range: 0.0 ~ 1.0]");
+		metals.getCategory("spread").setComment("How far can the ore generation deviate from its depth (Percentage / 64) [range: 0.0 ~ 1.0]");
 		metals.getCategory("hardness").setComment("How easy is the metal to harvest [range: 0.0 ~ 100.0]");
 		metals.getCategory("resistance").setComment("How resistant are the blocks to explosions [range: 0.0 ~ 100.0]");
 		metals.getCategory("components").setComment("Components of the alloy");

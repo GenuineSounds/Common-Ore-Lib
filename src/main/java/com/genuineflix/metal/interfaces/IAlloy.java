@@ -1,14 +1,25 @@
 package com.genuineflix.metal.interfaces;
 
-public interface IAlloy {
+public interface IAlloy extends IOre {
 
-	public String getPrimary();
+	public static class Component {
 
-	public int getPrimaryComponents();
+		public final String name;
+		public final int factor;
 
-	public String getSecondary();
+		public Component(final String name) {
+			this(name, 1);
+		}
 
-	public int getSecondaryComponents();
+		public Component(final String name, final int factor) {
+			this.name = name;
+			this.factor = factor;
+		}
+	}
+
+	public Component[] getComponents();
 
 	public boolean isAlloy();
+
+	public void setComponents(Component... components);
 }

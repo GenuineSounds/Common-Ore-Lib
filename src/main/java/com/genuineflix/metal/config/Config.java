@@ -5,6 +5,8 @@ import java.io.File;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
+import com.genuineflix.metal.interfaces.IAlloy.Component;
+import com.genuineflix.metal.interfaces.IOre.Properties;
 import com.genuineflix.metal.metals.Metal;
 import com.genuineflix.metal.registry.MetalRegistry;
 
@@ -28,35 +30,36 @@ public class Config {
 		metals.save();
 	}
 
-	private String getComponent(final Metal metal, final boolean primary) {
-		final Property prop = metals.get("components." + metal.name, primary ? "primary" : "secondary", primary ? metal.getPrimary() : metal.getSecondary());
+	private String[] getComponentNames(final Metal metal) {
+		final String[] names = new String[metal.getComponents().length];
+		for (int i = 0; i < metal.getComponents().length; i++)
+			names[i] = metal.getComponents()[i].name;
+		final Property prop = metals.get("components", metal.name, names);
+		//final Property prop = metals.get("components." + metal.name, "names", names);
 		prop.setValidValues(MetalRegistry.instance.getMetalNames());
 		prop.setLanguageKey("CommonOre.components");
-		metals.getCategory("components." + metal.name).setComment("[default: " + metal.getPrimary() + ", " + metal.getSecondary() + "]");
-		return prop.getString();
+		return prop.getStringList();
 	}
 
-	private int getComponentFactor(final Metal metal, final boolean primary) {
-		final int min = 1;
-		final int max = 8;
-		final String category = "recipe." + metal.name;
-		final int value = primary ? metal.getPrimaryComponents() : metal.getSecondaryComponents();
-		final Property prop = metals.get(category, primary ? metal.getPrimary() : metal.getSecondary(), value);
+	/*
+	private int[] getComponentFactors(final Metal metal) {
+		int[] factors = new int[metal.getComponents().length];
+		for (int i = 0; i < metal.getComponents().length; i++)
+			factors[i] = metal.getComponents()[i].factor;
+		final String category = "components." + metal.name;
+		final Property prop = metals.get(category, "factors", factors);
 		prop.setLanguageKey("CommonOre." + category);
-		metals.getCategory(category).setComment("[default: " + metal.getPrimary() + "=" + metal.getPrimaryComponents() + ", " + metal.getSecondary() + "=" + metal.getSecondaryComponents() + "]");
-		prop.setMinValue(min);
-		prop.setMaxValue(max);
-		return prop.getInt(value) < min ? min : prop.getInt(value) > max ? max : prop.getInt(value);
+		return prop.getIntList();
 	}
-
+	 */
 	private float getDepth(final Metal metal) {
-		return getFloat(metal, "depth", metal.getDepth(), 0, 1);
+		return getFloat(metal, "depth", metal.getProperties().depth, 0, 1);
 	}
 
 	private float getFloat(final Metal metal, final String category, final float value, final float min, final float max) {
 		final Property prop = metals.get(category, metal.name, Float.toString(value));
 		prop.setLanguageKey("CommonOre." + category);
-		prop.comment = "[default: " + value + "]";
+		//prop.comment = "[default: " + value + "]";
 		prop.setMinValue(min);
 		prop.setMaxValue(max);
 		try {
@@ -71,50 +74,56 @@ public class Config {
 	private boolean getGeneration(final Metal metal) {
 		final Property prop = metals.get("generation", metal.name, metal.generate());
 		prop.setLanguageKey("CommonOre.generation");
-		prop.comment = "[default: " + metal.generate() + "]";
+		//prop.comment = "[default: " + metal.generate() + "]";
 		return prop.getBoolean(metal.generate());
 	}
 
 	private float getHardness(final Metal metal) {
-		return getFloat(metal, "hardness", metal.getHardness(), 0, 100);
+		return getFloat(metal, "hardness", metal.getProperties().hardness, 0, 100);
 	}
 
 	private int getInt(final Metal metal, final String category, final int value, final int min, final int max) {
 		final Property prop = metals.get(category, metal.name, value);
 		prop.setLanguageKey("CommonOre." + category);
-		prop.comment = "[default: " + value + "]";
+		//prop.comment = "[default: " + value + "]";
 		prop.setMinValue(min);
 		prop.setMaxValue(max);
 		return prop.getInt(value) < min ? min : prop.getInt(value) > max ? max : prop.getInt(value);
 	}
 
 	private int getNodes(final Metal metal) {
-		return getInt(metal, "nodes", metal.getNodesPerChunk(), 1, 8);
+		return getInt(metal, "nodes", metal.getProperties().nodes, 1, 8);
 	}
 
 	private float getRarity(final Metal metal) {
-		return getFloat(metal, "rarity", metal.getChunkRarity(), 0, 1);
+		return getFloat(metal, "rarity", metal.getProperties().rarity, 0, 1);
 	}
 
 	private float getResistance(final Metal metal) {
-		return getFloat(metal, "resistance", metal.getResistance(), 0, 100);
+		return getFloat(metal, "resistance", metal.getProperties().resistance, 0, 100);
 	}
 
 	private int getSize(final Metal metal) {
-		return getInt(metal, "size", metal.getNodeSize(), 1, 16);
+		return getInt(metal, "size", metal.getProperties().size, 1, 16);
 	}
 
 	private float getSpread(final Metal metal) {
-		return getFloat(metal, "spread", metal.getSpread(), 0, 1);
+		return getFloat(metal, "spread", metal.getProperties().spread, 0, 1);
 	}
 
 	public void init() {
-		for (int i = 0; i < MetalRegistry.instance.getAllMetals().size(); i++) {
-			final Metal metal = MetalRegistry.instance.getAllMetals().get(i);
-			metal.setup(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal));
+		for (int metalCounter = 0; metalCounter < MetalRegistry.instance.getAllMetals().size(); metalCounter++) {
+			final Metal metal = MetalRegistry.instance.getAllMetals().get(metalCounter);
+			final Properties properties = new Properties(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal));
+			metal.setup(properties);
 			if (!metal.isAlloy())
 				continue;
-			metal.setComponents(getComponent(metal, true), getComponentFactor(metal, true), getComponent(metal, false), getComponentFactor(metal, false));
+			final String[] componentNames = getComponentNames(metal);
+			//int[] componentFactors = getComponentFactors(metal);
+			final Component[] components = new Component[componentNames.length];
+			for (int componentCounter = 0; componentCounter < components.length; componentCounter++)
+				components[componentCounter] = new Component(componentNames[componentCounter], 1); //componentFactors[componentCounter]);
+			metal.setComponents(components);
 		}
 		metals.save();
 	}
@@ -141,7 +150,6 @@ public class Config {
 		metals.getCategory("hardness").setComment("How easy is the metal to harvest [range: 0.0 ~ 100.0]");
 		metals.getCategory("resistance").setComment("How resistant are the blocks to explosions [range: 0.0 ~ 100.0]");
 		metals.getCategory("components").setComment("Components of the alloy");
-		metals.getCategory("recipe").setComment("How many component dusts it takes to craft the alloy dust [range: 1 ~ 8]");
 		metals.getCategory("generation").setComment("Whether the ore will generate");
 		metals.save();
 	}

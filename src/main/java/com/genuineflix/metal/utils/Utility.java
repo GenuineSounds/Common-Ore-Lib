@@ -14,7 +14,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.oredict.OreDictionary;
 
+import com.genuineflix.metal.interfaces.IAlloy.Component;
 import com.genuineflix.metal.metals.Metal;
 
 public class Utility {
@@ -22,9 +24,8 @@ public class Utility {
 	public static boolean areComponentsFound(final Metal metal, final World world, final int x, final int y, final int z, final int radius) {
 		if (!metal.isAlloy())
 			return false;
-		boolean foundPrimary = false;
-		boolean foundSecondary = false;
-		final int count = 0;
+		final Component[] components = metal.getComponents();
+		final boolean[] componentWasFound = new boolean[metal.getComponents().length];
 		for (int xd = -radius; xd <= radius; xd++)
 			for (int yd = -radius; yd <= radius; yd++)
 				for (int zd = -radius; zd <= radius; zd++) {
@@ -32,32 +33,28 @@ public class Utility {
 						continue;
 					final Block block = world.getBlock(x + xd, y + yd, z + zd);
 					final int meta = world.getBlockMetadata(x + xd, y + yd, z + zd);
-					final ItemStack stack = new ItemStack(block, 1, meta);
-					if (Utility.componentCache.containsKey(stack.getUnlocalizedName())) {
-						if (Utility.componentCache.get(stack.getUnlocalizedName()).equals(metal.getPrimaryOreDict()))
-							foundPrimary = true;
-						if (Utility.componentCache.get(stack.getUnlocalizedName()).equals(metal.getSecondaryOreDict()))
-							foundSecondary = true;
-					} else {
-						final ArrayList<ItemStack> priStacks = metal.getOreListFromPrimaryComponent();
-						final ArrayList<ItemStack> secStacks = metal.getOreListFromSecondaryComponent();
-						for (final ItemStack testStack : priStacks) {
-							if (!testStack.isItemEqual(stack))
-								continue;
-							foundPrimary = true;
-							Utility.componentCache.put(stack.getUnlocalizedName(), metal.getPrimaryOreDict());
-						}
-						for (final ItemStack testStack : secStacks) {
-							if (!testStack.isItemEqual(stack))
-								continue;
-							foundSecondary = true;
-							Utility.componentCache.put(stack.getUnlocalizedName(), metal.getSecondaryOreDict());
+					final ItemStack blockStack = new ItemStack(block, 1, meta);
+					for (int i = 0; i < components.length; i++) {
+						final Component component = components[i];
+						// If the display name is cached use that instead of checking the oredict.
+						if (Utility.displayNameToOreDictName.containsKey(blockStack.getDisplayName())) {
+							if (Utility.displayNameToOreDictName.get(blockStack.getDisplayName()).equals(fixCamelCase("ore", component.name)))
+								componentWasFound[i] = true;
+						} else {
+							final List<ItemStack> oreDictStacks = getOreDictStacks(metal);
+							for (final ItemStack test : oreDictStacks) {
+								if (!ItemStack.areItemStacksEqual(blockStack, test))
+									continue;
+								componentWasFound[i] = true;
+								Utility.displayNameToOreDictName.put(blockStack.getDisplayName(), fixCamelCase("ore", component.name));
+							}
 						}
 					}
-					if (foundPrimary && foundSecondary)
-						return true;
 				}
-		return false;
+		boolean missedAny = false;
+		for (int i = 0; i < componentWasFound.length; i++)
+			missedAny |= !componentWasFound[i];
+		return !missedAny;
 	}
 
 	public static void cacheCommon(final ItemStack stack) {
@@ -109,6 +106,13 @@ public class Utility {
 		return prefix.toLowerCase() + str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
 	}
 
+	public static List<ItemStack> getOreDictStacks(final Metal metal) {
+		final List<ItemStack> list = new ArrayList<ItemStack>();
+		for (final Component component : metal.getComponents())
+			list.addAll(OreDictionary.getOres(fixCamelCase("ore", component.name)));
+		return list;
+	}
+
 	public static int hashChunk(final Chunk chunk) {
 		return (chunk.xPosition >> 8 ^ chunk.xPosition) & 0xFFFF | ((chunk.zPosition >> 8 ^ chunk.zPosition) & 0xFFFF) << 16;
 	}
@@ -134,7 +138,7 @@ public class Utility {
 	});
 	private static TIntIntHashMap cachedHeight = new TIntIntHashMap();
 	private static ChunkMap<List<Metal>> metalsGenerated = new ChunkMap<List<Metal>>();
-	private static Map<String, String> componentCache = new HashMap<String, String>();
+	private static Map<String, String> displayNameToOreDictName = new HashMap<String, String>();
 	private static List<String> commonCache = new ArrayList<String>();
 	public static final String[] fixes = {
 			"ore", "dust", "pulv(erized*)*", "block", "ingot", "nugget", "storage", "compress(ed)*"

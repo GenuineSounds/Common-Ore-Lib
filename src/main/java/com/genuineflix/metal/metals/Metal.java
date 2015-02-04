@@ -1,7 +1,5 @@
 package com.genuineflix.metal.metals;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCompressed;
 import net.minecraft.block.BlockOre;
@@ -11,16 +9,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import scala.actors.threadpool.Arrays;
 
 import com.genuineflix.metal.CommonOre;
 import com.genuineflix.metal.interfaces.IAlloy;
-import com.genuineflix.metal.interfaces.IOre;
-import com.genuineflix.metal.utils.Utility;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-public class Metal implements IOre, IAlloy {
+public class Metal implements IAlloy {
 
 	public final String name;
 	public final String nameFixed;
@@ -29,18 +26,8 @@ public class Metal implements IOre, IAlloy {
 	public final Item dust;
 	public final Item ingot;
 	public final Item nugget;
-	private float chunkRarity;
-	private float depth;
-	private int nodesPerChunk;
-	private int nodeSize;
-	private float spread;
-	private float hardness;
-	private float resistance;
-	private String primary;
-	private String secondary;
-	private int primaryRecipeComponents;
-	private int secondaryRecipeComponents;
-	private boolean alloy;
+	private Properties properties;
+	private Component[] components = new Component[0];
 	private boolean generate;
 
 	public Metal(final String name) {
@@ -58,95 +45,28 @@ public class Metal implements IOre, IAlloy {
 	}
 
 	@Override
-	public float getChunkRarity() {
-		return chunkRarity;
+	public Component[] getComponents() {
+		return components;
 	}
 
 	@Override
-	public float getDepth() {
-		return depth;
-	}
-
-	@Override
-	public float getHardness() {
-		return hardness;
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public int getNodeSize() {
-		return nodeSize;
-	}
-
-	@Override
-	public int getNodesPerChunk() {
-		return nodesPerChunk;
-	}
-
-	public ArrayList<ItemStack> getOreListFromPrimaryComponent() {
-		return OreDictionary.getOres(Utility.fixCamelCase("ore", getPrimary()));
-	}
-
-	public ArrayList<ItemStack> getOreListFromSecondaryComponent() {
-		return OreDictionary.getOres(Utility.fixCamelCase("ore", getSecondary()));
-	}
-
-	@Override
-	public String getPrimary() {
-		return primary;
-	}
-
-	@Override
-	public int getPrimaryComponents() {
-		return primaryRecipeComponents;
-	}
-
-	public String getPrimaryOreDict() {
-		return Utility.fixCamelCase("ore", getPrimary());
-	}
-
-	@Override
-	public float getResistance() {
-		return resistance;
-	}
-
-	@Override
-	public String getSecondary() {
-		return secondary;
-	}
-
-	@Override
-	public int getSecondaryComponents() {
-		return secondaryRecipeComponents;
-	}
-
-	public String getSecondaryOreDict() {
-		return Utility.fixCamelCase("ore", getSecondary());
-	}
-
-	@Override
-	public float getSpread() {
-		return spread;
+	public Properties getProperties() {
+		return properties;
 	}
 
 	@Override
 	public boolean isAlloy() {
-		return alloy;
+		return components != null && components.length > 0;
 	}
 
 	public void registerAlloyRecipes() {
-		if (!isAlloy())
-			return;
-		final Object[] recipe = new String[primaryRecipeComponents + secondaryRecipeComponents];
-		for (int i = 0; i < primaryRecipeComponents; i++)
-			recipe[i] = Utility.fixCamelCase("dust", getPrimary());
-		for (int i = primaryRecipeComponents; i < recipe.length; i++)
-			recipe[i] = Utility.fixCamelCase("dust", getSecondary());
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(dust, recipe.length), recipe));
+		Object[] items = new Object[0];
+		for (final Component component : components)
+			for (int i = 0; i < component.factor; i++) {
+				items = Arrays.copyOf(items, items.length + 1, Object[].class);
+				items[items.length - 1] = component.name;
+			}
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(dust, items.length), items));
 	}
 
 	public void registerOre() {
@@ -173,15 +93,13 @@ public class Metal implements IOre, IAlloy {
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(block), "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingot), "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingot, 9), "block" + nameFixed));
-		registerAlloyRecipes();
+		if (isAlloy())
+			registerAlloyRecipes();
 	}
 
-	public void setComponents(final String primary, final int primaryRecipeComponents, final String secondary, final int secondaryRecipeComponents) {
-		this.primary = primary;
-		this.secondary = secondary;
-		this.primaryRecipeComponents = primaryRecipeComponents;
-		this.secondaryRecipeComponents = secondaryRecipeComponents;
-		alloy = true;
+	@Override
+	public void setComponents(final Component... components) {
+		this.components = components;
 	}
 
 	public void setGeneration(final boolean generate) {
@@ -192,18 +110,17 @@ public class Metal implements IOre, IAlloy {
 		this.generate = generate;
 	}
 
-	public Metal setup(final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {
-		this.chunkRarity = chunkRarity;
-		this.depth = depth;
-		this.nodesPerChunk = nodesPerChunk;
-		this.nodeSize = nodeSize;
-		this.spread = spread;
-		this.hardness = hardness;
-		this.resistance = resistance;
-		ore.setHardness(hardness);
-		ore.setResistance(resistance);
-		block.setHardness(hardness);
-		block.setResistance(resistance);
+	@Override
+	public void setOreProperties(final Properties properties) {
+		this.properties = properties;
+	}
+
+	public Metal setup(final Properties properties) {
+		setOreProperties(properties);
+		ore.setHardness(properties.hardness);
+		ore.setResistance(properties.resistance);
+		block.setHardness(properties.hardness);
+		block.setResistance(properties.resistance);
 		return this;
 	}
 }

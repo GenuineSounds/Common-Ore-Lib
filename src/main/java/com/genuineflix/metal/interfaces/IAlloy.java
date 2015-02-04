@@ -2,11 +2,13 @@ package com.genuineflix.metal.interfaces;
 
 public interface IAlloy {
 
-	public String getPrimaryComponent();
+	public String getPrimary();
 
-	public String getSecondaryComponent();
+	public int getPrimaryComponents();
+
+	public String getSecondary();
+
+	public int getSecondaryComponents();
 
 	public boolean isAlloy();
-
-	public boolean isNonCommon();
 }

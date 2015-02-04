@@ -25,7 +25,7 @@ public class Metal implements IOre, IAlloy {
 	public final String name;
 	public final String nameFixed;
 	public final Block ore;
-	public final Block storage;
+	public final Block block;
 	public final Item dust;
 	public final Item ingot;
 	public final Item nugget;
@@ -38,8 +38,9 @@ public class Metal implements IOre, IAlloy {
 	private float resistance;
 	private String primary;
 	private String secondary;
+	private int primaryRecipeComponents;
+	private int secondaryRecipeComponents;
 	private boolean alloy;
-	private boolean nonCommonAlloy;
 	private boolean generate;
 
 	public Metal(final String name) {
@@ -49,7 +50,11 @@ public class Metal implements IOre, IAlloy {
 		dust = new Item().setUnlocalizedName("dust" + nameFixed).setCreativeTab(CreativeTabs.tabMaterials).setTextureName(CommonOre.MODID + ":dusts/" + nameFixed);
 		ingot = new Item().setUnlocalizedName("ingot" + nameFixed).setCreativeTab(CreativeTabs.tabMaterials).setTextureName(CommonOre.MODID + ":ingots/" + nameFixed);
 		nugget = new Item().setUnlocalizedName("nugget" + nameFixed).setCreativeTab(CreativeTabs.tabMaterials).setTextureName(CommonOre.MODID + ":nuggets/" + nameFixed);
-		storage = new BlockCompressed(MapColor.ironColor).setBlockName("block" + nameFixed).setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeMetal).setBlockTextureName(CommonOre.MODID + ":blocks/" + nameFixed);
+		block = new BlockCompressed(MapColor.ironColor).setBlockName("block" + nameFixed).setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeMetal).setBlockTextureName(CommonOre.MODID + ":blocks/" + nameFixed);
+	}
+
+	public boolean generate() {
+		return generate;
 	}
 
 	@Override
@@ -83,20 +88,25 @@ public class Metal implements IOre, IAlloy {
 	}
 
 	public ArrayList<ItemStack> getOreListFromPrimaryComponent() {
-		return OreDictionary.getOres(Utility.fixCamelCase("ore", getPrimaryComponent()));
+		return OreDictionary.getOres(Utility.fixCamelCase("ore", getPrimary()));
 	}
 
 	public ArrayList<ItemStack> getOreListFromSecondaryComponent() {
-		return OreDictionary.getOres(Utility.fixCamelCase("ore", getSecondaryComponent()));
+		return OreDictionary.getOres(Utility.fixCamelCase("ore", getSecondary()));
 	}
 
 	@Override
-	public String getPrimaryComponent() {
+	public String getPrimary() {
 		return primary;
 	}
 
+	@Override
+	public int getPrimaryComponents() {
+		return primaryRecipeComponents;
+	}
+
 	public String getPrimaryOreDict() {
-		return Utility.fixCamelCase("ore", getPrimaryComponent());
+		return Utility.fixCamelCase("ore", getPrimary());
 	}
 
 	@Override
@@ -105,12 +115,17 @@ public class Metal implements IOre, IAlloy {
 	}
 
 	@Override
-	public String getSecondaryComponent() {
+	public String getSecondary() {
 		return secondary;
 	}
 
+	@Override
+	public int getSecondaryComponents() {
+		return secondaryRecipeComponents;
+	}
+
 	public String getSecondaryOreDict() {
-		return Utility.fixCamelCase("ore", getSecondaryComponent());
+		return Utility.fixCamelCase("ore", getSecondary());
 	}
 
 	@Override
@@ -123,59 +138,57 @@ public class Metal implements IOre, IAlloy {
 		return alloy;
 	}
 
-	@Override
-	public boolean isNonCommon() {
-		return nonCommonAlloy;
-	};
+	public void registerAlloyRecipes() {
+		if (!isAlloy())
+			return;
+		final Object[] recipe = new String[primaryRecipeComponents + secondaryRecipeComponents];
+		for (int i = 0; i < primaryRecipeComponents; i++)
+			recipe[i] = Utility.fixCamelCase("dust", getPrimary());
+		for (int i = primaryRecipeComponents; i < recipe.length; i++)
+			recipe[i] = Utility.fixCamelCase("dust", getSecondary());
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(dust, recipe.length), recipe));
+	}
 
 	public void registerOre() {
 		GameRegistry.registerBlock(ore, "ore" + nameFixed);
 		GameRegistry.registerItem(dust, "dust" + nameFixed);
 		GameRegistry.registerItem(ingot, "ingot" + nameFixed);
 		GameRegistry.registerItem(nugget, "nugget" + nameFixed);
-		GameRegistry.registerBlock(storage, "storage" + nameFixed);
+		GameRegistry.registerBlock(block, "storage" + nameFixed);
 		OreDictionary.registerOre("ore" + nameFixed, ore);
 		OreDictionary.registerOre("dust" + nameFixed, dust);
 		OreDictionary.registerOre("pulv" + nameFixed, dust);
 		OreDictionary.registerOre("ingot" + nameFixed, ingot);
 		OreDictionary.registerOre("nugget" + nameFixed, nugget);
-		OreDictionary.registerOre("storage" + nameFixed, storage);
-		OreDictionary.registerOre("block" + nameFixed, storage);
+		OreDictionary.registerOre("storage" + nameFixed, block);
+		OreDictionary.registerOre("block" + nameFixed, block);
 		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(ore));
-		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(storage));
+		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(block));
 	}
 
 	public void registerRecipes() {
 		GameRegistry.addSmelting(ore, new ItemStack(ingot), 10);
 		GameRegistry.addSmelting(dust, new ItemStack(ingot), 10);
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(nugget, 9), "ingot" + nameFixed));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(storage), "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(block), "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingot), "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ingot, 9), "block" + nameFixed));
+		registerAlloyRecipes();
 	}
 
-	public void registerAlloyRecipes() {
-		// TODO: Add alloy recipes.
-	}
-
-	public void setComponents(final Metal primary, final Metal secondary) {
-		setComponents(primary.name, secondary.name, false);
-	}
-
-	public void setComponents(final String primary, final String secondary) {
-		setComponents(primary, secondary, true);
-	}
-
-	private void setComponents(final String primary, final String secondary, final boolean nonCommon) {
+	public void setComponents(final String primary, final int primaryRecipeComponents, final String secondary, final int secondaryRecipeComponents) {
 		this.primary = primary;
 		this.secondary = secondary;
+		this.primaryRecipeComponents = primaryRecipeComponents;
+		this.secondaryRecipeComponents = secondaryRecipeComponents;
 		alloy = true;
-		nonCommonAlloy = nonCommon;
 	}
 
 	public void setGeneration(final boolean generate) {
 		if (!this.generate && generate)
-			CommonOre.log.info("[CommonOre] Setting " + nameFixed + " to generate");
+			CommonOre.log.info("[CommonOre] Setting " + nameFixed + " implicitly to generate");
+		if (this.generate && !generate)
+			CommonOre.log.info("[CommonOre] Setting " + nameFixed + " explicitly to not generate");
 		this.generate = generate;
 	}
 
@@ -189,12 +202,8 @@ public class Metal implements IOre, IAlloy {
 		this.resistance = resistance;
 		ore.setHardness(hardness);
 		ore.setResistance(resistance);
-		storage.setHardness(hardness);
-		storage.setResistance(resistance);
+		block.setHardness(hardness);
+		block.setResistance(resistance);
 		return this;
-	}
-
-	public boolean willGenerate() {
-		return generate;
 	}
 }

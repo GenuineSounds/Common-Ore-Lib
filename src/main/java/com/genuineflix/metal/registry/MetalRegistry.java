@@ -1,6 +1,7 @@
 package com.genuineflix.metal.registry;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 public class MetalRegistry {
 
 	public static final MetalRegistry instance = new MetalRegistry();
+	private String[] metalNames;
 	private final List<Metal> completeMetalList = new ArrayList<Metal>();
 	private final List<Metal> generatedMetalList = new ArrayList<Metal>();
 	private final Map<String, Metal> nameToMetal = new HashMap<String, Metal>();
@@ -38,12 +40,17 @@ public class MetalRegistry {
 		return generatedMetalList;
 	}
 
+	public String[] getMetalNames() {
+		return metalNames;
+	}
+
 	public void init() {
-		for (final Metal metal : completeMetalList) {
+		metalNames = new String[completeMetalList.size()];
+		for (int i = 0; i < completeMetalList.size(); i++)
+			metalNames[i] = completeMetalList.get(i).name;
+		Arrays.sort(metalNames);
+		for (final Metal metal : completeMetalList)
 			metal.registerRecipes();
-			if (metal.isAlloy())
-				metal.registerAlloyRecipes();
-		}
 	}
 
 	private boolean isCommonMetal(final String name) {
@@ -63,23 +70,23 @@ public class MetalRegistry {
 
 	public void pre() {
 		available = false;
-		registerOre("aluminium", 1F, 1F, 6, 6, 0.2F, 3F, 2F, false);
-		registerOre("zinc", 1F, 0.9375F, 6, 6, 0.2F, 2.5F, 2F, false);
-		registerOre("copper", 1F, 0.8125F, 6, 6, 0.2F, 3F, 2F, false);
-		registerOre("tin", 0.8F, 0.6875F, 6, 6, 0.2F, 1.5F, 2F, false);
-		registerOre("lead", 0.8F, 0.625F, 6, 6, 0.2F, 1.5F, 2F, false);
-		registerOre("iron", 0.8F, 0.5F, 6, 6, 0.2F, 4F, 2F, true);
-		registerOre("nickel", 0.6F, 0.375F, 6, 6, 0.2F, 4F, 2F, false);
-		registerOre("tungsten", 0.6F, 0.3125F, 6, 6, 0.2F, 7.5F, 2F, false);
-		registerOre("silver", 0.6F, 0.25F, 6, 6, 0.2F, 2.5F, 2F, false);
-		registerOre("gold", 0.4F, 0.125F, 6, 6, 0.2F, 2.75F, 2F, true);
-		registerOre("titanium", 0.4F, 0.0625F, 6, 6, 0.2F, 6F, 2F, false);
-		registerOre("platinum", 0.4F, 0F, 6, 6, 0.2F, 3.5F, 2F, false);
-		registerAlloy("brass", "copper", "zinc", 1F, 0.875F, 6, 6, 0.2F, 3.5F, 2F, false);
-		registerAlloy("bronze", "copper", "tin", 0.8F, 0.75F, 6, 6, 0.2F, 3F, 2F, false);
-		registerAlloy("steel", "coal", "iron", 0.8F, 0.5625F, 6, 6, 0.2F, 7.25F, 2F, false);
-		registerAlloy("invar", "nickel", "iron", 0.6F, 0.4375F, 6, 6, 0.2F, 4F, 2F, false);
-		registerAlloy("electrum", "gold", "silver", 0.4F, 0.1875F, 6, 6, 0.2F, 2.5F, 2F, false);
+		registerOre("aluminium", 1F, 1F, 6, 6, 0.2F, 3F);
+		registerOre("zinc", 1F, 0.9375F, 6, 6, 0.2F, 2.5F);
+		registerOre("copper", 1F, 0.8125F, 6, 6, 0.2F, 3F);
+		registerOre("tin", 0.8F, 0.6875F, 6, 6, 0.2F, 1.5F);
+		registerOre("lead", 0.8F, 0.625F, 6, 6, 0.2F, 1.5F);
+		registerOre("iron", 0.8F, 0.5F, 6, 6, 0.2F, 4F, 4F, true);
+		registerOre("nickel", 0.6F, 0.375F, 6, 6, 0.2F, 4F);
+		registerOre("tungsten", 0.6F, 0.3125F, 6, 6, 0.2F, 7.5F);
+		registerOre("silver", 0.6F, 0.25F, 6, 6, 0.2F, 2.5F);
+		registerOre("gold", 0.4F, 0.125F, 6, 6, 0.2F, 2.75F, 2.75F, true);
+		registerOre("titanium", 0.4F, 0.0625F, 6, 6, 0.2F, 6F);
+		registerOre("platinum", 0.4F, 0F, 6, 6, 0.2F, 3.5F);
+		registerAlloy("brass", "copper", 1, "zinc", 1, 1F, 0.875F, 6, 6, 0.2F, 3.5F);
+		registerAlloy("bronze", "copper", 3, "tin", 1, 0.8F, 0.75F, 6, 6, 0.2F, 3F);
+		registerAlloy("steel", "iron", 1, "coal", 1, 0.8F, 0.5625F, 6, 6, 0.2F, 7.25F);
+		registerAlloy("invar", "iron", 2, "nickel", 1, 0.6F, 0.4375F, 6, 6, 0.2F, 4F);
+		registerAlloy("electrum", "gold", 1, "silver", 1, 0.4F, 0.1875F, 6, 6, 0.2F, 2.5F);
 		final ImmutableList<IMCMessage> list = FMLInterModComms.fetchRuntimeMessages(CommonOre.instance);
 		final List<NBTTagCompound> metals = new ArrayList<NBTTagCompound>();
 		final List<NBTTagCompound> alloys = new ArrayList<NBTTagCompound>();
@@ -104,7 +111,7 @@ public class MetalRegistry {
 				boolean generate = false;
 				if (tag.hasKey("generate"))
 					generate = tag.getBoolean("generate");
-				registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getString("secondary"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"), generate);
+				registerAlloy(tag.getString("name"), tag.getString("primary"), tag.getInteger("primaryNumber"), tag.getString("secondary"), tag.getInteger("secondaryNumber"), tag.getFloat("rarity"), tag.getFloat("depth"), tag.getInteger("nodes"), tag.getInteger("size"), tag.getFloat("spread"), tag.getFloat("hardness"), tag.getFloat("resistance"), generate);
 			}
 			catch (final Exception e) {
 				System.err.println("CommonOre has detected a badly formatted alloy registration.");
@@ -112,25 +119,22 @@ public class MetalRegistry {
 		available = true;
 	}
 
-	public void registerAlloy(final String name, final String primary, final String secondary, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {
-		registerAlloy(name, primary, secondary, chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance, false);
+	public void registerAlloy(final String name, final String primary, final int primaryRecipeComponents, final String secondary, final int secondaryRecipeComponents, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness) {
+		registerAlloy(name, primary, primaryRecipeComponents, secondary, secondaryRecipeComponents, chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, hardness, false);
 	}
 
-	public void registerAlloy(final String name, final String primary, final String secondary, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance, final boolean generate) {
+	public void registerAlloy(final String name, final String primary, final int primaryRecipeComponents, final String secondary, final int secondaryRecipeComponents, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance, final boolean generate) {
 		final Metal metal = new Metal(name);
 		metal.setup(chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance);
 		metal.setGeneration(generate);
-		if (!isCommonMetal(primary) || !isCommonMetal(secondary))
-			metal.setComponents(primary, secondary);
-		else
-			metal.setComponents(getCommonMetal(primary), getCommonMetal(secondary));
+		metal.setComponents(primary, primaryRecipeComponents, secondary, secondaryRecipeComponents);
 		completeMetalList.add(metal);
 		nameToMetal.put(name, metal);
 		metal.registerOre();
 	}
 
-	public void registerOre(final String name, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance) {
-		registerOre(name, chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, resistance, false);
+	public void registerOre(final String name, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness) {
+		registerOre(name, chunkRarity, depth, nodesPerChunk, nodeSize, spread, hardness, hardness, false);
 	}
 
 	public void registerOre(final String name, final float chunkRarity, final float depth, final int nodesPerChunk, final int nodeSize, final float spread, final float hardness, final float resistance, final boolean generate) {

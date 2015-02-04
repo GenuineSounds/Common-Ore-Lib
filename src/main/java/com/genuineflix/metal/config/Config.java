@@ -35,23 +35,11 @@ public class Config {
 		for (int i = 0; i < metal.getComponents().length; i++)
 			names[i] = metal.getComponents()[i].name;
 		final Property prop = metals.get("components", metal.name, names);
-		//final Property prop = metals.get("components." + metal.name, "names", names);
 		prop.setValidValues(MetalRegistry.instance.getMetalNames());
 		prop.setLanguageKey("CommonOre.components");
 		return prop.getStringList();
 	}
 
-	/*
-	private int[] getComponentFactors(final Metal metal) {
-		int[] factors = new int[metal.getComponents().length];
-		for (int i = 0; i < metal.getComponents().length; i++)
-			factors[i] = metal.getComponents()[i].factor;
-		final String category = "components." + metal.name;
-		final Property prop = metals.get(category, "factors", factors);
-		prop.setLanguageKey("CommonOre." + category);
-		return prop.getIntList();
-	}
-	 */
 	private float getDepth(final Metal metal) {
 		return getFloat(metal, "depth", metal.getProperties().depth, 0, 1);
 	}
@@ -59,7 +47,6 @@ public class Config {
 	private float getFloat(final Metal metal, final String category, final float value, final float min, final float max) {
 		final Property prop = metals.get(category, metal.name, Float.toString(value));
 		prop.setLanguageKey("CommonOre." + category);
-		//prop.comment = "[default: " + value + "]";
 		prop.setMinValue(min);
 		prop.setMaxValue(max);
 		try {
@@ -74,7 +61,6 @@ public class Config {
 	private boolean getGeneration(final Metal metal) {
 		final Property prop = metals.get("generation", metal.name, metal.generate());
 		prop.setLanguageKey("CommonOre.generation");
-		//prop.comment = "[default: " + metal.generate() + "]";
 		return prop.getBoolean(metal.generate());
 	}
 
@@ -85,7 +71,6 @@ public class Config {
 	private int getInt(final Metal metal, final String category, final int value, final int min, final int max) {
 		final Property prop = metals.get(category, metal.name, value);
 		prop.setLanguageKey("CommonOre." + category);
-		//prop.comment = "[default: " + value + "]";
 		prop.setMinValue(min);
 		prop.setMaxValue(max);
 		return prop.getInt(value) < min ? min : prop.getInt(value) > max ? max : prop.getInt(value);
@@ -119,7 +104,6 @@ public class Config {
 			if (!metal.isAlloy())
 				continue;
 			final String[] componentNames = getComponentNames(metal);
-			//int[] componentFactors = getComponentFactors(metal);
 			final Component[] components = new Component[componentNames.length];
 			for (int componentCounter = 0; componentCounter < components.length; componentCounter++)
 				components[componentCounter] = new Component(componentNames[componentCounter], 1); //componentFactors[componentCounter]);

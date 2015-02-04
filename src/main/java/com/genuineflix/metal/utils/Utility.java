@@ -1,7 +1,5 @@
 package com.genuineflix.metal.utils;
 
-import gnu.trove.map.hash.TIntIntHashMap;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.genuineflix.metal.CommonOre;
 import com.genuineflix.metal.interfaces.IAlloy.Component;
 import com.genuineflix.metal.metals.Metal;
 
@@ -31,24 +30,14 @@ public class Utility {
 				for (int zd = -radius; zd <= radius; zd++) {
 					if (!world.blockExists(x + xd, y + yd, z + zd))
 						continue;
-					final Block block = world.getBlock(x + xd, y + yd, z + zd);
-					final int meta = world.getBlockMetadata(x + xd, y + yd, z + zd);
-					final ItemStack blockStack = new ItemStack(block, 1, meta);
+					final String tag = world.getBlock(x + xd, y + yd, z + zd).getUnlocalizedName() + ":" + world.getBlockMetadata(x + xd, y + yd, z + zd);
 					for (int i = 0; i < components.length; i++) {
 						final Component component = components[i];
-						// If the display name is cached use that instead of checking the oredict.
-						if (Utility.displayNameToOreDictName.containsKey(blockStack.getDisplayName())) {
-							if (Utility.displayNameToOreDictName.get(blockStack.getDisplayName()).equals(fixCamelCase("ore", component.name)))
-								componentWasFound[i] = true;
-						} else {
-							final List<ItemStack> oreDictStacks = getOreDictStacks(metal);
-							for (final ItemStack test : oreDictStacks) {
-								if (!ItemStack.areItemStacksEqual(blockStack, test))
-									continue;
-								componentWasFound[i] = true;
-								Utility.displayNameToOreDictName.put(blockStack.getDisplayName(), fixCamelCase("ore", component.name));
-							}
-						}
+						final String oreName = camelCase("ore", component.name);
+						if (!Utility.commonCache.containsKey(oreName))
+							continue;
+						if (Utility.commonCache.get(oreName).contains(tag))
+							componentWasFound[i] = true;
 					}
 				}
 		boolean missedAny = false;
@@ -57,22 +46,21 @@ public class Utility {
 		return !missedAny;
 	}
 
-	public static void cacheCommon(final ItemStack stack) {
-		Utility.commonCache.add(stack.getUnlocalizedName());
+	public static void cacheCommonBlock(final String oreDict, final Block block, final int meta) {
+		if (!oreDict.startsWith("ore"))
+			return;
+		CommonOre.log.warn("Caching common: " + oreDict + ".add(" + block.getUnlocalizedName() + ":" + meta + ")");
+		List<String> list;
+		if (!commonCache.containsKey(oreDict))
+			list = new ArrayList<String>();
+		else
+			list = commonCache.get(oreDict);
+		list.add(block.getUnlocalizedName() + ":" + meta);
+		commonCache.put(oreDict, list);
 	}
 
-	public static void cacheGeneration(final Metal metal, final Chunk chunk) {
-		if (!Utility.metalsGenerated.contains(chunk)) {
-			final List<Metal> list = new ArrayList<Metal>();
-			list.add(metal);
-			Utility.metalsGenerated.put(chunk, list);
-		} else {
-			final List<Metal> list = Utility.metalsGenerated.get(chunk);
-			if (!list.contains(metal)) {
-				list.add(metal);
-				Utility.metalsGenerated.put(chunk, list);
-			}
-		}
+	public static String camelCase(final String prefix, final String str) {
+		return prefix.toLowerCase() + str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
 	}
 
 	public static String cleanName(String name) {
@@ -89,27 +77,18 @@ public class Utility {
 	}
 
 	public static int findHighestBlock(final IBlockAccess ba, final Chunk chunk) {
-		final int hash = Utility.hashChunk(chunk);
-		if (Utility.cachedHeight.contains(hash))
-			return Utility.cachedHeight.get(hash);
 		for (int y = chunk.getTopFilledSegment() + 16; y > 0; y--)
 			for (int x = 0; x < 16; x++)
 				for (int z = 0; z < 16; z++)
-					if (ba.getBlock(chunk.xPosition * 16 + x, y, chunk.zPosition * 16 + z) != Blocks.air) {
-						Utility.cachedHeight.put(hash, y);
+					if (ba.getBlock(chunk.xPosition * 16 + x, y, chunk.zPosition * 16 + z) != Blocks.air)
 						return y;
-					}
 		return chunk.getTopFilledSegment() + 16;
-	}
-
-	public static String fixCamelCase(final String prefix, final String str) {
-		return prefix.toLowerCase() + str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
 	}
 
 	public static List<ItemStack> getOreDictStacks(final Metal metal) {
 		final List<ItemStack> list = new ArrayList<ItemStack>();
 		for (final Component component : metal.getComponents())
-			list.addAll(OreDictionary.getOres(fixCamelCase("ore", component.name)));
+			list.addAll(OreDictionary.getOres(camelCase("ore", component.name)));
 		return list;
 	}
 
@@ -117,29 +96,26 @@ public class Utility {
 		return (chunk.xPosition >> 8 ^ chunk.xPosition) & 0xFFFF | ((chunk.zPosition >> 8 ^ chunk.zPosition) & 0xFFFF) << 16;
 	}
 
-	public static boolean isCached(final ItemStack stack) {
-		return stack != null && Utility.commonCache.contains(stack.getUnlocalizedName());
+	public static boolean isCommonBlock(final Block block, final int meta) {
+		if (block == null)
+			return false;
+		for (final List<String> entry : commonCache.values()) {
+			if (entry == null || entry.isEmpty())
+				continue;
+			if (entry.contains(block.getUnlocalizedName() + ":" + meta))
+				return true;
+		}
+		return false;
 	}
 
 	public static boolean isCommonName(final String name) {
 		return Utility.commonList.contains(Utility.cleanName(name));
 	}
 
-	public static boolean presentInChunk(final Metal metal, final Chunk chunk) {
-		if (!Utility.metalsGenerated.contains(chunk))
-			return false;
-		if (Utility.metalsGenerated.get(chunk).contains(metal))
-			return true;
-		return false;
-	}
-
 	public static final List<String> commonList = Arrays.asList(new String[] {
 			"coal", "aluminium", "zinc", "copper", "tin", "lead", "iron", "nickel", "tungsten", "silver", "gold", "titanium", "platinum", "brass", "bronze", "steel", "invar", "electrum"
 	});
-	private static TIntIntHashMap cachedHeight = new TIntIntHashMap();
-	private static ChunkMap<List<Metal>> metalsGenerated = new ChunkMap<List<Metal>>();
-	private static Map<String, String> displayNameToOreDictName = new HashMap<String, String>();
-	private static List<String> commonCache = new ArrayList<String>();
+	private static Map<String, List<String>> commonCache = new HashMap<String, List<String>>();
 	public static final String[] fixes = {
 			"ore", "dust", "pulv(erized*)*", "block", "ingot", "nugget", "storage", "compress(ed)*"
 	};

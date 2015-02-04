@@ -25,7 +25,7 @@ public class MagicWand extends ItemShears {
 		if (world.isRemote)
 			return thisStack;
 		int commonTotal = 0;
-		final int square = 1;
+		final int square = 2;
 		for (int ix = -square; ix <= square; ix++)
 			for (int iy = -square; iy <= square; iy++) {
 				int commonCount = 0;
@@ -36,12 +36,11 @@ public class MagicWand extends ItemShears {
 						for (int y = yMax; y > 0; y--) {
 							final int worldX = chunk.xPosition * 16 + x;
 							final int worldZ = chunk.zPosition * 16 + z;
-							final Block block = chunk.getBlock(x, y, z);
-							if (block.isAir(world, worldX, y, worldZ))
+							if (world.isAirBlock(worldX, y, worldZ))
 								continue;
+							final Block block = chunk.getBlock(x, y, z);
 							final int meta = world.getBlockMetadata(worldX, y, worldZ);
-							final ItemStack stack = new ItemStack(block, 1, meta);
-							if (!Utility.isCached(stack))
+							if (!Utility.isCommonBlock(block, meta))
 								world.setBlock(worldX, y, worldZ, Blocks.air);
 							else
 								commonCount++;

@@ -15,6 +15,11 @@ import cpw.mods.fml.common.IWorldGenerator;
 
 public class GeneratorCommonOre implements IWorldGenerator {
 
+	int count = 0;
+	long total = 0;
+	int min = 1000;
+	int max = 0;
+
 	@Override
 	public void generate(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
 		if (world.provider.dimensionId != 0)
@@ -24,16 +29,16 @@ public class GeneratorCommonOre implements IWorldGenerator {
 		for (final Metal metal : MetalRegistry.instance.getGeneratedMetals()) {
 			if (metal.isAlloy())
 				continue;
-			final int nodes = metal.getProperties().nodes + 1;
+			final int nodes = metal.getProperties().nodes;
 			final CommonGenMinable gen = new CommonGenMinable(metal.ore, metal.getProperties().size);
-			for (int i = 0; i < yMax / 64F * nodes; i++) {
+			for (int i = 0; i < nodes; i++) {
 				if (metal.getProperties().rarity < random.nextDouble())
 					continue;
-				final int y = (int) (((float) random.nextGaussian() - 0.5F) * metal.getProperties().spread * yMax + metal.getProperties().depth * yMax);
-				if (y < 0)
+				double y = (random.nextGaussian() - 0.5) * (metal.getProperties().spread * yMax);
+				y += metal.getProperties().depth * yMax;
+				if (y <= 1)
 					continue;
-				Utility.cacheGeneration(metal, chunk);
-				gen.generate(world, random, chunkX * 16 + random.nextInt(16), y, chunkZ * 16 + random.nextInt(16));
+				gen.generate(world, random, chunkX * 16 + random.nextInt(16), (int) y, chunkZ * 16 + random.nextInt(16));
 			}
 		}
 	}

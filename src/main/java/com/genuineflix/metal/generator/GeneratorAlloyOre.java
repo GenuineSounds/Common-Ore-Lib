@@ -34,16 +34,17 @@ public class GeneratorAlloyOre implements IWorldGenerator {
 				continue;
 			final int nodes = (int) (metal.getProperties().nodes / 2F) + 1;
 			final CommonGenMinable gen = new CommonGenMinable(metal.ore, metal.getProperties().size);
-			for (int i = 0; i < yMax / 64F * nodes; i++) {
+			for (int i = 0; i < nodes; i++) {
 				if (metal.getProperties().rarity < random.nextDouble())
 					continue;
-				final int y = (int) (((float) random.nextGaussian() - 0.5F) * metal.getProperties().spread * yMax + metal.getProperties().depth * yMax);
-				if (y < 0)
+				double y = (random.nextGaussian() - 0.5) * (metal.getProperties().spread * yMax);
+				y += metal.getProperties().depth * yMax;
+				if (y <= 1)
 					continue;
 				final int x = chunkX * 16 + random.nextInt(16);
 				final int z = chunkZ * 16 + random.nextInt(16);
-				if (!rareAlloys || Utility.presentInChunk(metal, chunk) && Utility.areComponentsFound(metal, world, x, y, z, radius))
-					gen.generate(world, random, x, y, z);
+				if (!rareAlloys || Utility.areComponentsFound(metal, world, x, (int) y, z, radius))
+					gen.generate(world, random, x, (int) y, z);
 			}
 		}
 	}

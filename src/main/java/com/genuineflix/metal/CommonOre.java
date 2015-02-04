@@ -6,11 +6,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.genuineflix.metal.config.Config;
-import com.genuineflix.metal.events.OreGenerationEvent;
+import com.genuineflix.metal.event.OreGenerationEvent;
 import com.genuineflix.metal.generator.GeneratorAlloyOre;
 import com.genuineflix.metal.generator.GeneratorCommonOre;
 import com.genuineflix.metal.generator.GeneratorFlatBedrock;
-import com.genuineflix.metal.items.MagicWand;
+import com.genuineflix.metal.item.MagicWand;
 import com.genuineflix.metal.registry.MetalRegistry;
 
 import cpw.mods.fml.common.Mod;

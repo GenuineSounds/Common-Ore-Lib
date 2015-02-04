@@ -1,10 +1,9 @@
-package com.genuineflix.metal.metals;
+package com.genuineflix.metal.registry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCompressed;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.material.MapColor;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -13,6 +12,7 @@ import scala.actors.threadpool.Arrays;
 
 import com.genuineflix.metal.CommonOre;
 import com.genuineflix.metal.interfaces.IAlloy;
+import com.genuineflix.metal.util.Utility;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -33,11 +33,11 @@ public class Metal implements IAlloy {
 	public Metal(final String name) {
 		this.name = name;
 		nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-		ore = new BlockOre().setBlockName("ore" + nameFixed).setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeStone).setBlockTextureName(CommonOre.MODID + ":ores/" + nameFixed);
-		dust = new Item().setUnlocalizedName("dust" + nameFixed).setCreativeTab(CreativeTabs.tabMaterials).setTextureName(CommonOre.MODID + ":dusts/" + nameFixed);
-		ingot = new Item().setUnlocalizedName("ingot" + nameFixed).setCreativeTab(CreativeTabs.tabMaterials).setTextureName(CommonOre.MODID + ":ingots/" + nameFixed);
-		nugget = new Item().setUnlocalizedName("nugget" + nameFixed).setCreativeTab(CreativeTabs.tabMaterials).setTextureName(CommonOre.MODID + ":nuggets/" + nameFixed);
-		block = new BlockCompressed(MapColor.ironColor).setBlockName("block" + nameFixed).setCreativeTab(CreativeTabs.tabBlock).setStepSound(Block.soundTypeMetal).setBlockTextureName(CommonOre.MODID + ":blocks/" + nameFixed);
+		ore = new BlockOre().setBlockName("ore" + nameFixed).setCreativeTab(Utility.COMMON_TAB).setStepSound(Block.soundTypeStone).setBlockTextureName(CommonOre.MODID + ":ores/" + nameFixed);
+		dust = new Item().setUnlocalizedName("dust" + nameFixed).setCreativeTab(Utility.COMMON_TAB).setTextureName(CommonOre.MODID + ":dusts/" + nameFixed);
+		ingot = new Item().setUnlocalizedName("ingot" + nameFixed).setCreativeTab(Utility.COMMON_TAB).setTextureName(CommonOre.MODID + ":ingots/" + nameFixed);
+		nugget = new Item().setUnlocalizedName("nugget" + nameFixed).setCreativeTab(Utility.COMMON_TAB).setTextureName(CommonOre.MODID + ":nuggets/" + nameFixed);
+		block = new BlockCompressed(MapColor.ironColor).setBlockName("block" + nameFixed).setCreativeTab(Utility.COMMON_TAB).setStepSound(Block.soundTypeMetal).setBlockTextureName(CommonOre.MODID + ":blocks/" + nameFixed);
 	}
 
 	public boolean generate() {

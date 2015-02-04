@@ -12,8 +12,7 @@ import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
 
 import com.genuineflix.metal.interfaces.IAlloy.Component;
 import com.genuineflix.metal.interfaces.IOre.Properties;
-import com.genuineflix.metal.metals.Metal;
-import com.genuineflix.metal.utils.Utility;
+import com.genuineflix.metal.util.Utility;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
@@ -31,12 +30,12 @@ public class MetalRegistry {
 		return completeMetalList;
 	}
 
-	private Metal getCommonMetal(final String name) {
-		return nameToMetal.get(name);
-	}
-
 	public List<Metal> getGeneratedMetals() {
 		return generatedMetalList;
+	}
+
+	public Metal getMetal(final String name) {
+		return nameToMetal.get(name);
 	}
 
 	public String[] getMetalNames() {
@@ -58,7 +57,7 @@ public class MetalRegistry {
 
 	public void post() {
 		for (final String name : oresRegistered) {
-			final Metal metal = getCommonMetal(name);
+			final Metal metal = getMetal(name);
 			if (metal == null)
 				continue;
 			metal.setGeneration(true);

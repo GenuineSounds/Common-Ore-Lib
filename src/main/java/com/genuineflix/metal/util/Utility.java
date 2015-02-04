@@ -1,4 +1,4 @@
-package com.genuineflix.metal.utils;
+package com.genuineflix.metal.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -16,7 +18,8 @@ import net.minecraftforge.oredict.OreDictionary;
 
 import com.genuineflix.metal.CommonOre;
 import com.genuineflix.metal.interfaces.IAlloy.Component;
-import com.genuineflix.metal.metals.Metal;
+import com.genuineflix.metal.registry.Metal;
+import com.genuineflix.metal.registry.MetalRegistry;
 
 public class Utility {
 
@@ -118,5 +121,16 @@ public class Utility {
 	private static Map<String, List<String>> commonCache = new HashMap<String, List<String>>();
 	public static final String[] fixes = {
 			"ore", "dust", "pulv(erized*)*", "block", "ingot", "nugget", "storage", "compress(ed)*"
+	};
+	public static final CreativeTabs COMMON_TAB = new CreativeTabs(CommonOre.NAME) {
+
+		Item getRandomItem() {
+			return MetalRegistry.instance.getMetal("tungsten").ingot;
+		}
+
+		@Override
+		public Item getTabIconItem() {
+			return getRandomItem();
+		}
 	};
 }

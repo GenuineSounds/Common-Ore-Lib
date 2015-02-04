@@ -7,7 +7,7 @@ import net.minecraftforge.common.config.Property;
 
 import com.genuineflix.metal.interfaces.IAlloy.Component;
 import com.genuineflix.metal.interfaces.IOre.Properties;
-import com.genuineflix.metal.metals.Metal;
+import com.genuineflix.metal.registry.Metal;
 import com.genuineflix.metal.registry.MetalRegistry;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;

@@ -1,4 +1,4 @@
-package com.genuineflix.metal.items;
+package com.genuineflix.metal.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import com.genuineflix.metal.CommonOre;
-import com.genuineflix.metal.utils.Utility;
+import com.genuineflix.metal.util.Utility;
 
 public class MagicWand extends ItemShears {
 
@@ -18,17 +18,17 @@ public class MagicWand extends ItemShears {
 	public MagicWand() {
 		setUnlocalizedName("magicWand");
 		setTextureName(CommonOre.MODID + ":debug/Wand");
+		setCreativeTab(Utility.COMMON_TAB);
 	}
 
 	@Override
 	public ItemStack onItemRightClick(final ItemStack thisStack, final World world, final EntityPlayer player) {
 		if (world.isRemote)
 			return thisStack;
-		int commonTotal = 0;
 		final int square = 2;
 		for (int ix = -square; ix <= square; ix++)
 			for (int iy = -square; iy <= square; iy++) {
-				int commonCount = 0;
+				final int commonCount = 0;
 				final Chunk chunk = world.getChunkFromBlockCoords((int) Math.floor(player.posX + ix * 16), (int) Math.floor(player.posZ + iy * 16));
 				final int yMax = Utility.findHighestBlock(world, chunk);
 				for (int x = 0; x < 16; x++)
@@ -42,10 +42,7 @@ public class MagicWand extends ItemShears {
 							final int meta = world.getBlockMetadata(worldX, y, worldZ);
 							if (!Utility.isCommonBlock(block, meta))
 								world.setBlock(worldX, y, worldZ, Blocks.air);
-							else
-								commonCount++;
 						}
-				commonTotal += commonCount;
 			}
 		return thisStack;
 	}

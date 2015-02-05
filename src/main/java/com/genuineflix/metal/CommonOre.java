@@ -28,7 +28,7 @@ public class CommonOre {
 	public static CommonOre instance;
 	public static final String MODID = "CommonOre";
 	public static final String NAME = "CommonOre";
-	public static final String VERSION = "1.0.11";
+	public static final String VERSION = "1.0.12";
 	public static final Logger log = LogManager.getLogger(MODID);
 	public static Config config;
 

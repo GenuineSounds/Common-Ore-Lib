@@ -22,15 +22,16 @@ public class GeneratorCommonOre implements IWorldGenerator {
 		for (final Metal metal : MetalRegistry.instance.getGeneratedMetals()) {
 			if (metal.isAlloy())
 				continue;
-			final CommonGenMinable gen = new CommonGenMinable(metal.ore, metal.getProperties().size);
-			for (int i = 0; i < metal.getProperties().nodes; i++) {
+			final CommonGenMinable gen = new CommonGenMinable(metal.ore, (int) Utility.generativeScaling(yMax, false, metal.getProperties().size));
+			for (int i = 0; i < Utility.generativeScaling(yMax, true, metal.getProperties().nodes); i++) {
 				if (metal.getProperties().rarity < random.nextDouble())
 					continue;
 				final int x = chunkX * 16 + random.nextInt(16);
-				final int y = (int) ((random.nextGaussian() - 0.5) * (metal.getProperties().spread * yMax) + metal.getProperties().depth * yMax);
 				final int z = chunkZ * 16 + random.nextInt(16);
-				if (y > 1)
-					gen.generate(world, random, x, y, z);
+				int y = (int) ((random.nextGaussian() - 0.5) * (metal.getProperties().spread * yMax) + metal.getProperties().depth * yMax);
+				if (y < 1)
+					y = 1;
+				gen.generate(world, random, x, y, z);
 			}
 		}
 	}

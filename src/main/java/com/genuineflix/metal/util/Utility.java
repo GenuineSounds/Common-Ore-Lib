@@ -8,10 +8,8 @@ import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.oredict.OreDictionary;
@@ -79,13 +77,18 @@ public class Utility {
 		return name;
 	}
 
-	public static int findHighestBlock(final IBlockAccess ba, final Chunk chunk) {
+	public static int findHighestBlock(final World world, final Chunk chunk) {
+		chunk.generateHeightMap();
 		for (int y = chunk.getTopFilledSegment() + 16; y > 0; y--)
 			for (int x = 0; x < 16; x++)
 				for (int z = 0; z < 16; z++)
-					if (ba.getBlock(chunk.xPosition * 16 + x, y, chunk.zPosition * 16 + z) != Blocks.air)
+					if (!world.isAirBlock(chunk.xPosition * 16 + x, y, chunk.zPosition * 16 + z))
 						return y;
 		return chunk.getTopFilledSegment() + 16;
+	}
+
+	public static double generativeScaling(final int yMax, final boolean inverse, final double number) {
+		return (inverse ? yConst / yMax : yMax / yConst) * number;
 	}
 
 	public static List<ItemStack> getOreDictStacks(final Metal metal) {
@@ -115,6 +118,7 @@ public class Utility {
 		return Utility.commonList.contains(Utility.cleanName(name));
 	}
 
+	public static final double yConst = 128D;
 	public static final List<String> commonList = Arrays.asList(new String[] {
 			"coal", "aluminium", "zinc", "copper", "tin", "lead", "iron", "nickel", "tungsten", "silver", "gold", "titanium", "platinum", "brass", "bronze", "steel", "invar", "electrum"
 	});

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -18,22 +19,22 @@ import com.genuineflix.metal.CommonOre;
 import com.genuineflix.metal.interfaces.IAlloy.Component;
 import com.genuineflix.metal.registry.Metal;
 import com.genuineflix.metal.registry.MetalRegistry;
+import com.google.common.base.Predicate;
 
 public class Utility {
 
-	public static boolean areComponentsFound(final Metal metal, final World world, final int x, final int y, final int z, final int radius) {
+	public static boolean areComponentsFound(final Metal metal, final World world, final int posX, final int posY, final int posZ, final int radius) {
 		if (!metal.isAlloy())
 			return false;
-		final Component[] components = metal.getComponents();
 		final boolean[] componentWasFound = new boolean[metal.getComponents().length];
-		for (int xd = -radius; xd <= radius; xd++)
-			for (int yd = -radius; yd <= radius; yd++)
-				for (int zd = -radius; zd <= radius; zd++) {
-					if (!world.blockExists(x + xd, y + yd, z + zd))
+		for (int x = -radius; x <= radius; x++)
+			for (int y = -radius; y <= radius; y++)
+				for (int z = -radius; z <= radius; z++) {
+					if (!world.blockExists(posX + x, posY + y, posZ + z))
 						continue;
-					final String tag = world.getBlock(x + xd, y + yd, z + zd).getUnlocalizedName() + ":" + world.getBlockMetadata(x + xd, y + yd, z + zd);
-					for (int i = 0; i < components.length; i++) {
-						final Component component = components[i];
+					final String tag = world.getBlock(posX + x, posY + y, posZ + z).getUnlocalizedName() + ":" + world.getBlockMetadata(posX + x, posY + y, posZ + z);
+					for (int i = 0; i < metal.getComponents().length; i++) {
+						final Component component = metal.getComponents()[i];
 						final String oreName = camelCase("ore", component.name);
 						if (!Utility.commonCache.containsKey(oreName))
 							continue;
@@ -50,7 +51,7 @@ public class Utility {
 	public static void cacheCommonBlock(final String oreDict, final Block block, final int meta) {
 		if (!oreDict.startsWith("ore"))
 			return;
-		CommonOre.log.warn("Caching common: " + oreDict + ".add(" + block.getUnlocalizedName() + ":" + meta + ")");
+		CommonOre.log.warn("Caching common: " + oreDict + " = " + block.getUnlocalizedName() + ":" + meta);
 		List<String> list;
 		if (!commonCache.containsKey(oreDict))
 			list = new ArrayList<String>();
@@ -71,18 +72,14 @@ public class Utility {
 			name = name.replaceAll("^" + string, "");
 			name = name.replaceAll(string + "$", "");
 		}
-		if ("aluminum".equalsIgnoreCase(name))
-			name = "aluminium";
-		name = name.toLowerCase();
-		return name;
+		return name.replace("aluminum", "aluminium").toLowerCase();
 	}
 
-	public static int findHighestBlock(final World world, final Chunk chunk) {
-		chunk.generateHeightMap();
-		for (int y = chunk.getTopFilledSegment() + 16; y > 0; y--)
+	public static int findGroundLevel(final Chunk chunk, final Predicate<Block> isGroundBlock) {
+		for (int y = chunk.getTopFilledSegment() + 16; y > 1; y--)
 			for (int x = 0; x < 16; x++)
 				for (int z = 0; z < 16; z++)
-					if (!world.isAirBlock(chunk.xPosition * 16 + x, y, chunk.zPosition * 16 + z))
+					if (isGroundBlock.apply(chunk.getBlock(x, y, z)))
 						return y;
 		return chunk.getTopFilledSegment() + 16;
 	}
@@ -118,23 +115,45 @@ public class Utility {
 		return Utility.commonList.contains(Utility.cleanName(name));
 	}
 
-	public static final double yConst = 128D;
-	public static final List<String> commonList = Arrays.asList(new String[] {
+	public static final Predicate<Block> IS_GROUND_BLOCK = new Predicate<Block>() {
+
+		@Override
+		public boolean apply(final Block input) {
+			for (final Block block : Utility.GROUND_BLOCKS)
+				if (Block.isEqualTo(input, block))
+					return true;
+			return false;
+		}
+	};
+	public static final Predicate<Block> IS_REPLACEABLE_BLOCK = new Predicate<Block>() {
+
+		@Override
+		public boolean apply(final Block input) {
+			for (final Block block : Utility.REPLACED_BLOCKS)
+				if (Block.isEqualTo(input, block))
+					return true;
+			return false;
+		}
+	};
+	private static final double yConst = 128D;
+	private static final List<String> commonList = Arrays.asList(new String[] {
 			"coal", "aluminium", "zinc", "copper", "tin", "lead", "iron", "nickel", "tungsten", "silver", "gold", "titanium", "platinum", "brass", "bronze", "steel", "invar", "electrum"
 	});
 	private static Map<String, List<String>> commonCache = new HashMap<String, List<String>>();
-	public static final String[] fixes = {
+	private static final String[] fixes = {
 			"ore", "dust", "pulv(erized*)*", "block", "ingot", "nugget", "storage", "compress(ed)*"
+	};
+	public static final Block[] REPLACED_BLOCKS = new Block[] {
+			Blocks.dirt, Blocks.stone, Blocks.sand, Blocks.gravel, Blocks.netherrack, Blocks.soul_sand
+	};
+	public static final Block[] GROUND_BLOCKS = new Block[] {
+			Blocks.grass, Blocks.dirt, Blocks.stone, Blocks.sand, Blocks.gravel, Blocks.clay, Blocks.snow, Blocks.snow_layer, Blocks.hardened_clay, Blocks.mycelium, Blocks.netherrack, Blocks.soul_sand
 	};
 	public static final CreativeTabs COMMON_TAB = new CreativeTabs(CommonOre.NAME) {
 
-		Item getRandomItem() {
-			return MetalRegistry.instance.getMetal("tungsten").ingot;
-		}
-
 		@Override
 		public Item getTabIconItem() {
-			return getRandomItem();
+			return MetalRegistry.instance.getMetal("tungsten").ingot;
 		}
 	};
 }

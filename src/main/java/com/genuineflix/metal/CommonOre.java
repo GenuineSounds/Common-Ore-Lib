@@ -38,8 +38,8 @@ public class CommonOre {
 
 	@EventHandler
 	public void init(final FMLInitializationEvent event) {
-		MagicWand.instance = new MagicWand();
-		GameRegistry.registerItem(MagicWand.instance, "magicWand");
+		MagicWand.wand = new MagicWand();
+		GameRegistry.registerItem(MagicWand.wand, "magicWand");
 		MetalRegistry.instance.init();
 		CommonOre.config.init();
 		if (CommonOre.config.flatBedrock)

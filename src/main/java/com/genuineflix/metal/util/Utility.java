@@ -23,7 +23,7 @@ import com.google.common.base.Predicate;
 
 public class Utility {
 
-	public static boolean areComponentsFound(final Metal metal, final World world, final int posX, final int posY, final int posZ, final int radius) {
+	public static boolean areComponentsFound(final World world, final int posX, final int posY, final int posZ, final Metal metal, final int radius) {
 		if (!metal.isAlloy())
 			return false;
 		final boolean[] componentWasFound = new boolean[metal.getComponents().length];
@@ -81,6 +81,13 @@ public class Utility {
 				for (int z = 0; z < 16; z++)
 					if (isGroundBlock.apply(chunk.getBlock(x, y, z)))
 						return y;
+		return chunk.getTopFilledSegment() + 16;
+	}
+
+	public static int findGroundLevel(final Chunk chunk, final int x, final int z, final Predicate<Block> isGroundBlock) {
+		for (int y = chunk.getTopFilledSegment() + 16; y > 1; y--)
+			if (isGroundBlock.apply(chunk.getBlock(x, y, z)))
+				return y;
 		return chunk.getTopFilledSegment() + 16;
 	}
 

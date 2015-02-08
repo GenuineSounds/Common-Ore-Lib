@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Logger;
 import com.genuineflix.metal.config.Config;
 import com.genuineflix.metal.event.OreGenerationEvent;
 import com.genuineflix.metal.generator.GeneratorAlloyOre;
-import com.genuineflix.metal.generator.GeneratorCommonOre;
 import com.genuineflix.metal.generator.GeneratorFlatBedrock;
+import com.genuineflix.metal.generator.GeneratorStandardOre;
 import com.genuineflix.metal.item.MagicWand;
 import com.genuineflix.metal.registry.MetalRegistry;
 
@@ -44,7 +44,7 @@ public class CommonOre {
 		CommonOre.config.init();
 		if (CommonOre.config.flatBedrock)
 			GameRegistry.registerWorldGenerator(new GeneratorFlatBedrock(), Integer.MIN_VALUE);
-		GameRegistry.registerWorldGenerator(new GeneratorCommonOre(), 5000);
+		GameRegistry.registerWorldGenerator(new GeneratorStandardOre(), 5000);
 		if (CommonOre.config.genAlloys)
 			GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(CommonOre.config.rareAlloys, CommonOre.config.searchRadius), 5001);
 	}

@@ -2,28 +2,78 @@ package com.genuineflix.metal.generator.feature;
 
 import java.util.Random;
 
+import javax.vecmath.Tuple3i;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 
-import com.genuineflix.metal.util.Utility;
+import com.genuineflix.metal.registry.Metal;
+import com.genuineflix.metal.util.GenerationHelper;
 import com.google.common.base.Predicate;
 
 public class CommonMetalNode extends WorldGenMinable {
 
-	public final Block ore;
+	public static class NodePos extends Tuple3i {
+
+		public final String ore;
+		public final double radius;
+
+		public NodePos(final String ore, final int x, final int y, final int z) {
+			this(ore, x, y, z, 0);
+		}
+
+		public NodePos(final String ore, final int x, final int y, final int z, final double radius) {
+			super(x, y, z);
+			this.ore = ore;
+			this.radius = radius;
+		}
+
+		public boolean areIntersecting(final NodePos pos) {
+			return this.distanceTo(pos) - (radius + pos.radius) <= 0;
+		}
+
+		public boolean areIntersecting(final NodePos pos, final double extra) {
+			return this.distanceTo(pos) - (radius / 2.0 + pos.radius / 2.0 + extra) <= 0;
+		}
+
+		public double distanceTo(final NodePos pos) {
+			return this.distanceTo(pos.x, pos.y, pos.z);
+		}
+
+		public double distanceTo(final double x, final double y, final double z) {
+			final double distanceX = this.x - x;
+			final double distanceY = this.y - y;
+			final double distanceZ = this.z - z;
+			return Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
+		}
+	}
+
+	public static enum BiomeType {
+		STONE(0), NETHER(1), ENDER(2);
+
+		public final int meta;
+
+		private BiomeType(final int meta) {
+			this.meta = meta;
+		}
+	}
+
+	public final Metal metal;
+	public final BiomeType type;
 	public final int size;
 	public final Predicate<Block> isBlockReplaceable;
 
-	public CommonMetalNode(final Block ore, final int size) {
-		this(ore, size, Utility.IS_REPLACEABLE_BLOCK);
+	public CommonMetalNode(final Metal metal, final BiomeType type, final int size) {
+		this(metal, type, size, GenerationHelper.IS_REPLACEABLE_BLOCK);
 	}
 
-	public CommonMetalNode(final Block ore, final int size, final Predicate<Block> isBlockReplaceable) {
-		super(ore, size, Blocks.stone);
-		this.ore = ore;
+	public CommonMetalNode(final Metal metal, final BiomeType type, final int size, final Predicate<Block> isBlockReplaceable) {
+		super(metal.ore, type.meta, size, Blocks.stone);
+		this.metal = metal;
+		this.type = type;
 		this.size = size;
 		this.isBlockReplaceable = isBlockReplaceable;
 	}
@@ -62,12 +112,16 @@ public class CommonMetalNode extends WorldGenMinable {
 							for (int genZ = k1; genZ <= j2; ++genZ) {
 								final double d14 = (genZ + 0.5D - d8) / (d10 / 2.0D);
 								if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && isBlockReplaceable.apply(world.getBlock(genX, genY, genZ))) {
-									world.setBlock(genX, genY, genZ, ore, 0, 2);
+									world.setBlock(genX, genY, genZ, metal.ore, type.meta, 2);
 									generated = true;
 								}
 							}
 					}
 			}
+		}
+		if (generated) {
+			final NodePos pos = new NodePos(metal.name, x, y, z);
+			GenerationHelper.cacheNodeGen(world.getChunkFromBlockCoords(x, z), pos);
 		}
 		return generated;
 	}

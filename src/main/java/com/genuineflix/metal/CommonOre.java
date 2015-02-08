@@ -1,5 +1,7 @@
 package com.genuineflix.metal;
 
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,6 +33,13 @@ public class CommonOre {
 	public static final String VERSION = "1.0.12";
 	public static final Logger log = LogManager.getLogger(MODID);
 	public static Config config;
+	public static final CreativeTabs COMMON_TAB = new CreativeTabs(NAME) {
+
+		@Override
+		public Item getTabIconItem() {
+			return MetalRegistry.instance.getMetal("tungsten").ingot;
+		}
+	};
 
 	public CommonOre() {
 		MinecraftForge.EVENT_BUS.register(MetalRegistry.instance);

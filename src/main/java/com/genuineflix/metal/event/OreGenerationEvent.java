@@ -7,7 +7,7 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 
 import com.genuineflix.metal.generator.feature.CommonMetalNode;
-import com.genuineflix.metal.util.Utility;
+import com.genuineflix.metal.registry.MetalRegistry;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -16,7 +16,7 @@ public class OreGenerationEvent {
 
 	public static Field blockWorldGenMinableField;
 	public static Field metaWorldGenMinableField;
-	public static Boolean enabledWorldGenMinable = true;
+	public static Boolean enabledWorldGenMinable = false;
 	static {
 		try {
 			OreGenerationEvent.blockWorldGenMinableField = WorldGenMinable.class.getDeclaredFields()[0];
@@ -44,7 +44,7 @@ public class OreGenerationEvent {
 						Integer meta = (Integer) OreGenerationEvent.metaWorldGenMinableField.get(event.generator);
 						if (meta == null)
 							meta = 0;
-						if (Utility.isCommonBlock(block, meta))
+						if (MetalRegistry.isCommonBlock(block, meta))
 							event.setResult(Result.DENY);
 					}
 				}

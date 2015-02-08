@@ -1,6 +1,7 @@
 package com.genuineflix.metal.config;
 
 import java.io.File;
+import java.util.Arrays;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -9,6 +10,7 @@ import com.genuineflix.metal.interfaces.IAlloy.Component;
 import com.genuineflix.metal.interfaces.IOre.Properties;
 import com.genuineflix.metal.registry.Metal;
 import com.genuineflix.metal.registry.MetalRegistry;
+import com.genuineflix.metal.util.StringHelper;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
@@ -31,9 +33,11 @@ public class Config {
 	}
 
 	private String[] getComponentNames(final Metal metal) {
-		final String[] names = new String[metal.getComponents().length];
-		for (int i = 0; i < metal.getComponents().length; i++)
-			names[i] = metal.getComponents()[i].name;
+		String[] names = new String[metal.getComponents().size()];
+		for (int i = 0; i < metal.getComponents().get(i).factor; i++) {
+			names = Arrays.copyOf(names, names.length + 1);
+			names[names.length - 1] = StringHelper.camelCase("dust", metal.getComponents().get(i).name);
+		}
 		final Property prop = metals.get("components", metal.name, names);
 		prop.setValidValues(MetalRegistry.instance.getMetalNames());
 		prop.setLanguageKey("CommonOre.components");
@@ -116,6 +120,8 @@ public class Config {
 		for (int i = 0; i < MetalRegistry.instance.getAllMetals().size(); i++) {
 			final Metal metal = MetalRegistry.instance.getAllMetals().get(i);
 			metal.setGeneration(getGeneration(metal));
+			if (!MetalRegistry.instance.getGeneratedMetals().contains(metal))
+				MetalRegistry.instance.getGeneratedMetals().add(metal);
 		}
 		metals.save();
 	}

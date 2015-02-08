@@ -10,7 +10,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import com.genuineflix.metal.CommonOre;
-import com.genuineflix.metal.util.Utility;
+import com.genuineflix.metal.registry.MetalRegistry;
+import com.genuineflix.metal.util.GenerationHelper;
 import com.google.common.base.Predicate;
 
 import cpw.mods.fml.common.Loader;
@@ -36,7 +37,7 @@ public class MagicWand extends ItemShears {
 	public MagicWand() {
 		setUnlocalizedName("magicWand");
 		setTextureName(CommonOre.MODID + ":debug/Wand");
-		setCreativeTab(Utility.COMMON_TAB);
+		setCreativeTab(CommonOre.COMMON_TAB);
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public class MagicWand extends ItemShears {
 			return stack;
 		int count = 0;
 		final Chunk chunk = world.getChunkFromBlockCoords((int) Math.floor(player.posX), (int) Math.floor(player.posZ));
-		final int yMax = Utility.findGroundLevel(chunk, removal);
+		final int yMax = GenerationHelper.findGroundLevel(chunk, removal);
 		for (int x = 0; x < 16; x++)
 			for (int z = 0; z < 16; z++)
 				for (int y = yMax; y > 0; y--) {
@@ -53,7 +54,7 @@ public class MagicWand extends ItemShears {
 					final int worldZ = chunk.zPosition * 16 + z;
 					if (world.isAirBlock(worldX, y, worldZ))
 						continue;
-					if (Utility.isCommonBlock(chunk.getBlock(x, y, z), world.getBlockMetadata(worldX, y, worldZ)))
+					if (MetalRegistry.isCommonBlock(chunk.getBlock(x, y, z), world.getBlockMetadata(worldX, y, worldZ)))
 						count++;
 					else
 						world.setBlock(worldX, y, worldZ, Blocks.air);
@@ -63,7 +64,7 @@ public class MagicWand extends ItemShears {
 			tag.setString("type", "common");
 			tag.setFloat("amount", count);
 			tag.setString("message", "Common ores found: ");
-			tag.setInteger("ticks", 120);
+			tag.setInteger("ticks", 60);
 			FMLInterModComms.sendMessage(CC_MOD_NAME, CC_DIRECT_MESSAGE_KEY, tag);
 		}
 		CommonOre.log.warn("Common Ore count: " + count);

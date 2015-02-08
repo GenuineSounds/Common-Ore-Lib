@@ -11,21 +11,21 @@ import net.minecraft.world.gen.feature.WorldGenMinable;
 import com.genuineflix.metal.util.Utility;
 import com.google.common.base.Predicate;
 
-public class CommonGenMinable extends WorldGenMinable {
+public class CommonMetalNode extends WorldGenMinable {
 
 	public final Block ore;
 	public final int size;
-	public final Predicate<Block> generateOver;
+	public final Predicate<Block> isBlockReplaceable;
 
-	public CommonGenMinable(final Block ore, final int size) {
+	public CommonMetalNode(final Block ore, final int size) {
 		this(ore, size, Utility.IS_REPLACEABLE_BLOCK);
 	}
 
-	public CommonGenMinable(final Block ore, final int size, final Predicate<Block> generateOver) {
+	public CommonMetalNode(final Block ore, final int size, final Predicate<Block> isBlockReplaceable) {
 		super(ore, size, Blocks.stone);
 		this.ore = ore;
 		this.size = size;
-		this.generateOver = generateOver;
+		this.isBlockReplaceable = isBlockReplaceable;
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class CommonGenMinable extends WorldGenMinable {
 						if (d12 * d12 + d13 * d13 < 1.0D)
 							loop: for (int genZ = k1; genZ <= j2; ++genZ) {
 								final double d14 = (genZ + 0.5D - d8) / (d10 / 2.0D);
-								if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && generateOver.apply(world.getBlock(genX, genY, genZ))) {
+								if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && isBlockReplaceable.apply(world.getBlock(genX, genY, genZ))) {
 									world.setBlock(genX, genY, genZ, ore, 0, 2);
 									generated = true;
 									continue loop;

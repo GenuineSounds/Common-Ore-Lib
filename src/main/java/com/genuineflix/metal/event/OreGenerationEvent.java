@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import net.minecraftforge.event.terraingen.OreGenEvent;
 
-import com.genuineflix.metal.generator.feature.CommonGenMinable;
+import com.genuineflix.metal.generator.feature.CommonMetalNode;
 import com.genuineflix.metal.util.Utility;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -34,7 +34,7 @@ public class OreGenerationEvent {
 
 	@SubscribeEvent
 	public void minable(final OreGenEvent.GenerateMinable event) {
-		if (event.generator == null || event.generator instanceof CommonGenMinable)
+		if (event.generator == null || event.generator instanceof CommonMetalNode)
 			return;
 		if (event.generator instanceof WorldGenMinable)
 			if (OreGenerationEvent.enabledWorldGenMinable)

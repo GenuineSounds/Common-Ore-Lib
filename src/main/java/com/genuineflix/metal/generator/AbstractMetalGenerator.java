@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 
-import com.genuineflix.metal.generator.feature.CommonGenMinable;
+import com.genuineflix.metal.generator.feature.CommonMetalNode;
 import com.genuineflix.metal.registry.Metal;
 import com.genuineflix.metal.registry.MetalRegistry;
 import com.genuineflix.metal.util.Utility;
@@ -37,7 +37,7 @@ public abstract class AbstractMetalGenerator implements IWorldGenerator {
 			final int posX = chunk.xPosition * 16 + rndX;
 			final int posY = (int) (random.nextGaussian() * metal.getProperties().spread * columnLevel + metal.getProperties().depth * columnLevel);
 			final int posZ = chunk.zPosition * 16 + rndZ;
-			final CommonGenMinable node = new CommonGenMinable(metal.ore, (int) Utility.generativeScaling(columnLevel, false, metal.getProperties().size));
+			final CommonMetalNode node = new CommonMetalNode(metal.ore, (int) Utility.generativeScaling(columnLevel, false, metal.getProperties().size));
 			if (isActionValid(world, random, posX, posY, posZ, metal))
 				node.generate(world, random, posX, posY, posZ);
 		}

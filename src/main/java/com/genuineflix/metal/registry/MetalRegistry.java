@@ -22,8 +22,8 @@ public class MetalRegistry {
 	private String[] metalNames;
 	private final List<Metal> completeMetalList = new ArrayList<Metal>();
 	private final List<Metal> generatedMetalList = new ArrayList<Metal>();
-	private final Map<String, Metal> nameToMetal = new HashMap<String, Metal>();
 	private final List<String> oresRegistered = new ArrayList<String>();
+	private final Map<String, Metal> nameToMetal = new HashMap<String, Metal>();
 	private boolean available = true;
 
 	public List<Metal> getAllMetals() {
@@ -80,11 +80,11 @@ public class MetalRegistry {
 		registerOre("silver", new Properties(0.3F, 0.25F, 8, 10, 0.15F, 2.5F, 2.5F));
 		registerOre("platinum", new Properties(0.3F, 0.00F, 8, 10, 0.15F, 3.5F, 3.5F));
 		registerOre("gold", new Properties(0.3F, 0.13F, 8, 10, 0.15F, 2.75F, 2.75F, true));
-		registerAlloy("brass", new Properties(0.4F, 0.88F, 20, 10, 0.15F, 3.5F, 3.5F), "copper", "zinc");
-		registerAlloy("bronze", new Properties(0.4F, 0.75F, 20, 10, 0.15F, 3F, 3F), "copper", "copper", "copper", "tin");
-		registerAlloy("steel", new Properties(0.7F, 0.56F, 18, 10, 0.15F, 7.25F, 7.25F), "iron", "coal");
-		registerAlloy("invar", new Properties(0.8F, 0.44F, 16, 10, 0.15F, 4F, 4F), "iron", "iron", "nickel");
-		registerAlloy("electrum", new Properties(0.2F, 0.19F, 16, 10, 0.15F, 2.5F, 2.5F), "gold", "silver");
+		registerAlloy("brass", new Properties(0.4F, 0.88F, 10, 10, 0.15F, 3.5F, 3.5F), "copper", "zinc");
+		registerAlloy("bronze", new Properties(0.4F, 0.75F, 10, 10, 0.15F, 3F, 3F), "copper", "copper", "copper", "tin");
+		registerAlloy("steel", new Properties(0.7F, 0.56F, 9, 10, 0.15F, 7.25F, 7.25F), "iron", "coal");
+		registerAlloy("invar", new Properties(0.8F, 0.44F, 8, 10, 0.15F, 4F, 4F), "iron", "iron", "nickel");
+		registerAlloy("electrum", new Properties(0.2F, 0.19F, 8, 10, 0.15F, 2.5F, 2.5F), "gold", "silver");
 		available = true;
 	}
 

@@ -12,8 +12,8 @@ public class GeneratorAlloyOre extends AbstractMetalGenerator {
 	private final boolean rare;
 	private final int radius;
 
-	public GeneratorAlloyOre(final boolean rareAlloys, final int radius) {
-		rare = rareAlloys;
+	public GeneratorAlloyOre(final boolean rare, final int radius) {
+		this.rare = rare;
 		this.radius = radius;
 	}
 
@@ -23,7 +23,7 @@ public class GeneratorAlloyOre extends AbstractMetalGenerator {
 	}
 
 	@Override
-	public boolean isActionValid(final World world, final Random random, final int x, final int y, final int z, final Metal metal) {
+	public boolean isValidAction(final World world, final Random random, final int x, final int y, final int z, final Metal metal) {
 		return !rare || Utility.areComponentsFound(world, x, y, z, metal, radius);
 	}
 }

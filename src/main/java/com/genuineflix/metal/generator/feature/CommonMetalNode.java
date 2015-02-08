@@ -31,6 +31,8 @@ public class CommonMetalNode extends WorldGenMinable {
 	@Override
 	public boolean generate(final World world, final Random random, final int x, final int y, final int z) {
 		boolean generated = false;
+		if (!isBlockReplaceable.apply(world.getBlock(x, y, z)))
+			return generated;
 		final float angle = random.nextFloat() * (float) Math.PI;
 		final double d0 = x + 8 + MathHelper.sin(angle) * size / 8.0F;
 		final double d1 = x + 8 - MathHelper.sin(angle) * size / 8.0F;
@@ -57,12 +59,11 @@ public class CommonMetalNode extends WorldGenMinable {
 					for (int genY = j1; genY <= i2; ++genY) {
 						final double d13 = (genY + 0.5D - d7) / (d11 / 2.0D);
 						if (d12 * d12 + d13 * d13 < 1.0D)
-							loop: for (int genZ = k1; genZ <= j2; ++genZ) {
+							for (int genZ = k1; genZ <= j2; ++genZ) {
 								final double d14 = (genZ + 0.5D - d8) / (d10 / 2.0D);
 								if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && isBlockReplaceable.apply(world.getBlock(genX, genY, genZ))) {
 									world.setBlock(genX, genY, genZ, ore, 0, 2);
 									generated = true;
-									continue loop;
 								}
 							}
 					}

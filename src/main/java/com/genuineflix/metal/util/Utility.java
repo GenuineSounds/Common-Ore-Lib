@@ -23,35 +23,34 @@ import com.google.common.base.Predicate;
 
 public class Utility {
 
-	public static boolean areComponentsFound(final World world, final int posX, final int posY, final int posZ, final Metal metal, final int radius) {
-		if (!metal.isAlloy())
-			return false;
-		final boolean[] componentWasFound = new boolean[metal.getComponents().length];
+	// This can become extremely slow if the radius is a large number since this method is called every time a rare alloy tries to generate.
+	// Use with caution.
+	public static boolean areComponentsFound(final World world, final int posX, final int posY, final int posZ, final Metal metal, int radius) {
+		radius = 1;
+		final boolean[] foundComponents = new boolean[metal.getComponents().length];
 		for (int x = -radius; x <= radius; x++)
 			for (int y = -radius; y <= radius; y++)
 				for (int z = -radius; z <= radius; z++) {
 					if (!world.blockExists(posX + x, posY + y, posZ + z))
 						continue;
-					final String tag = world.getBlock(posX + x, posY + y, posZ + z).getUnlocalizedName() + ":" + world.getBlockMetadata(posX + x, posY + y, posZ + z);
+					final String blockName = world.getBlock(posX + x, posY + y, posZ + z).getUnlocalizedName() + ":" + world.getBlockMetadata(posX + x, posY + y, posZ + z);
 					for (int i = 0; i < metal.getComponents().length; i++) {
 						final Component component = metal.getComponents()[i];
 						final String oreName = camelCase("ore", component.name);
-						if (!Utility.commonCache.containsKey(oreName))
-							continue;
-						if (Utility.commonCache.get(oreName).contains(tag))
-							componentWasFound[i] = true;
+						final List<String> list = Utility.commonCache.get(oreName);
+						if (list != null && !list.isEmpty() && list.contains(blockName))
+							foundComponents[i] = true;
 					}
 				}
 		boolean missedAny = false;
-		for (int i = 0; i < componentWasFound.length; i++)
-			missedAny |= !componentWasFound[i];
+		for (int i = 0; i < foundComponents.length; i++)
+			missedAny |= !foundComponents[i];
 		return !missedAny;
 	}
 
 	public static void cacheCommonBlock(final String oreDict, final Block block, final int meta) {
 		if (!oreDict.startsWith("ore"))
 			return;
-		CommonOre.log.warn("Caching common: " + oreDict + " = " + block.getUnlocalizedName() + ":" + meta);
 		List<String> list;
 		if (!commonCache.containsKey(oreDict))
 			list = new ArrayList<String>();
@@ -87,6 +86,13 @@ public class Utility {
 	public static int findGroundLevel(final Chunk chunk, final int x, final int z, final Predicate<Block> isGroundBlock) {
 		for (int y = chunk.getTopFilledSegment() + 16; y > 1; y--)
 			if (isGroundBlock.apply(chunk.getBlock(x, y, z)))
+				return y;
+		return chunk.getTopFilledSegment() + 16;
+	}
+
+	public static int findGroundLevel(final Chunk chunk, final int x, final int z, final Block groundBlock) {
+		for (int y = chunk.getTopFilledSegment() + 16; y > 1; y--)
+			if (Block.isEqualTo(groundBlock, chunk.getBlock(x, y, z)))
 				return y;
 		return chunk.getTopFilledSegment() + 16;
 	}
@@ -151,10 +157,21 @@ public class Utility {
 			"ore", "dust", "pulv(erized*)*", "block", "ingot", "nugget", "storage", "compress(ed)*"
 	};
 	public static final Block[] REPLACED_BLOCKS = new Block[] {
-			Blocks.dirt, Blocks.stone, Blocks.sand, Blocks.gravel, Blocks.netherrack, Blocks.soul_sand
+			Blocks.stone, Blocks.dirt, Blocks.gravel, Blocks.sandstone, Blocks.hardened_clay, Blocks.netherrack, Blocks.soul_sand
 	};
 	public static final Block[] GROUND_BLOCKS = new Block[] {
-			Blocks.grass, Blocks.dirt, Blocks.stone, Blocks.sand, Blocks.gravel, Blocks.clay, Blocks.snow, Blocks.snow_layer, Blocks.hardened_clay, Blocks.mycelium, Blocks.netherrack, Blocks.soul_sand
+			// Normal biomes.
+			Blocks.stone, Blocks.grass, Blocks.dirt, Blocks.gravel,
+			// Hot biomes.
+			Blocks.sand,
+			// Tall Biomes.
+			Blocks.hardened_clay,
+			// Cold biomes.
+			Blocks.ice, Blocks.snow, Blocks.snow_layer,
+			// Mushroom biomes.
+			Blocks.mycelium,
+			// Hell biomes.
+			Blocks.netherrack, Blocks.soul_sand
 	};
 	public static final CreativeTabs COMMON_TAB = new CreativeTabs(CommonOre.NAME) {
 

@@ -11,7 +11,7 @@ import net.minecraft.util.IIcon;
 
 import com.genuineflix.metal.CommonOre;
 
-public class Ore extends BlockOre {
+public class BlockOreCommon extends BlockOre {
 
 	public static final String[] FOLDERS = new String[] {
 			"", "nether/", "ender/"
@@ -22,7 +22,7 @@ public class Ore extends BlockOre {
 	private final String name;
 	private final IIcon[] icons = new IIcon[FOLDERS.length];
 
-	public Ore(final String name) {
+	public BlockOreCommon(final String name) {
 		this.name = name;
 	}
 

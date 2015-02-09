@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
 import com.genuineflix.metal.generator.feature.CommonMetalNode.NodePos;
-import com.genuineflix.metal.interfaces.IAlloy.Component;
+import com.genuineflix.metal.interfaces.IOre;
 import com.genuineflix.metal.registry.Metal;
 import com.google.common.base.Predicate;
 
@@ -51,7 +51,7 @@ public class GenerationHelper {
 		final NodePos node = new NodePos(metal.name, posX, posY, posZ);
 		final boolean[] foundComponents = new boolean[metal.getComponents().size()];
 		for (int ci = 0; ci < metal.getComponents().size(); ci++) {
-			final Component component = metal.getComponents().get(ci);
+			final IOre.Component component = metal.getComponents().get(ci);
 			for (int ni = 0; ni < cachedNodes.size(); ni++) {
 				final NodePos componentNode = cachedNodes.get(ni);
 				if (!componentNode.ore.equals(component.name))

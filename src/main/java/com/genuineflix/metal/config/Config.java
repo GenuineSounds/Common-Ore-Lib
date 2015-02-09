@@ -7,8 +7,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 import com.genuineflix.metal.event.OreGenerationEvent;
-import com.genuineflix.metal.interfaces.IAlloy.Component;
-import com.genuineflix.metal.interfaces.IOre.Properties;
+import com.genuineflix.metal.interfaces.IOre;
 import com.genuineflix.metal.registry.Metal;
 import com.genuineflix.metal.registry.MetalRegistry;
 
@@ -53,14 +52,14 @@ public class Config {
 
 	public void init() {
 		for (final Metal metal : MetalRegistry.getMetals()) {
-			final Properties properties = new Properties(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal));
-			metal.setup(properties);
+			final IOre.Property properties = new IOre.Property(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal));
+			metal.setProperty(properties);
 			if (!metal.isAlloy())
 				continue;
 			final String[] names = getComponentNames(metal);
-			final Component[] components = new Component[names.length];
+			final IOre.Component[] components = new IOre.Component[names.length];
 			for (int i = 0; i < components.length; i++)
-				components[i] = new Component(names[i]);
+				components[i] = new IOre.Component(names[i]);
 			metal.setComponents(components);
 		}
 		metals.save();
@@ -75,7 +74,7 @@ public class Config {
 	private String[] getComponentNames(final Metal metal) {
 		String[] names = new String[0];
 		for (int i = 0; i < metal.getComponents().size(); i++) {
-			final Component comp = metal.getComponents().get(i);
+			final IOre.Component comp = metal.getComponents().get(i);
 			for (int j = 0; j < comp.factor; j++) {
 				names = Arrays.copyOf(names, names.length + 1);
 				names[names.length - 1] = comp.name;
@@ -88,7 +87,7 @@ public class Config {
 	}
 
 	private float getDepth(final Metal metal) {
-		return getFloat(metal, "depth", metal.getProperties().depth, 0, 1);
+		return getFloat(metal, "depth", metal.getProperty().depth, 0, 1);
 	}
 
 	private float getFloat(final Metal metal, final String category, final float value, final float min, final float max) {
@@ -105,13 +104,13 @@ public class Config {
 	}
 
 	private boolean getGeneration(final Metal metal) {
-		final Property prop = metals.get("generation", metal.name, metal.generate());
+		final Property prop = metals.get("generation", metal.name, metal.getProperty().canGenerate());
 		prop.setLanguageKey("CommonOre.generation");
-		return prop.getBoolean(metal.generate());
+		return prop.getBoolean(metal.getProperty().canGenerate());
 	}
 
 	private float getHardness(final Metal metal) {
-		return getFloat(metal, "hardness", metal.getProperties().hardness, 0, 100);
+		return getFloat(metal, "hardness", metal.getProperty().hardness, 0, 100);
 	}
 
 	private int getInt(final Metal metal, final String category, final int value, final int min, final int max) {
@@ -123,22 +122,22 @@ public class Config {
 	}
 
 	private int getNodes(final Metal metal) {
-		return getInt(metal, "nodes", metal.getProperties().nodes, 1, 8);
+		return getInt(metal, "nodes", metal.getProperty().nodes, 1, 8);
 	}
 
 	private float getRarity(final Metal metal) {
-		return getFloat(metal, "rarity", metal.getProperties().rarity, 0, 1);
+		return getFloat(metal, "rarity", metal.getProperty().rarity, 0, 1);
 	}
 
 	private float getResistance(final Metal metal) {
-		return getFloat(metal, "resistance", metal.getProperties().resistance, 0, 100);
+		return getFloat(metal, "resistance", metal.getProperty().resistance, 0, 100);
 	}
 
 	private int getSize(final Metal metal) {
-		return getInt(metal, "size", metal.getProperties().size, 1, 16);
+		return getInt(metal, "size", metal.getProperty().size, 1, 16);
 	}
 
 	private float getSpread(final Metal metal) {
-		return getFloat(metal, "spread", metal.getProperties().spread, 0, 1);
+		return getFloat(metal, "spread", metal.getProperty().spread, 0, 1);
 	}
 }

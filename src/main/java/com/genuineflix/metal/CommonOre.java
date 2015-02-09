@@ -33,7 +33,6 @@ public class CommonOre {
 	public static final String NAME = "CommonOre";
 	public static final String VERSION = "1.0.16";
 	public static final Logger log = LogManager.getLogger(MODID);
-	public static Config config;
 	public static final CreativeTabs COMMON_TAB = new CreativeTabs(NAME) {
 
 		@Override
@@ -41,6 +40,7 @@ public class CommonOre {
 			return MetalRegistry.getMetal("tungsten").ingot;
 		}
 	};
+	public static Config config;
 
 	public CommonOre() {
 		MinecraftForge.EVENT_BUS.register(new OreRegistrationEvent());
@@ -56,8 +56,6 @@ public class CommonOre {
 
 	@EventHandler
 	public void init(final FMLInitializationEvent event) {
-		MagicWand.wand = new MagicWand();
-		GameRegistry.registerItem(MagicWand.wand, "magicWand");
 		MetalRegistry.init();
 		CommonOre.config.init();
 		if (CommonOre.config.flatBedrock)
@@ -65,6 +63,8 @@ public class CommonOre {
 		GameRegistry.registerWorldGenerator(new GeneratorStandardOre(), 5000);
 		if (CommonOre.config.genAlloys)
 			GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(CommonOre.config.rareAlloys, CommonOre.config.searchRadius), 5001);
+		MagicWand.wand = new MagicWand();
+		GameRegistry.registerItem(MagicWand.wand, "magicWand");
 	}
 
 	@EventHandler

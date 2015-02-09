@@ -32,9 +32,9 @@ public class Metal implements IAlloy {
 	public final Item dust;
 	public final Item ingot;
 	public final Item nugget;
-	private Properties properties;
-	private final List<Component> components = new ArrayList<Component>();
 	private boolean generate;
+	private Properties properties;
+	private List<Component> components = new ArrayList<Component>();
 
 	public Metal(final String name) {
 		this.name = name;
@@ -111,12 +111,12 @@ public class Metal implements IAlloy {
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(dust, names.length, 0), names));
 		if (!MetalRegistry.isCommonName(components.get(0).name) || !MetalRegistry.isCommonName(components.get(1).name))
 			return;
-		final Metal component1 = MetalRegistry.instance.getMetal(components.get(0).name);
+		final Metal component1 = MetalRegistry.getMetal(components.get(0).name);
 		final Item dust1 = component1.dust;
 		final Item ingot1 = component1.ingot;
 		final ItemStack dustStack1 = new ItemStack(dust1, components.get(0).factor, 0);
 		final ItemStack ingotStack1 = new ItemStack(ingot1, components.get(0).factor, 0);
-		final Metal component2 = MetalRegistry.instance.getMetal(components.get(1).name);
+		final Metal component2 = MetalRegistry.getMetal(components.get(1).name);
 		final Item dust2 = component2.dust;
 		final Item ingot2 = component2.ingot;
 		final ItemStack dustStack2 = new ItemStack(dust2, components.get(1).factor, 0);
@@ -155,14 +155,14 @@ public class Metal implements IAlloy {
 	}
 
 	@Override
-	public void setComponents(final Component... addComps) {
-		components.clear();
-		for (int i = 0; i < addComps.length; i++) {
-			final Component component = addComps[i];
-			if (components.contains(component))
-				components.get(components.indexOf(component)).factor++;
+	public void setComponents(final Component... comps) {
+		components = new ArrayList<Component>();
+		for (int i = 0; i < comps.length; i++) {
+			final Component comp = comps[i];
+			if (!components.isEmpty() && components.contains(comp))
+				components.get(components.indexOf(comp)).factor++;
 			else
-				components.add(component);
+				components.add(comp);
 		}
 	}
 

@@ -13,7 +13,7 @@ public class StringHelper {
 			name = name.replaceAll("^" + string, "");
 			name = name.replaceAll(string + "$", "");
 		}
-		return name.replace("aluminum", "aluminium").toLowerCase();
+		return name.toLowerCase().replace("aluminum", "aluminium");
 	}
 
 	private static final String[] fixes = {

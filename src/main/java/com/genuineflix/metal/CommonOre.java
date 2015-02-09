@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.genuineflix.metal.config.Config;
 import com.genuineflix.metal.event.OreGenerationEvent;
+import com.genuineflix.metal.event.OreRegistrationEvent;
 import com.genuineflix.metal.generator.GeneratorAlloyOre;
 import com.genuineflix.metal.generator.GeneratorFlatBedrock;
 import com.genuineflix.metal.generator.GeneratorStandardOre;
@@ -37,19 +38,27 @@ public class CommonOre {
 
 		@Override
 		public Item getTabIconItem() {
-			return MetalRegistry.instance.getMetal("tungsten").ingot;
+			return MetalRegistry.getMetal("tungsten").ingot;
 		}
 	};
 
 	public CommonOre() {
-		MinecraftForge.EVENT_BUS.register(MetalRegistry.instance);
+		MinecraftForge.EVENT_BUS.register(new OreRegistrationEvent());
+		MinecraftForge.ORE_GEN_BUS.register(new OreGenerationEvent());
+	}
+
+	@EventHandler
+	public void pre(final FMLPreInitializationEvent event) {
+		CommonOre.config = new Config(event);
+		MetalRegistry.pre();
+		CommonOre.config.pre();
 	}
 
 	@EventHandler
 	public void init(final FMLInitializationEvent event) {
 		MagicWand.wand = new MagicWand();
 		GameRegistry.registerItem(MagicWand.wand, "magicWand");
-		MetalRegistry.instance.init();
+		MetalRegistry.init();
 		CommonOre.config.init();
 		if (CommonOre.config.flatBedrock)
 			GameRegistry.registerWorldGenerator(new GeneratorFlatBedrock(), Integer.MIN_VALUE);
@@ -60,15 +69,7 @@ public class CommonOre {
 
 	@EventHandler
 	public void post(final FMLPostInitializationEvent event) {
-		MetalRegistry.instance.post();
+		MetalRegistry.post();
 		CommonOre.config.post();
-	}
-
-	@EventHandler
-	public void pre(final FMLPreInitializationEvent event) {
-		CommonOre.config = new Config(event);
-		MinecraftForge.ORE_GEN_BUS.register(new OreGenerationEvent());
-		MetalRegistry.instance.pre();
-		CommonOre.config.pre();
 	}
 }

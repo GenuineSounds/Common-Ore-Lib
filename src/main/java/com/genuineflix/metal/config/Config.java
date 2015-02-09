@@ -11,7 +11,6 @@ import com.genuineflix.metal.interfaces.IAlloy.Component;
 import com.genuineflix.metal.interfaces.IOre.Properties;
 import com.genuineflix.metal.registry.Metal;
 import com.genuineflix.metal.registry.MetalRegistry;
-import com.genuineflix.metal.util.StringHelper;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
@@ -33,14 +32,57 @@ public class Config {
 		metals.save();
 	}
 
+	public void pre() {
+		OreGenerationEvent.restrictOreGen = common.getBoolean("restrictOreGen", "Options", true, "Intrusively restrict ore generation for ores that are the same as the common ores. (recommended)");
+		genAlloys = common.getBoolean("genAlloys", "Options", true, "Generate alloy ores in world. This might break balance of other mods if rareAlloys is disabled. (recommended)");
+		rareAlloys = common.getBoolean("rareAlloys", "Options", true, "Generation of alloy ores only occur when the two components of the ore appear close together. (recommended)");
+		flatBedrock = common.getBoolean("flatBedrock", "Options", false, "Generate flat bedrock in the Over-world and Nether. (You probably have a mod that does this already)");
+		searchRadius = common.getInt("searchRadius", "Options", 2, 1, 8, "Radius for rare alloys to search for their required component ores.");
+		common.save();
+		metals.getCategory("rarity").setComment("Chance of generating in any given chunk [range: 0.0 ~ 1.0]");
+		metals.getCategory("depth").setComment("Depth at which the ore is most common (Percentage / 64) [range: 0.0 ~ 1.0]");
+		metals.getCategory("nodes").setComment("How many nodes have a chance to generate in a chunk [range: 1 ~ 8]");
+		metals.getCategory("size").setComment("How many ore can generate in each node [range: 1 ~ 16]");
+		metals.getCategory("spread").setComment("How far can the ore generation deviate from its depth (Percentage / 64) [range: 0.0 ~ 1.0]");
+		metals.getCategory("hardness").setComment("How easy is the metal to harvest [range: 0.0 ~ 100.0]");
+		metals.getCategory("resistance").setComment("How resistant are the blocks to explosions [range: 0.0 ~ 100.0]");
+		metals.getCategory("components").setComment("Components of the alloy");
+		metals.getCategory("generation").setComment("Whether the ore will generate");
+		metals.save();
+	}
+
+	public void init() {
+		for (final Metal metal : MetalRegistry.getMetals()) {
+			final Properties properties = new Properties(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal));
+			metal.setup(properties);
+			if (!metal.isAlloy())
+				continue;
+			final String[] names = getComponentNames(metal);
+			final Component[] components = new Component[names.length];
+			for (int i = 0; i < components.length; i++)
+				components[i] = new Component(names[i]);
+			metal.setComponents(components);
+		}
+		metals.save();
+	}
+
+	public void post() {
+		for (final Metal metal : MetalRegistry.getMetals())
+			metal.setGeneration(getGeneration(metal));
+		metals.save();
+	}
+
 	private String[] getComponentNames(final Metal metal) {
-		String[] names = new String[metal.getComponents().size()];
-		for (int i = 0; i < metal.getComponents().get(i).factor; i++) {
-			names = Arrays.copyOf(names, names.length + 1);
-			names[names.length - 1] = StringHelper.camelCase("dust", metal.getComponents().get(i).name);
+		String[] names = new String[0];
+		for (int i = 0; i < metal.getComponents().size(); i++) {
+			final Component comp = metal.getComponents().get(i);
+			for (int j = 0; j < comp.factor; j++) {
+				names = Arrays.copyOf(names, names.length + 1);
+				names[names.length - 1] = comp.name;
+			}
 		}
 		final Property prop = metals.get("components", metal.name, names);
-		prop.setValidValues(MetalRegistry.instance.getMetalNames());
+		prop.setValidValues(MetalRegistry.COMMON_NAMES);
 		prop.setLanguageKey("CommonOre.components");
 		return prop.getStringList();
 	}
@@ -58,9 +100,8 @@ public class Config {
 			return Float.parseFloat(prop.getString()) < min ? min : Float.parseFloat(prop.getString()) > max ? max : Float.parseFloat(prop.getString());
 		}
 		catch (final Exception e) {
-			e.printStackTrace();
+			return value;
 		}
-		return value;
 	}
 
 	private boolean getGeneration(final Metal metal) {
@@ -99,50 +140,5 @@ public class Config {
 
 	private float getSpread(final Metal metal) {
 		return getFloat(metal, "spread", metal.getProperties().spread, 0, 1);
-	}
-
-	public void init() {
-		for (int metalCounter = 0; metalCounter < MetalRegistry.instance.getAllMetals().size(); metalCounter++) {
-			final Metal metal = MetalRegistry.instance.getAllMetals().get(metalCounter);
-			final Properties properties = new Properties(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal));
-			metal.setup(properties);
-			if (!metal.isAlloy())
-				continue;
-			final String[] componentNames = getComponentNames(metal);
-			final Component[] components = new Component[componentNames.length];
-			for (int componentCounter = 0; componentCounter < components.length; componentCounter++)
-				components[componentCounter] = new Component(componentNames[componentCounter], 1); //componentFactors[componentCounter]);
-			metal.setComponents(components);
-		}
-		metals.save();
-	}
-
-	public void post() {
-		for (int i = 0; i < MetalRegistry.instance.getAllMetals().size(); i++) {
-			final Metal metal = MetalRegistry.instance.getAllMetals().get(i);
-			metal.setGeneration(getGeneration(metal));
-			if (!MetalRegistry.instance.getGeneratedMetals().contains(metal))
-				MetalRegistry.instance.getGeneratedMetals().add(metal);
-		}
-		metals.save();
-	}
-
-	public void pre() {
-		OreGenerationEvent.restrictOreGen = common.getBoolean("restrictOreGen", "Options", true, "Intrusively restrict ore generation for ores that are the same as the common ores. (recommended)");
-		genAlloys = common.getBoolean("genAlloys", "Options", true, "Generate alloy ores in world. This might break balance of other mods if rareAlloys is disabled. (recommended)");
-		rareAlloys = common.getBoolean("rareAlloys", "Options", true, "Generation of alloy ores only occur when the two components of the ore appear close together. (recommended)");
-		flatBedrock = common.getBoolean("flatBedrock", "Options", false, "Generate flat bedrock in the Over-world and Nether. (You probably have a mod that does this already)");
-		searchRadius = common.getInt("searchRadius", "Options", 2, 1, 8, "Radius for rare alloys to search for their required component ores. Higher numbers will drastically increase generation time.");
-		common.save();
-		metals.getCategory("rarity").setComment("Chance of generating in any given chunk [range: 0.0 ~ 1.0]");
-		metals.getCategory("depth").setComment("Depth at which the ore is most common (Percentage / 64) [range: 0.0 ~ 1.0]");
-		metals.getCategory("nodes").setComment("How many nodes have a chance to generate in a chunk [range: 1 ~ 8]");
-		metals.getCategory("size").setComment("How many ore can generate in each node [range: 1 ~ 16]");
-		metals.getCategory("spread").setComment("How far can the ore generation deviate from its depth (Percentage / 64) [range: 0.0 ~ 1.0]");
-		metals.getCategory("hardness").setComment("How easy is the metal to harvest [range: 0.0 ~ 100.0]");
-		metals.getCategory("resistance").setComment("How resistant are the blocks to explosions [range: 0.0 ~ 100.0]");
-		metals.getCategory("components").setComment("Components of the alloy");
-		metals.getCategory("generation").setComment("Whether the ore will generate");
-		metals.save();
 	}
 }

@@ -28,16 +28,16 @@ public abstract class AbstractMetalGenerator implements IWorldGenerator {
 			return;
 		final int chunkLevel = GenerationHelper.findGroundLevel(chunk, GenerationHelper.IS_GROUND_BLOCK);
 		for (final Metal metal : MetalRegistry.getMetals()) {
-			if (!metal.getProperty().canGenerate() || !isValidMetal(metal))
+			if (!metal.getSettings().canGenerate() || !isValidMetal(metal))
 				continue;
-			final int nodes = (int) GenerationHelper.generativeScaling(chunkLevel, true, metal.getProperty().nodes);
+			final int nodes = (int) GenerationHelper.generativeScaling(chunkLevel, true, metal.getSettings().nodes);
 			generateMetal(world, chunk, random, metal, nodes);
 		}
 	}
 
 	private void generateMetal(final World world, final Chunk chunk, final Random random, final Metal metal, final int nodes) {
 		for (int i = 0; i < nodes; i++) {
-			if (metal.getProperty().rarity < random.nextDouble())
+			if (metal.getSettings().rarity < random.nextDouble())
 				continue;
 			final int rndX = random.nextInt(16);
 			final int rndZ = random.nextInt(16);
@@ -55,15 +55,15 @@ public abstract class AbstractMetalGenerator implements IWorldGenerator {
 			int posY;
 			switch (type) {
 				case NETHER:
-					posY = (int) (random.nextGaussian() * metal.getProperty().spread * 64 + metal.getProperty().depth * 64);
+					posY = (int) (random.nextGaussian() * metal.getSettings().spread * 64 + metal.getSettings().depth * 64);
 					if (random.nextBoolean())
 						posY = 128 - posY;
 					break;
 				default:
-					posY = (int) (random.nextGaussian() * metal.getProperty().spread * columnLevel + metal.getProperty().depth * columnLevel);
+					posY = (int) (random.nextGaussian() * metal.getSettings().spread * columnLevel + metal.getSettings().depth * columnLevel);
 					break;
 			}
-			final CommonMetalNode node = new CommonMetalNode(metal, type, (int) GenerationHelper.generativeScaling(columnLevel, false, metal.getProperty().size));
+			final CommonMetalNode node = new CommonMetalNode(metal, type, (int) GenerationHelper.generativeScaling(columnLevel, false, metal.getSettings().size));
 			if (isValidAction(world, random, posX, posY, posZ, metal))
 				node.generate(world, random, posX, posY, posZ);
 		}

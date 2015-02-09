@@ -71,7 +71,7 @@ public class CommonMetalNode extends WorldGenMinable {
 	}
 
 	public CommonMetalNode(final Metal metal, final BiomeType type, final int size, final Predicate<Block> isBlockReplaceable) {
-		super(metal.ore, type.meta, size, Blocks.stone);
+		super(metal.getOre(), type.meta, size, Blocks.stone);
 		this.metal = metal;
 		this.type = type;
 		this.size = size;
@@ -112,7 +112,7 @@ public class CommonMetalNode extends WorldGenMinable {
 							for (int genZ = k1; genZ <= j2; ++genZ) {
 								final double d14 = (genZ + 0.5D - d8) / (d10 / 2.0D);
 								if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && isBlockReplaceable.apply(world.getBlock(genX, genY, genZ))) {
-									world.setBlock(genX, genY, genZ, metal.ore, type.meta, 2);
+									world.setBlock(genX, genY, genZ, metal.getOre(), type.meta, 2);
 									generated = true;
 								}
 							}

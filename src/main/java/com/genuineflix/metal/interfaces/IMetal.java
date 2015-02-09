@@ -4,11 +4,13 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-public interface IOre {
+import com.genuineflix.metal.registry.Metal;
 
-	public static class Property {
+public interface IMetal {
 
-		public static Property fromNBT(final NBTTagCompound nbt) {
+	public static class Settings {
+
+		public static Settings fromNBT(final NBTTagCompound nbt) {
 			final float rarity = nbt.getFloat("rarity");
 			final float depth = nbt.getFloat("depth");
 			final int nodes = nbt.getInteger("nodes");
@@ -16,7 +18,7 @@ public interface IOre {
 			final float spread = nbt.getFloat("spread");
 			final float hardness = nbt.getFloat("hardness");
 			final float resistance = nbt.getFloat("resistance");
-			return new Property(rarity, depth, nodes, size, spread, hardness, resistance, nbt.hasKey("generate") && nbt.getBoolean("generate"));
+			return new Settings(rarity, depth, nodes, size, spread, hardness, resistance, nbt.hasKey("generate") && nbt.getBoolean("generate"));
 		}
 
 		public final float rarity;
@@ -28,11 +30,11 @@ public interface IOre {
 		public final float resistance;
 		private boolean generate;
 
-		public Property(final float rarity, final float depth, final int nodes, final int size, final float spread, final float hardness, final float resistance) {
+		public Settings(final float rarity, final float depth, final int nodes, final int size, final float spread, final float hardness, final float resistance) {
 			this(rarity, depth, nodes, size, spread, hardness, resistance, false);
 		}
 
-		public Property(final float rarity, final float depth, final int nodes, final int size, final float spread, final float hardness, final float resistance, final boolean generate) {
+		public Settings(final float rarity, final float depth, final int nodes, final int size, final float spread, final float hardness, final float resistance, final boolean generate) {
 			this.rarity = rarity;
 			this.depth = depth;
 			this.nodes = nodes;
@@ -63,35 +65,35 @@ public interface IOre {
 		}
 	}
 
-	public static class Component {
+	public static class Compound {
 
-		public final String name;
+		public Metal metal;
 		public int factor;
 
-		public Component(final String name) {
-			this(name, 1);
+		public Compound(final Metal metal) {
+			this(metal, 1);
 		}
 
-		public Component(final String name, final int factor) {
-			this.name = name;
+		public Compound(final Metal metal, final int factor) {
+			this.metal = metal;
 			this.factor = factor;
 		}
 
 		@Override
 		public boolean equals(final Object obj) {
-			if (obj instanceof Component)
-				return name.equals(((Component) obj).name);
+			if (obj instanceof Compound)
+				return metal.equals(((Compound) obj).metal);
 			return super.equals(obj);
 		}
 	}
 
-	public boolean isAlloy();
+	public boolean isComposite();
 
-	public List<Component> getComponents();
+	public List<Compound> getCompounds();
 
-	public void setComponents(Component... components);
+	public void setCompounds(Compound... components);
 
-	public Property getProperty();
+	public Settings getSettings();
 
-	public void setProperty(Property props);
+	public void setSettings(Settings props);
 }

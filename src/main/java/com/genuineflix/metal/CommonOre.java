@@ -37,7 +37,7 @@ public class CommonOre {
 
 		@Override
 		public Item getTabIconItem() {
-			return MetalRegistry.getMetal("tungsten").ingot;
+			return MetalRegistry.TUNGSTEN.getIngot();
 		}
 	};
 	public static Config config;

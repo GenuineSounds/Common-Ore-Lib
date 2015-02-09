@@ -10,7 +10,7 @@ public class GeneratorStandardOre extends AbstractMetalGenerator {
 
 	@Override
 	public boolean isValidMetal(final Metal metal) {
-		return !metal.isAlloy();
+		return !metal.isComposite();
 	}
 
 	@Override

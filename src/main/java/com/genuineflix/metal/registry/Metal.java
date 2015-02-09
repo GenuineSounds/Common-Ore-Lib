@@ -6,74 +6,124 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
-import com.genuineflix.metal.CommonOre;
-import com.genuineflix.metal.interfaces.IOre;
+import com.genuineflix.metal.interfaces.IMetal;
 
-public class Metal implements IOre {
+public class Metal implements IMetal {
 
 	public final String name;
 	public final String nameFixed;
-	public Block ore;
-	public Block block;
-	public Item dust;
-	public Item ingot;
-	public Item nugget;
-	private IOre.Property property;
-	private List<IOre.Component> components = new ArrayList<IOre.Component>();
+	private Block ore;
+	private Block block;
+	private Item dust;
+	private Item ingot;
+	private Item nugget;
+	private Settings settings;
+	private List<Compound> compounds;
+	private boolean manuallyInitiated = false;
 
 	public Metal(final String name) {
 		this.name = name;
 		nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 	}
 
-	@Override
-	public List<IOre.Component> getComponents() {
-		return components;
+	public Metal(final String name, final Settings property, final Compound... compounds) {
+		this.name = name;
+		nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+		setSettings(property);
+		setCompounds(compounds);
 	}
 
 	@Override
-	public Property getProperty() {
-		return property;
+	public List<Compound> getCompounds() {
+		return compounds;
 	}
 
 	@Override
-	public boolean isAlloy() {
-		return components != null && components.size() > 0;
+	public Settings getSettings() {
+		return settings;
 	}
 
 	@Override
-	public void setComponents(final Component... comps) {
-		components = new ArrayList<Component>();
-		for (int i = 0; i < comps.length; i++) {
-			final Component comp = comps[i];
-			if (!components.isEmpty() && components.contains(comp))
-				components.get(components.indexOf(comp)).factor++;
+	public boolean isComposite() {
+		return compounds != null && compounds.size() > 0;
+	}
+
+	@Override
+	public void setCompounds(final Compound... compounds) {
+		this.compounds = new ArrayList<Compound>();
+		for (int i = 0; i < compounds.length; i++) {
+			final Compound compound = compounds[i];
+			if (!this.compounds.isEmpty() && this.compounds.contains(compound))
+				this.compounds.get(this.compounds.indexOf(compound)).factor++;
 			else
-				components.add(comp);
+				this.compounds.add(compound);
 		}
 	}
 
-	public void setGeneration(final boolean generate) {
-		if (!property.canGenerate() && generate)
-			CommonOre.log.info("Setting " + nameFixed + " implicitly to generate");
-		if (property.canGenerate() && !generate)
-			CommonOre.log.info("Setting " + nameFixed + " explicitly to not generate");
-		property.setGenerate(generate);
-	}
-
 	@Override
-	public void setProperty(final Property property) {
-		this.property = property;
+	public void setSettings(final Settings settings) {
+		this.settings = settings;
 	}
 
-	void setup(final Property property) {
-		setProperty(property);
+	public void setCompounds(final List<Compound> compounds) {
+		this.compounds = compounds;
 	}
 
 	void finallize() {
-		ore.setHardness(property.hardness);
-		ore.setResistance(property.resistance);
-		block.setHardness(property.hardness);
-		block.setResistance(property.resistance);
+		if (manuallyInitiated)
+			return;
+		ore.setHardness(settings.hardness);
+		ore.setResistance(settings.resistance);
+		block.setHardness(settings.hardness);
+		block.setResistance(settings.resistance);
+	}
+
+	public boolean manuallyInitiated() {
+		return manuallyInitiated;
+	}
+
+	public Metal flagManualInitiation() {
+		manuallyInitiated = true;
+		return this;
+	}
+
+	public Block getOre() {
+		return ore;
+	}
+
+	void setOre(final Block ore) {
+		this.ore = ore;
+	}
+
+	public Block getBlock() {
+		return block;
+	}
+
+	void setBlock(final Block block) {
+		this.block = block;
+	}
+
+	public Item getDust() {
+		return dust;
+	}
+
+	void setDust(final Item dust) {
+		this.dust = dust;
+	}
+
+	public Item getIngot() {
+		return ingot;
+	}
+
+	void setIngot(final Item ingot) {
+		this.ingot = ingot;
+	}
+
+	public Item getNugget() {
+		return nugget;
+	}
+
+	void setNugget(final Item nugget) {
+		this.nugget = nugget;
 	}
 }

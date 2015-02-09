@@ -16,14 +16,14 @@ public class OreGenerationEvent {
 
 	public static Field blockWorldGenMinableField;
 	public static Field metaWorldGenMinableField;
-	public static Boolean enabledWorldGenMinable = false;
+	public static Boolean restrictOreGen = true;
 	static {
 		try {
 			OreGenerationEvent.blockWorldGenMinableField = WorldGenMinable.class.getDeclaredFields()[0];
 			OreGenerationEvent.blockWorldGenMinableField.setAccessible(true);
 		}
 		catch (final Exception e) {
-			OreGenerationEvent.enabledWorldGenMinable = false;
+			OreGenerationEvent.restrictOreGen = false;
 		}
 		try {
 			OreGenerationEvent.metaWorldGenMinableField = WorldGenMinable.class.getDeclaredFields()[4];
@@ -37,7 +37,7 @@ public class OreGenerationEvent {
 		if (event.generator == null || event.generator instanceof CommonMetalNode)
 			return;
 		if (event.generator instanceof WorldGenMinable)
-			if (OreGenerationEvent.enabledWorldGenMinable)
+			if (OreGenerationEvent.restrictOreGen)
 				try {
 					final Block block = (Block) OreGenerationEvent.blockWorldGenMinableField.get(event.generator);
 					if (block != null) {

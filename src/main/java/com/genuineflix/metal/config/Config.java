@@ -6,6 +6,7 @@ import java.util.Arrays;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
+import com.genuineflix.metal.event.OreGenerationEvent;
 import com.genuineflix.metal.interfaces.IAlloy.Component;
 import com.genuineflix.metal.interfaces.IOre.Properties;
 import com.genuineflix.metal.registry.Metal;
@@ -127,8 +128,9 @@ public class Config {
 	}
 
 	public void pre() {
-		genAlloys = common.getBoolean("genAlloys", "Options", true, "Generate alloy ores in world. Will break balance of other mods if rareAlloys is disabled (recommended)");
-		rareAlloys = common.getBoolean("rareAlloys", "Options", true, "Generation of alloy ores only occur when the two components of the ore appear close together (recommended)");
+		OreGenerationEvent.restrictOreGen = common.getBoolean("restrictOreGen", "Options", true, "Intrusively restrict ore generation for ores that are the same as the common ores. (recommended)");
+		genAlloys = common.getBoolean("genAlloys", "Options", true, "Generate alloy ores in world. This might break balance of other mods if rareAlloys is disabled. (recommended)");
+		rareAlloys = common.getBoolean("rareAlloys", "Options", true, "Generation of alloy ores only occur when the two components of the ore appear close together. (recommended)");
 		flatBedrock = common.getBoolean("flatBedrock", "Options", false, "Generate flat bedrock in the Over-world and Nether. (You probably have a mod that does this already)");
 		searchRadius = common.getInt("searchRadius", "Options", 2, 1, 8, "Radius for rare alloys to search for their required component ores. Higher numbers will drastically increase generation time.");
 		common.save();

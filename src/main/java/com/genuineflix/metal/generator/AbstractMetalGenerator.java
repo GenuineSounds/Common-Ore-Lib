@@ -24,11 +24,9 @@ public abstract class AbstractMetalGenerator implements IWorldGenerator {
 	@Override
 	public void generate(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
 		final Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
-		if (chunk.isEmpty())
-			return;
 		final int chunkLevel = GenerationHelper.findGroundLevel(chunk, GenerationHelper.IS_GROUND_BLOCK);
 		for (final Metal metal : MetalRegistry.getMetals()) {
-			if (!metal.getSettings().canGenerate() || !isValidMetal(metal))
+			if (metal.manuallyInitiated() || !metal.getSettings().canGenerate() || !isValidMetal(metal))
 				continue;
 			final int nodes = (int) GenerationHelper.generativeScaling(chunkLevel, true, metal.getSettings().nodes);
 			generateMetal(world, chunk, random, metal, nodes);

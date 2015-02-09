@@ -168,9 +168,9 @@ public class Metal implements IAlloy {
 
 	public void setGeneration(final boolean generate) {
 		if (!this.generate && generate)
-			CommonOre.log.info("[CommonOre] Setting " + nameFixed + " implicitly to generate");
+			CommonOre.log.info("Setting " + nameFixed + " implicitly to generate");
 		if (this.generate && !generate)
-			CommonOre.log.info("[CommonOre] Setting " + nameFixed + " explicitly to not generate");
+			CommonOre.log.info("Setting " + nameFixed + " explicitly to not generate");
 		this.generate = generate;
 	}
 

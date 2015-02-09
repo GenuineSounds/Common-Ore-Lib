@@ -14,11 +14,13 @@ public class OreRegistrationEvent {
 
 	@SubscribeEvent
 	public void registerOreEvent(final OreRegisterEvent event) {
-		if (MetalRegistry.isRegistryClosed() || !MetalRegistry.isCommonName(event.Name) || !(event.Ore.getItem() instanceof ItemBlock))
+		if (!MetalRegistry.isCommonName(event.Name) || !(event.Ore.getItem() instanceof ItemBlock))
 			return;
 		final Block block = ((ItemBlock) event.Ore.getItem()).field_150939_a;
 		final int meta = event.Ore.getItemDamage();
 		MetalRegistry.cacheCommonBlock(event.Name, block, meta);
+		if (MetalRegistry.isRegistryClosed())
+			return;
 		final Metal metal = MetalRegistry.getMetal(StringHelper.cleanName(event.Name));
 		if (metal == null)
 			return;

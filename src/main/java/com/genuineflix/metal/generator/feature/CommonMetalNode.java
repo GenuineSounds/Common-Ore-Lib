@@ -120,7 +120,7 @@ public class CommonMetalNode extends WorldGenMinable {
 			}
 		}
 		if (generated) {
-			final NodePos pos = new NodePos(metal.name, x, y, z);
+			final NodePos pos = new NodePos(metal.getName(), x, y, z);
 			GenerationHelper.cacheNodeGen(world.getChunkFromBlockCoords(x, z), pos);
 		}
 		return generated;

@@ -10,8 +10,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
+import com.genuineflix.metal.api.IMetal;
 import com.genuineflix.metal.generator.feature.CommonMetalNode.NodePos;
-import com.genuineflix.metal.interfaces.IMetal;
 import com.genuineflix.metal.registry.Metal;
 import com.google.common.base.Predicate;
 
@@ -48,7 +48,7 @@ public class GenerationHelper {
 		final List<NodePos> cachedNodes = GenerationHelper.getNodesInChunk(world.getChunkFromBlockCoords(posX, posZ));
 		if (cachedNodes == null || cachedNodes.isEmpty())
 			return false;
-		final NodePos node = new NodePos(metal.name, posX, posY, posZ);
+		final NodePos node = new NodePos(metal.getName(), posX, posY, posZ);
 		final boolean[] foundComponents = new boolean[metal.getCompounds().size()];
 		for (int ci = 0; ci < metal.getCompounds().size(); ci++) {
 			final IMetal.Compound component = metal.getCompounds().get(ci);

@@ -5,13 +5,17 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 
-import com.genuineflix.metal.interfaces.IMetal;
+import com.genuineflix.metal.api.IMetal;
+import com.genuineflix.metal.api.data.NBTHelper;
+import com.genuineflix.metal.api.data.collections.DataCompound;
 
 public class Metal implements IMetal {
 
-	public final String name;
-	public final String nameFixed;
+	private String name;
+	private String displayName;
 	private Block ore;
 	private Block block;
 	private Item dust;
@@ -19,18 +23,30 @@ public class Metal implements IMetal {
 	private Item nugget;
 	private Settings settings;
 	private List<Compound> compounds;
-	private boolean manuallyInitiated = false;
+	private boolean manual;
 
-	public Metal(final String name) {
+	Metal() {}
+
+	Metal(final String name) {
 		this.name = name;
-		nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+		displayName = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 	}
 
-	public Metal(final String name, final Settings property, final Compound... compounds) {
+	Metal(final String name, final Settings property, final Compound... compounds) {
 		this.name = name;
-		nameFixed = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+		displayName = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 		setSettings(property);
 		setCompounds(compounds);
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public String getDisplayName() {
+		return displayName;
 	}
 
 	@Override
@@ -70,7 +86,7 @@ public class Metal implements IMetal {
 	}
 
 	void finallize() {
-		if (manuallyInitiated)
+		if (manual)
 			return;
 		ore.setHardness(settings.hardness);
 		ore.setResistance(settings.resistance);
@@ -78,49 +94,98 @@ public class Metal implements IMetal {
 		block.setResistance(settings.resistance);
 	}
 
-	public boolean manuallyInitiated() {
-		return manuallyInitiated;
+	public boolean isManual() {
+		return manual;
 	}
 
-	public Metal flagManualInitiation() {
-		manuallyInitiated = true;
+	public Metal manual() {
+		manual = true;
 		return this;
 	}
 
+	@Override
+	public DataCompound save(final DataCompound data) {
+		data.setString("name", name);
+		data.setString("displayName", displayName);
+		data.setData("ore", NBTHelper.convert(new ItemStack(ore)));
+		data.setData("block", NBTHelper.convert(new ItemStack(block)));
+		data.setData("dust", NBTHelper.convert(new ItemStack(dust)));
+		data.setData("ingot", NBTHelper.convert(new ItemStack(ingot)));
+		data.setData("nugget", NBTHelper.convert(new ItemStack(nugget)));
+		if (settings != null)
+			data.setData("settings", settings.save(new DataCompound()));
+		if (compounds != null && !compounds.isEmpty()) {
+			final DataCompound comps = new DataCompound();
+			for (int i = 0; i < compounds.size(); i++)
+				comps.setData(Integer.toString(i), compounds.get(i).save(new DataCompound()));
+			data.setData("compounds", comps);
+		}
+		if (manual)
+			data.setBoolean("manual", manual);
+		return data;
+	}
+
+	@Override
+	public IMetal load(final DataCompound data) {
+		name = data.getString("name");
+		displayName = data.getString("displayName");
+		ore = ((ItemBlock) NBTHelper.convert(data.getCompoundTag("ore")).getItem()).field_150939_a;
+		block = ((ItemBlock) NBTHelper.convert(data.getCompoundTag("block")).getItem()).field_150939_a;
+		dust = NBTHelper.convert(data.getCompoundTag("dust")).getItem();
+		ingot = NBTHelper.convert(data.getCompoundTag("ingot")).getItem();
+		nugget = NBTHelper.convert(data.getCompoundTag("nugget")).getItem();
+		if (data.hasKey("settings"))
+			settings = Settings.fromCompound(data.getCompoundTag("settings"));
+		if (data.hasKey("compounds")) {
+			final int compoundNumber = 0;
+			final DataCompound compounds = data.getCompoundTag("compounds");
+			DataCompound compoundTag;
+			final List<Compound> compoundList = new ArrayList<Compound>();
+			while (!(compoundTag = compounds.getCompoundTag("compound" + compoundNumber)).isEmpty())
+				compoundList.add(Compound.from(compoundTag));
+		}
+		return this;
+	}
+
+	@Override
 	public Block getOre() {
 		return ore;
+	}
+
+	@Override
+	public Block getBlock() {
+		return block;
+	}
+
+	@Override
+	public Item getDust() {
+		return dust;
+	}
+
+	@Override
+	public Item getIngot() {
+		return ingot;
+	}
+
+	@Override
+	public Item getNugget() {
+		return nugget;
 	}
 
 	void setOre(final Block ore) {
 		this.ore = ore;
 	}
 
-	public Block getBlock() {
-		return block;
-	}
-
 	void setBlock(final Block block) {
 		this.block = block;
-	}
-
-	public Item getDust() {
-		return dust;
 	}
 
 	void setDust(final Item dust) {
 		this.dust = dust;
 	}
 
-	public Item getIngot() {
-		return ingot;
-	}
-
 	void setIngot(final Item ingot) {
 		this.ingot = ingot;
-	}
-
-	public Item getNugget() {
-		return nugget;
 	}
 
 	void setNugget(final Item nugget) {

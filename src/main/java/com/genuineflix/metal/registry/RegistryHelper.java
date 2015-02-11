@@ -12,10 +12,10 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 import com.genuineflix.metal.CommonOre;
+import com.genuineflix.metal.api.IMetal;
 import com.genuineflix.metal.block.BlockOreCommon;
 import com.genuineflix.metal.block.ItemOreCommon;
 import com.genuineflix.metal.generator.feature.CommonMetalNode.BiomeType;
-import com.genuineflix.metal.interfaces.IMetal;
 import com.genuineflix.metal.util.StringHelper;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -23,14 +23,10 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class RegistryHelper {
 
-	public static final String[] COMMON_NAMES = new String[] {
-			"aluminium", "zinc", "copper", "tin", "lead", "iron", "nickel", "tungsten", "silver", "gold", "titanium", "platinum", "brass", "bronze", "steel", "invar", "electrum"
-	};
-
 	private RegistryHelper() {}
 
 	static void createItems(final Metal metal) {
-		final String nameFixed = metal.nameFixed;
+		final String nameFixed = metal.getDisplayName();
 		metal.setOre(new BlockOreCommon(nameFixed).setBlockName("ore" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setStepSound(Block.soundTypeStone).setBlockTextureName(CommonOre.MODID + ":ores/" + nameFixed));
 		metal.setDust(new Item().setUnlocalizedName("dust" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setTextureName(CommonOre.MODID + ":dusts/" + nameFixed));
 		metal.setIngot(new Item().setUnlocalizedName("ingot" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setTextureName(CommonOre.MODID + ":ingots/" + nameFixed));
@@ -39,7 +35,7 @@ public class RegistryHelper {
 	}
 
 	static void registerItems(final Metal metal) {
-		final String nameFixed = metal.nameFixed;
+		final String nameFixed = metal.getDisplayName();
 		GameRegistry.registerBlock(metal.getOre(), ItemOreCommon.class, "ore" + nameFixed, new Object[] {
 			nameFixed
 		});
@@ -61,7 +57,7 @@ public class RegistryHelper {
 	}
 
 	static void registerRecipes(final Metal metal) {
-		final String nameFixed = metal.nameFixed;
+		final String nameFixed = metal.getDisplayName();
 		GameRegistry.addSmelting(new ItemStack(metal.getOre(), 1, 0), new ItemStack(metal.getIngot(), 1, 0), 10);
 		GameRegistry.addSmelting(new ItemStack(metal.getOre(), 1, 1), new ItemStack(metal.getIngot(), 2, 0), 10);
 		GameRegistry.addSmelting(new ItemStack(metal.getOre(), 1, 2), new ItemStack(metal.getIngot(), 4, 0), 10);
@@ -82,11 +78,11 @@ public class RegistryHelper {
 		for (final IMetal.Compound comp : metal.getCompounds())
 			for (int i = 0; i < comp.factor; i++) {
 				dustNames = Arrays.copyOf(dustNames, dustNames.length + 1);
-				dustNames[dustNames.length - 1] = StringHelper.camelCase("dust", comp.metal.name);
+				dustNames[dustNames.length - 1] = StringHelper.camelCase("dust", comp.metal.getName());
 			}
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getDust(), dustNames.length, 0), dustNames));
-		final Metal component1 = metal.getCompounds().get(0).metal;
-		final Metal component2 = metal.getCompounds().get(1).metal;
+		final IMetal component1 = metal.getCompounds().get(0).metal;
+		final IMetal component2 = metal.getCompounds().get(1).metal;
 		final Item dust1 = component1.getDust();
 		final Item dust2 = component2.getDust();
 		if (dust1 != null && dust2 != null) {
@@ -130,12 +126,5 @@ public class RegistryHelper {
 		message.setTag("secondaryInput", secondaryInput);
 		message.setTag("primaryOutput", primaryOutput);
 		FMLInterModComms.sendMessage(mod, key, message);
-	}
-
-	public static boolean isCommonName(final String name) {
-		for (final String cName : COMMON_NAMES)
-			if (cName.equals(StringHelper.cleanName(name)))
-				return true;
-		return false;
 	}
 }

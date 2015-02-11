@@ -6,11 +6,10 @@ import java.util.Arrays;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
+import com.genuineflix.metal.api.IMetal;
 import com.genuineflix.metal.event.OreGenerationEvent;
-import com.genuineflix.metal.interfaces.IMetal;
 import com.genuineflix.metal.registry.Metal;
 import com.genuineflix.metal.registry.MetalRegistry;
-import com.genuineflix.metal.registry.RegistryHelper;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
@@ -70,7 +69,7 @@ public class Config {
 
 	public void post() {
 		for (final Metal metal : MetalRegistry.getMetals())
-			if (!metal.manuallyInitiated())
+			if (!metal.isManual())
 				metal.getSettings().setGenerate(getGeneration(metal));
 		metals.save();
 	}
@@ -81,11 +80,10 @@ public class Config {
 			final IMetal.Compound comp = metal.getCompounds().get(i);
 			for (int j = 0; j < comp.factor; j++) {
 				names = Arrays.copyOf(names, names.length + 1);
-				names[names.length - 1] = comp.metal.name;
+				names[names.length - 1] = comp.metal.getName();
 			}
 		}
-		final Property prop = metals.get("components", metal.name, names);
-		prop.setValidValues(RegistryHelper.COMMON_NAMES);
+		final Property prop = metals.get("components", metal.getName(), names);
 		prop.setLanguageKey("CommonOre.components");
 		return prop.getStringList();
 	}
@@ -95,7 +93,7 @@ public class Config {
 	}
 
 	private float getFloat(final Metal metal, final String category, final float value, final float min, final float max) {
-		final Property prop = metals.get(category, metal.name, Float.toString(value));
+		final Property prop = metals.get(category, metal.getName(), Float.toString(value));
 		prop.setLanguageKey("CommonOre." + category);
 		prop.setMinValue(min);
 		prop.setMaxValue(max);
@@ -108,7 +106,7 @@ public class Config {
 	}
 
 	private boolean getGeneration(final Metal metal) {
-		final Property prop = metals.get("generation", metal.name, metal.getSettings().canGenerate());
+		final Property prop = metals.get("generation", metal.getName(), metal.getSettings().canGenerate());
 		prop.setLanguageKey("CommonOre.generation");
 		return prop.getBoolean(metal.getSettings().canGenerate());
 	}
@@ -118,7 +116,7 @@ public class Config {
 	}
 
 	private int getInt(final Metal metal, final String category, final int value, final int min, final int max) {
-		final Property prop = metals.get(category, metal.name, value);
+		final Property prop = metals.get(category, metal.getName(), value);
 		prop.setLanguageKey("CommonOre." + category);
 		prop.setMinValue(min);
 		prop.setMaxValue(max);

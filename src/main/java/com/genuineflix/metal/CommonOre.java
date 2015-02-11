@@ -1,5 +1,7 @@
 package com.genuineflix.metal;
 
+import java.io.File;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
@@ -40,6 +42,7 @@ public class CommonOre {
 			return MetalRegistry.TUNGSTEN.getIngot();
 		}
 	};
+	public static File configDirectory;
 	public static Config config;
 
 	public CommonOre() {
@@ -49,6 +52,8 @@ public class CommonOre {
 
 	@EventHandler
 	public void pre(final FMLPreInitializationEvent event) {
+		configDirectory = new File(event.getModConfigurationDirectory(), "NBTData");
+		configDirectory.mkdirs();
 		CommonOre.config = new Config(event);
 		MetalRegistry.pre();
 		CommonOre.config.pre();

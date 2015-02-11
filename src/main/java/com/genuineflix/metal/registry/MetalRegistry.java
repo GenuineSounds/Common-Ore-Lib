@@ -1,5 +1,7 @@
 package com.genuineflix.metal.registry;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,10 +11,14 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.genuineflix.metal.interfaces.IMetal.Compound;
-import com.genuineflix.metal.interfaces.IMetal.Settings;
+import com.genuineflix.metal.CommonOre;
+import com.genuineflix.metal.api.IMetal.Compound;
+import com.genuineflix.metal.api.IMetal.Settings;
+import com.genuineflix.metal.api.data.collections.DataCompound;
 import com.genuineflix.metal.util.StringHelper;
 import com.google.common.collect.ImmutableList;
 
@@ -43,9 +49,13 @@ public final class MetalRegistry {
 
 	public static Metal getMetal(final String name) {
 		for (final Metal m : metals)
-			if (m.name.equals(StringHelper.cleanName(name)))
+			if (m.getName().equals(StringHelper.cleanName(name)))
 				return m;
 		return null;
+	}
+
+	public static boolean isMetal(final String name) {
+		return getMetal(name) != null;
 	}
 
 	public static void registrationEvent(final String name, final Block block, final int meta) {
@@ -61,7 +71,7 @@ public final class MetalRegistry {
 		if (closed)
 			return;
 		for (final Metal m : metals)
-			if (m.name.equals(StringHelper.cleanName(name))) {
+			if (m.getName().equals(StringHelper.cleanName(name))) {
 				m.getSettings().setGenerate(true);
 				break;
 			}
@@ -85,7 +95,7 @@ public final class MetalRegistry {
 
 	public static void pre() {
 		for (final Metal metal : metals) {
-			if (metal.manuallyInitiated())
+			if (metal.isManual())
 				continue;
 			RegistryHelper.createItems(metal);
 			RegistryHelper.registerItems(metal);
@@ -104,8 +114,16 @@ public final class MetalRegistry {
 	}
 
 	public static void post() {
-		for (final Metal metal : metals)
+		for (final Metal metal : metals) {
 			metal.finallize();
+			final NBTTagCompound out = metal.save(new DataCompound()).toNBT();
+			try {
+				CompressedStreamTools.safeWrite(out, new File(CommonOre.configDirectory, metal.getName() + ".mtl"));
+			}
+			catch (final IOException e) {
+				e.printStackTrace();
+			}
+		}
 		metals = ImmutableList.copyOf(metals);
 	}
 
@@ -144,7 +162,7 @@ public final class MetalRegistry {
 		final Settings propFeNi = new Settings(0.5F, 0.44F, 8, 10, 0.05F, 4.0F, 4.0F);
 		final Settings propAuAg = new Settings(0.3F, 0.19F, 8, 10, 0.05F, 2.5F, 2.5F);
 		// Coal is a dummy metal
-		COAL = registerMetal("coal").flagManualInitiation();
+		COAL = registerMetal("coal").manual();
 		// Default metals
 		ALUMINIUM = registerMetal("aluminium", propAl);
 		IRON = registerMetal("iron", propFe);

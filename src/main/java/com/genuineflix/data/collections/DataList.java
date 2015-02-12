@@ -28,8 +28,8 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	public static final String NAME = "LIST";
 	public static final long SIZE = 8;
 	public static final byte TYPE = 9;
-	private byte type = 0;
 	private List<AbstractData> value = new ArrayList<AbstractData>();
+	private byte type = 0;
 
 	@Override
 	public List<AbstractData> value() {
@@ -171,7 +171,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	@Override
 	public NBTTagList toNBT() {
 		final NBTTagList list = new NBTTagList();
-		for (final IData data : value)
+		for (final AbstractData data : value)
 			list.appendTag(data.toNBT());
 		return list;
 	}

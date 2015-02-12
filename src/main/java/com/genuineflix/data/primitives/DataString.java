@@ -28,7 +28,7 @@ public class DataString extends AbstractData<String> {
 	public DataString(final String value) {
 		this.value = value;
 		if (value == null)
-			throw new IllegalArgumentException("Null string not allowed");
+			throw new IllegalArgumentException("Null value not allowed");
 	}
 
 	@Override

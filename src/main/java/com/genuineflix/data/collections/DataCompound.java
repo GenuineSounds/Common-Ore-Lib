@@ -16,9 +16,6 @@ import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ReportedException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.genuineflix.data.AbstractData;
 import com.genuineflix.data.IData;
 import com.genuineflix.data.IDataPrimitive;
@@ -38,29 +35,28 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 
-public class DataCompound extends AbstractData<Map<String, IData>> {
+public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	public static final String NAME = "COMPOUND";
 	public static final long SIZE = 16;
 	public static final byte TYPE = 10;
-	private static final Logger logger = LogManager.getLogger();
-	private Map<String, IData> values = new HashMap<String, IData>();
+	private Map<String, AbstractData> values = new HashMap<String, AbstractData>();
 
 	public DataCompound() {}
 
-	public DataCompound(final Map<String, IData> values) {
+	public DataCompound(final Map<String, AbstractData> values) {
 		this.values = values;
 	}
 
 	@Override
-	public Map<String, IData> value() {
+	public Map<String, AbstractData> value() {
 		return values;
 	}
 
 	@Override
 	public void write(final DataOutput output) throws IOException {
 		for (final String name : values.keySet()) {
-			final IData data = values.get(name);
+			final AbstractData data = values.get(name);
 			output.writeByte(data.getTypeByte());
 			if (data.getTypeByte() != 0) {
 				output.writeUTF(name);
@@ -85,10 +81,10 @@ public class DataCompound extends AbstractData<Map<String, IData>> {
 					data.read(input, depth + 1, limit);
 				}
 				catch (final IOException e) {
-					final CrashReport report = CrashReport.makeCrashReport(e, "Loading NBT data");
-					final CrashReportCategory category = report.makeCategory("NBT Tag");
-					category.addCrashSection("Tag name", name);
-					category.addCrashSection("Tag type", Byte.valueOf(type));
+					final CrashReport report = CrashReport.makeCrashReport(e, "Loading GDF data");
+					final CrashReportCategory category = report.makeCategory("GDF Byte");
+					category.addCrashSection("Byte name", name);
+					category.addCrashSection("Byte type", Byte.valueOf(type));
 					throw new ReportedException(report);
 				}
 				values.put(name, data);
@@ -110,7 +106,7 @@ public class DataCompound extends AbstractData<Map<String, IData>> {
 		return NAME;
 	}
 
-	public void setData(final String name, final IData value) {
+	public void setData(final String name, final AbstractData value) {
 		if (this != value)
 			values.put(name, value);
 	}
@@ -163,12 +159,12 @@ public class DataCompound extends AbstractData<Map<String, IData>> {
 		values.put(name, new DataString(value.toPlainString()));
 	}
 
-	public IData getData(final String name) {
+	public AbstractData getData(final String name) {
 		return values.get(name);
 	}
 
 	public byte getType(final String name) {
-		final IData nbtbase = values.get(name);
+		final AbstractData nbtbase = values.get(name);
 		return nbtbase != null ? nbtbase.getTypeByte() : 0;
 	}
 
@@ -244,15 +240,6 @@ public class DataCompound extends AbstractData<Map<String, IData>> {
 		}
 	}
 
-	public String getString(final String name) {
-		try {
-			return values.containsKey(name) ? ((DataString) values.get(name)).value() : "";
-		}
-		catch (final ClassCastException classcastexception) {
-			return "";
-		}
-	}
-
 	public byte[] getByteArray(final String name) {
 		try {
 			return values.containsKey(name) ? ((IDataPrimitiveArray) values.get(name)).toByteArray() : new byte[0];
@@ -268,6 +255,15 @@ public class DataCompound extends AbstractData<Map<String, IData>> {
 		}
 		catch (final ClassCastException e) {
 			return new int[0];
+		}
+	}
+
+	public String getString(final String name) {
+		try {
+			return values.containsKey(name) ? ((DataString) values.get(name)).value() : "";
+		}
+		catch (final ClassCastException classcastexception) {
+			return "";
 		}
 	}
 
@@ -342,7 +338,7 @@ public class DataCompound extends AbstractData<Map<String, IData>> {
 	public DataCompound copy() {
 		final DataCompound compound = new DataCompound();
 		for (final String key : values.keySet())
-			compound.setData(key, values.get(key).copy());
+			compound.setData(key, (AbstractData) values.get(key).copy());
 		return compound;
 	}
 
@@ -365,16 +361,16 @@ public class DataCompound extends AbstractData<Map<String, IData>> {
 	}
 
 	@Override
-	public JsonObject serialize(final IData<Map<String, IData>> src, final Type typeOfSrc, final JsonSerializationContext context) {
+	public JsonObject serialize(final IData<Map<String, AbstractData>> src, final Type typeOfSrc, final JsonSerializationContext context) {
 		final JsonObject object = new JsonObject();
-		for (final Entry<String, IData> entry : src.value().entrySet())
+		for (final Entry<String, AbstractData> entry : src.value().entrySet())
 			object.add(entry.getKey(), entry.getValue().serialize(entry.getValue(), entry.getValue().getClass(), context));
 		return object;
 	}
 
 	@Override
 	public DataCompound deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
-		final Map<String, IData> map = new HashMap<String, IData>();
+		final Map<String, AbstractData> map = new HashMap<String, AbstractData>();
 		try {
 			for (final Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
 				map.put(entry.getKey(), serializedElement(entry.getValue(), entry.getValue().getClass(), context));

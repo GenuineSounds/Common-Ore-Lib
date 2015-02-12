@@ -1,7 +1,5 @@
 package com.genuineflix.metal.registry;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,14 +9,10 @@ import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.genuineflix.metal.CommonOre;
 import com.genuineflix.metal.api.IMetal.Compound;
 import com.genuineflix.metal.api.IMetal.Settings;
-import com.genuineflix.metal.api.data.collections.DataCompound;
 import com.genuineflix.metal.util.StringHelper;
 import com.google.common.collect.ImmutableList;
 
@@ -114,16 +108,8 @@ public final class MetalRegistry {
 	}
 
 	public static void post() {
-		for (final Metal metal : metals) {
+		for (final Metal metal : metals)
 			metal.finallize();
-			final NBTTagCompound out = metal.save(new DataCompound()).toNBT();
-			try {
-				CompressedStreamTools.safeWrite(out, new File(CommonOre.configDirectory, metal.getName() + ".mtl"));
-			}
-			catch (final IOException e) {
-				e.printStackTrace();
-			}
-		}
 		metals = ImmutableList.copyOf(metals);
 	}
 

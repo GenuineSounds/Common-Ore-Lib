@@ -1,4 +1,4 @@
-package com.genuineflix.metal.api.data;
+package com.genuineflix.data.helpers;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -21,7 +21,10 @@ import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.util.ReportedException;
 
-import com.genuineflix.metal.api.data.collections.DataCompound;
+import com.genuineflix.data.AbstractData;
+import com.genuineflix.data.SizeLimit;
+import com.genuineflix.data.collections.DataCompound;
+import com.genuineflix.data.primitives.DataNull;
 
 public class IOHelper {
 
@@ -71,17 +74,20 @@ public class IOHelper {
 		return baos.toByteArray();
 	}
 
-	public static void saveToFileSafe(final DataCompound compound, final File file) throws IOException {
-		final File tmp = new File(file.getAbsolutePath() + "_tmp");
-		if (tmp.exists())
-			tmp.delete();
-		saveToFile(compound, tmp);
-		if (file.exists())
-			file.delete();
-		if (file.exists())
-			throw new IOException("Failed to delete " + file);
-		else
-			tmp.renameTo(file);
+	public static void saveToFileSafe(final DataCompound compound, final File file) {
+		try {
+			final File tmp = new File(file.getAbsolutePath() + "_tmp");
+			if (tmp.exists())
+				tmp.delete();
+			saveToFile(compound, tmp);
+			if (file.exists())
+				file.delete();
+			if (file.exists())
+				throw new IOException("Failed to delete " + file);
+			else
+				tmp.renameTo(file);
+		}
+		catch (final Exception e) {}
 	}
 
 	public static DataCompound readStream(final DataInputStream stream) throws IOException {
@@ -89,14 +95,14 @@ public class IOHelper {
 	}
 
 	public static DataCompound readStream(final DataInput input, final SizeLimit limit) throws IOException {
-		final Data nbtbase = getData(input, 0, limit);
+		final AbstractData nbtbase = getData(input, 0, limit);
 		if (nbtbase instanceof DataCompound)
 			return (DataCompound) nbtbase;
 		else
-			throw new IOException("Root tag must be a named compound tag");
+			throw new IOException("Root byte must be DataCompound byte");
 	}
 
-	private static void writeToOutput(final Data data, final DataOutput output) throws IOException {
+	private static void writeToOutput(final AbstractData data, final DataOutput output) throws IOException {
 		output.writeByte(data.getTypeByte());
 		if (data.getTypeByte() != 0) {
 			output.writeUTF("");
@@ -104,22 +110,22 @@ public class IOHelper {
 		}
 	}
 
-	private static Data getData(final DataInput input, final int depth, final SizeLimit limit) throws IOException {
+	private static AbstractData getData(final DataInput input, final int depth, final SizeLimit limit) throws IOException {
 		final byte type = input.readByte();
 		if (type == 0)
-			return new Data.DataEnd();
+			return DataNull.INSTANCE;
 		else {
 			input.readUTF();
-			final Data nbtbase = Data.create(type);
+			final AbstractData nbtbase = AbstractData.create(type);
 			try {
 				nbtbase.read(input, depth, limit);
 				return nbtbase;
 			}
 			catch (final IOException ioexception) {
-				final CrashReport report = CrashReport.makeCrashReport(ioexception, "Loading NBT data");
-				final CrashReportCategory category = report.makeCategory("NBT Tag");
-				category.addCrashSection("Tag name", Data.TYPES[type]);
-				category.addCrashSection("Tag type", Byte.valueOf(type));
+				final CrashReport report = CrashReport.makeCrashReport(ioexception, "Loading GDF data");
+				final CrashReportCategory category = report.makeCategory("GDF Tag");
+				category.addCrashSection("Byte name", AbstractData.TYPES[type]);
+				category.addCrashSection("Byte type", Byte.valueOf(type));
 				throw new ReportedException(report);
 			}
 		}

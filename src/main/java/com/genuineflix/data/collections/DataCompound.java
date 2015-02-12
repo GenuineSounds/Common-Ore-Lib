@@ -1,11 +1,14 @@
-package com.genuineflix.metal.api.data.collections;
+package com.genuineflix.data.collections;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import net.minecraft.crash.CrashReport;
@@ -16,34 +19,48 @@ import net.minecraft.util.ReportedException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.genuineflix.metal.api.data.Data;
-import com.genuineflix.metal.api.data.IDataPrimitive;
-import com.genuineflix.metal.api.data.SizeLimit;
-import com.genuineflix.metal.api.data.primitives.DataByte;
-import com.genuineflix.metal.api.data.primitives.DataDouble;
-import com.genuineflix.metal.api.data.primitives.DataFloat;
-import com.genuineflix.metal.api.data.primitives.DataInteger;
-import com.genuineflix.metal.api.data.primitives.DataLong;
-import com.genuineflix.metal.api.data.primitives.DataShort;
-import com.genuineflix.metal.api.data.primitives.DataString;
+import com.genuineflix.data.AbstractData;
+import com.genuineflix.data.IData;
+import com.genuineflix.data.IDataPrimitive;
+import com.genuineflix.data.IDataPrimitiveArray;
+import com.genuineflix.data.SizeLimit;
+import com.genuineflix.data.primitives.DataBoolean;
+import com.genuineflix.data.primitives.DataByte;
+import com.genuineflix.data.primitives.DataDouble;
+import com.genuineflix.data.primitives.DataFloat;
+import com.genuineflix.data.primitives.DataInteger;
+import com.genuineflix.data.primitives.DataLong;
+import com.genuineflix.data.primitives.DataShort;
+import com.genuineflix.data.primitives.DataString;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
 
-public class DataCompound extends Data<Map<String, Data>> {
+public class DataCompound extends AbstractData<Map<String, IData>> {
 
 	public static final String NAME = "COMPOUND";
 	public static final long SIZE = 16;
 	public static final byte TYPE = 10;
 	private static final Logger logger = LogManager.getLogger();
-	private final Map<String, Data> values = new HashMap<String, Data>();
+	private Map<String, IData> values = new HashMap<String, IData>();
+
+	public DataCompound() {}
+
+	public DataCompound(final Map<String, IData> values) {
+		this.values = values;
+	}
 
 	@Override
-	public Map<String, Data> value() {
+	public Map<String, IData> value() {
 		return values;
 	}
 
 	@Override
 	public void write(final DataOutput output) throws IOException {
 		for (final String name : values.keySet()) {
-			final Data data = values.get(name);
+			final IData data = values.get(name);
 			output.writeByte(data.getTypeByte());
 			if (data.getTypeByte() != 0) {
 				output.writeUTF(name);
@@ -63,7 +80,7 @@ public class DataCompound extends Data<Map<String, Data>> {
 			while ((type = input.readByte()) != 0) {
 				final String name = input.readUTF();
 				limit.assertLimit(DataCompound.SIZE * name.length());
-				final Data data = Data.create(type);
+				final AbstractData data = AbstractData.create(type);
 				try {
 					data.read(input, depth + 1, limit);
 				}
@@ -93,8 +110,13 @@ public class DataCompound extends Data<Map<String, Data>> {
 		return NAME;
 	}
 
-	public void setData(final String name, final Data value) {
-		values.put(name, value);
+	public void setData(final String name, final IData value) {
+		if (this != value)
+			values.put(name, value);
+	}
+
+	public void setBoolean(final String name, final boolean value) {
+		values.put(name, new DataBoolean(value));
 	}
 
 	public void setByte(final String name, final byte value) {
@@ -126,23 +148,27 @@ public class DataCompound extends Data<Map<String, Data>> {
 	}
 
 	public void setByteArray(final String name, final byte[] value) {
-		values.put(name, new DataArrayByte(value));
+		values.put(name, new DataByteArray(value));
 	}
 
 	public void setIntArray(final String name, final int[] value) {
-		values.put(name, new DataArrayInteger(value));
+		values.put(name, new DataIntegerArray(value));
 	}
 
-	public void setBoolean(final String name, final boolean value) {
-		setByte(name, (byte) (value ? 1 : 0));
+	public void setBigInteger(final String name, final BigInteger value) {
+		values.put(name, new DataByteArray(value.toByteArray()));
 	}
 
-	public Data getTag(final String name) {
+	public void setBigDecimal(final String name, final BigDecimal value) {
+		values.put(name, new DataString(value.toPlainString()));
+	}
+
+	public IData getData(final String name) {
 		return values.get(name);
 	}
 
 	public byte getType(final String name) {
-		final Data nbtbase = values.get(name);
+		final IData nbtbase = values.get(name);
 		return nbtbase != null ? nbtbase.getTypeByte() : 0;
 	}
 
@@ -153,6 +179,15 @@ public class DataCompound extends Data<Map<String, Data>> {
 	public boolean hasKey(final String name, final int withType) {
 		final byte type = getType(name);
 		return type == withType ? true : withType != 99 ? false : type == 1 || type == 2 || type == 3 || type == 4 || type == 5 || type == 6;
+	}
+
+	public boolean getBoolean(final String name) {
+		try {
+			return values.containsKey(name) ? ((IDataPrimitive) values.get(name)).toBoolean() : false;
+		}
+		catch (final ClassCastException e) {
+			return false;
+		}
 	}
 
 	public byte getByte(final String name) {
@@ -220,7 +255,7 @@ public class DataCompound extends Data<Map<String, Data>> {
 
 	public byte[] getByteArray(final String name) {
 		try {
-			return values.containsKey(name) ? ((DataArrayByte) values.get(name)).value() : new byte[0];
+			return values.containsKey(name) ? ((IDataPrimitiveArray) values.get(name)).toByteArray() : new byte[0];
 		}
 		catch (final ClassCastException e) {
 			return new byte[0];
@@ -229,14 +264,32 @@ public class DataCompound extends Data<Map<String, Data>> {
 
 	public int[] getIntArray(final String name) {
 		try {
-			return values.containsKey(name) ? ((DataArrayInteger) values.get(name)).value() : new int[0];
+			return values.containsKey(name) ? ((IDataPrimitiveArray) values.get(name)).toIntArray() : new int[0];
 		}
 		catch (final ClassCastException e) {
 			return new int[0];
 		}
 	}
 
-	public DataCompound getCompoundTag(final String name) {
+	public BigInteger getBigInteger(final String name) {
+		try {
+			return values.containsKey(name) ? new BigInteger(((DataByteArray) values.get(name)).value()) : new BigInteger("0");
+		}
+		catch (final ClassCastException e) {
+			return new BigInteger("0");
+		}
+	}
+
+	public BigDecimal getBigDecimal(final String name) {
+		try {
+			return values.containsKey(name) ? new BigDecimal(((DataString) values.get(name)).value()) : new BigDecimal("0");
+		}
+		catch (final ClassCastException e) {
+			return new BigDecimal("0");
+		}
+	}
+
+	public DataCompound getCompound(final String name) {
 		try {
 			return values.containsKey(name) ? (DataCompound) values.get(name) : new DataCompound();
 		}
@@ -245,7 +298,7 @@ public class DataCompound extends Data<Map<String, Data>> {
 		}
 	}
 
-	public DataList getTagList(final String name, final int ofType) {
+	public DataList getList(final String name, final int ofType) {
 		try {
 			if (getType(name) != DataList.TYPE)
 				return new DataList();
@@ -259,10 +312,6 @@ public class DataCompound extends Data<Map<String, Data>> {
 		}
 	}
 
-	public boolean getBoolean(final String name) {
-		return getByte(name) != 0;
-	}
-
 	public void remove(final String name) {
 		values.remove(name);
 	}
@@ -273,9 +322,13 @@ public class DataCompound extends Data<Map<String, Data>> {
 		sb.append('{');
 		for (final String str : values.keySet()) {
 			sb.append(str);
-			sb.append(':');
+			sb.append(": ");
 			sb.append(values.get(str));
-			sb.append(',');
+			sb.append(", ");
+		}
+		if (sb.indexOf(", ") > 0) {
+			sb.deleteCharAt(sb.length() - 1);
+			sb.deleteCharAt(sb.length() - 1);
 		}
 		sb.append('}');
 		return sb.toString();
@@ -286,13 +339,10 @@ public class DataCompound extends Data<Map<String, Data>> {
 	}
 
 	@Override
-	public Data<Map<String, Data>> copy() {
+	public DataCompound copy() {
 		final DataCompound compound = new DataCompound();
-		final Iterator iterator = values.keySet().iterator();
-		while (iterator.hasNext()) {
-			final String s = (String) iterator.next();
-			compound.setData(s, values.get(s).copy());
-		}
+		for (final String key : values.keySet())
+			compound.setData(key, values.get(key).copy());
 		return compound;
 	}
 
@@ -312,5 +362,26 @@ public class DataCompound extends Data<Map<String, Data>> {
 	@Override
 	public int hashCode() {
 		return super.hashCode() ^ values.hashCode();
+	}
+
+	@Override
+	public JsonObject serialize(final IData<Map<String, IData>> src, final Type typeOfSrc, final JsonSerializationContext context) {
+		final JsonObject object = new JsonObject();
+		for (final Entry<String, IData> entry : src.value().entrySet())
+			object.add(entry.getKey(), entry.getValue().serialize(entry.getValue(), entry.getValue().getClass(), context));
+		return object;
+	}
+
+	@Override
+	public DataCompound deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+		final Map<String, IData> map = new HashMap<String, IData>();
+		try {
+			for (final Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
+				map.put(entry.getKey(), serializedElement(entry.getValue(), entry.getValue().getClass(), context));
+			return new DataCompound(map);
+		}
+		catch (final Exception e) {
+			throw new JsonParseException(e);
+		}
 	}
 }

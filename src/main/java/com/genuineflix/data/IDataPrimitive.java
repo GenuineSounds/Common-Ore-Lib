@@ -1,6 +1,8 @@
-package com.genuineflix.metal.api.data;
+package com.genuineflix.data;
 
 public interface IDataPrimitive {
+
+	public boolean toBoolean();
 
 	public long toLong();
 

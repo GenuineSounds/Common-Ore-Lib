@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
-import com.genuineflix.metal.api.data.collections.DataCompound;
+import com.genuineflix.data.collections.DataCompound;
 
 public interface IMetal extends SaveableData, LoadableData<IMetal> {
 
@@ -130,8 +130,8 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 		@Override
 		public DataCompound save(final DataCompound nbt) {
 			nbt.setString("class", metal.getClass().getName());
-			nbt.setInteger("factor", factor);
 			nbt.setData("metal", metal.save(new DataCompound()));
+			nbt.setInteger("factor", factor);
 			return nbt;
 		}
 
@@ -140,7 +140,7 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 			try {
 				final ClassLoader cl = ClassLoader.getSystemClassLoader();
 				final Class<IMetal> clazz = (Class<IMetal>) cl.loadClass(nbt.getString("class"));
-				metal = clazz.newInstance().load(nbt.getCompoundTag("metal"));
+				metal = clazz.newInstance().load(nbt.getCompound("metal"));
 				factor = nbt.getInteger("factor");
 			}
 			catch (final Exception e) {

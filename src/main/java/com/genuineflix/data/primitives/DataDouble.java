@@ -1,17 +1,23 @@
-package com.genuineflix.metal.api.data.primitives;
+package com.genuineflix.data.primitives;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 import net.minecraft.nbt.NBTTagDouble;
-import net.minecraft.util.MathHelper;
 
-import com.genuineflix.metal.api.data.Data;
-import com.genuineflix.metal.api.data.IDataPrimitive;
-import com.genuineflix.metal.api.data.SizeLimit;
+import com.genuineflix.data.AbstractData;
+import com.genuineflix.data.IData;
+import com.genuineflix.data.IDataPrimitive;
+import com.genuineflix.data.SizeLimit;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
 
-public class DataDouble extends Data<Double> implements IDataPrimitive {
+public class DataDouble extends AbstractData<Double> implements IDataPrimitive {
 
 	public static final String NAME = "DOUBLE";
 	public static final long SIZE = 64;
@@ -56,7 +62,7 @@ public class DataDouble extends Data<Double> implements IDataPrimitive {
 	}
 
 	@Override
-	public Data<Double> copy() {
+	public DataDouble copy() {
 		return new DataDouble(value);
 	}
 
@@ -77,23 +83,28 @@ public class DataDouble extends Data<Double> implements IDataPrimitive {
 	}
 
 	@Override
+	public boolean toBoolean() {
+		return toByte() != 0;
+	}
+
+	@Override
 	public long toLong() {
 		return (long) Math.floor(value);
 	}
 
 	@Override
 	public int toInt() {
-		return MathHelper.floor_double(value);
+		return (int) Math.floor(value) & 0xFFFFFFFF;
 	}
 
 	@Override
 	public short toShort() {
-		return (short) (MathHelper.floor_double(value) & 65535);
+		return (short) ((int) Math.floor(value) & 0xFFFF);
 	}
 
 	@Override
 	public byte toByte() {
-		return (byte) (MathHelper.floor_double(value) & 255);
+		return (byte) ((int) Math.floor(value) & 0xFF);
 	}
 
 	@Override
@@ -104,5 +115,15 @@ public class DataDouble extends Data<Double> implements IDataPrimitive {
 	@Override
 	public float toFloat() {
 		return (float) value;
+	}
+
+	@Override
+	public JsonPrimitive serialize(final IData<Double> src, final Type typeOfSrc, final JsonSerializationContext context) {
+		return new JsonPrimitive(src.value());
+	}
+
+	@Override
+	public DataDouble deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+		return new DataDouble(json.getAsDouble());
 	}
 }

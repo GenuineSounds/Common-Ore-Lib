@@ -8,9 +8,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
+import com.genuineflix.data.collections.DataCompound;
+import com.genuineflix.data.collections.DataList;
+import com.genuineflix.data.helpers.NBTHelper;
 import com.genuineflix.metal.api.IMetal;
-import com.genuineflix.metal.api.data.NBTHelper;
-import com.genuineflix.metal.api.data.collections.DataCompound;
 
 public class Metal implements IMetal {
 
@@ -107,17 +108,17 @@ public class Metal implements IMetal {
 	public DataCompound save(final DataCompound data) {
 		data.setString("name", name);
 		data.setString("displayName", displayName);
-		data.setData("ore", NBTHelper.convert(new ItemStack(ore)));
-		data.setData("block", NBTHelper.convert(new ItemStack(block)));
-		data.setData("dust", NBTHelper.convert(new ItemStack(dust)));
-		data.setData("ingot", NBTHelper.convert(new ItemStack(ingot)));
-		data.setData("nugget", NBTHelper.convert(new ItemStack(nugget)));
+		data.setData("ore", NBTHelper.create(new ItemStack(ore)));
+		data.setData("block", NBTHelper.create(new ItemStack(block)));
+		data.setData("dust", NBTHelper.create(new ItemStack(dust)));
+		data.setData("ingot", NBTHelper.create(new ItemStack(ingot)));
+		data.setData("nugget", NBTHelper.create(new ItemStack(nugget)));
 		if (settings != null)
 			data.setData("settings", settings.save(new DataCompound()));
 		if (compounds != null && !compounds.isEmpty()) {
-			final DataCompound comps = new DataCompound();
+			final DataList comps = new DataList();
 			for (int i = 0; i < compounds.size(); i++)
-				comps.setData(Integer.toString(i), compounds.get(i).save(new DataCompound()));
+				comps.add(compounds.get(i).save(new DataCompound()));
 			data.setData("compounds", comps);
 		}
 		if (manual)
@@ -129,20 +130,19 @@ public class Metal implements IMetal {
 	public IMetal load(final DataCompound data) {
 		name = data.getString("name");
 		displayName = data.getString("displayName");
-		ore = ((ItemBlock) NBTHelper.convert(data.getCompoundTag("ore")).getItem()).field_150939_a;
-		block = ((ItemBlock) NBTHelper.convert(data.getCompoundTag("block")).getItem()).field_150939_a;
-		dust = NBTHelper.convert(data.getCompoundTag("dust")).getItem();
-		ingot = NBTHelper.convert(data.getCompoundTag("ingot")).getItem();
-		nugget = NBTHelper.convert(data.getCompoundTag("nugget")).getItem();
+		ore = ((ItemBlock) NBTHelper.create(data.getCompound("ore")).getItem()).field_150939_a;
+		block = ((ItemBlock) NBTHelper.create(data.getCompound("block")).getItem()).field_150939_a;
+		dust = NBTHelper.create(data.getCompound("dust")).getItem();
+		ingot = NBTHelper.create(data.getCompound("ingot")).getItem();
+		nugget = NBTHelper.create(data.getCompound("nugget")).getItem();
 		if (data.hasKey("settings"))
-			settings = Settings.fromCompound(data.getCompoundTag("settings"));
+			settings = Settings.fromCompound(data.getCompound("settings"));
 		if (data.hasKey("compounds")) {
-			final int compoundNumber = 0;
-			final DataCompound compounds = data.getCompoundTag("compounds");
-			DataCompound compoundTag;
-			final List<Compound> compoundList = new ArrayList<Compound>();
-			while (!(compoundTag = compounds.getCompoundTag("compound" + compoundNumber)).isEmpty())
-				compoundList.add(Compound.from(compoundTag));
+			final DataList list = data.getList("compounds", DataCompound.TYPE);
+			final List<Compound> compounds = new ArrayList<Compound>();
+			for (int i = 0; i < list.size(); i++)
+				compounds.add(Compound.from(list.getCompound(i)));
+			this.compounds = compounds;
 		}
 		return this;
 	}

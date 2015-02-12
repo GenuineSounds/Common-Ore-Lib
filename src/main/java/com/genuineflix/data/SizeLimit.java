@@ -1,6 +1,6 @@
-package com.genuineflix.metal.api.data;
+package com.genuineflix.data;
 
-import com.genuineflix.metal.api.data.primitives.DataByte;
+import com.genuineflix.data.primitives.DataByte;
 
 public class SizeLimit {
 

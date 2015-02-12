@@ -1,17 +1,23 @@
-package com.genuineflix.metal.api.data.primitives;
+package com.genuineflix.data.primitives;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.util.MathHelper;
 
-import com.genuineflix.metal.api.data.Data;
-import com.genuineflix.metal.api.data.IDataPrimitive;
-import com.genuineflix.metal.api.data.SizeLimit;
+import com.genuineflix.data.AbstractData;
+import com.genuineflix.data.IData;
+import com.genuineflix.data.IDataPrimitive;
+import com.genuineflix.data.SizeLimit;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
 
-public class DataFloat extends Data<Float> implements IDataPrimitive {
+public class DataFloat extends AbstractData<Float> implements IDataPrimitive {
 
 	public static final String NAME = "FLOAT";
 	public static final long SIZE = 32;
@@ -56,7 +62,7 @@ public class DataFloat extends Data<Float> implements IDataPrimitive {
 	}
 
 	@Override
-	public Data<Float> copy() {
+	public DataFloat copy() {
 		return new DataFloat(value);
 	}
 
@@ -76,23 +82,28 @@ public class DataFloat extends Data<Float> implements IDataPrimitive {
 	}
 
 	@Override
+	public boolean toBoolean() {
+		return toByte() != 0;
+	}
+
+	@Override
 	public long toLong() {
 		return (long) value;
 	}
 
 	@Override
 	public int toInt() {
-		return MathHelper.floor_float(value);
+		return (int) Math.floor(value) & 0xFFFFFFFF;
 	}
 
 	@Override
 	public short toShort() {
-		return (short) (MathHelper.floor_float(value) & 65535);
+		return (short) ((int) Math.floor(value) & 0xFFFF);
 	}
 
 	@Override
 	public byte toByte() {
-		return (byte) (MathHelper.floor_float(value) & 255);
+		return (byte) ((int) Math.floor(value) & 0xFF);
 	}
 
 	@Override
@@ -103,5 +114,15 @@ public class DataFloat extends Data<Float> implements IDataPrimitive {
 	@Override
 	public float toFloat() {
 		return value;
+	}
+
+	@Override
+	public JsonPrimitive serialize(final IData<Float> src, final Type typeOfSrc, final JsonSerializationContext context) {
+		return new JsonPrimitive(src.value());
+	}
+
+	@Override
+	public DataFloat deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+		return new DataFloat(json.getAsFloat());
 	}
 }

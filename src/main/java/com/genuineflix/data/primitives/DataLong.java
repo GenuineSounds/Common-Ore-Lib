@@ -1,16 +1,23 @@
-package com.genuineflix.metal.api.data.primitives;
+package com.genuineflix.data.primitives;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 import net.minecraft.nbt.NBTTagLong;
 
-import com.genuineflix.metal.api.data.Data;
-import com.genuineflix.metal.api.data.IDataPrimitive;
-import com.genuineflix.metal.api.data.SizeLimit;
+import com.genuineflix.data.AbstractData;
+import com.genuineflix.data.IData;
+import com.genuineflix.data.IDataPrimitive;
+import com.genuineflix.data.SizeLimit;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
 
-public class DataLong extends Data<Long> implements IDataPrimitive {
+public class DataLong extends AbstractData<Long> implements IDataPrimitive {
 
 	public static final String NAME = "LONG";
 	public static final long SIZE = 64;
@@ -55,7 +62,7 @@ public class DataLong extends Data<Long> implements IDataPrimitive {
 	}
 
 	@Override
-	public Data<Long> copy() {
+	public DataLong copy() {
 		return new DataLong(value);
 	}
 
@@ -75,23 +82,28 @@ public class DataLong extends Data<Long> implements IDataPrimitive {
 	}
 
 	@Override
+	public boolean toBoolean() {
+		return toByte() != 0;
+	}
+
+	@Override
 	public long toLong() {
 		return value;
 	}
 
 	@Override
 	public int toInt() {
-		return (int) (value & -1L);
+		return (int) (value & 0xFFFFFFFF);
 	}
 
 	@Override
 	public short toShort() {
-		return (short) (int) (value & 65535L);
+		return (short) (value & 0xFFFF);
 	}
 
 	@Override
 	public byte toByte() {
-		return (byte) (int) (value & 255L);
+		return (byte) (value & 0xFF);
 	}
 
 	@Override
@@ -102,5 +114,15 @@ public class DataLong extends Data<Long> implements IDataPrimitive {
 	@Override
 	public float toFloat() {
 		return value;
+	}
+
+	@Override
+	public JsonPrimitive serialize(final IData<Long> src, final Type typeOfSrc, final JsonSerializationContext context) {
+		return new JsonPrimitive(src.value());
+	}
+
+	@Override
+	public DataLong deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+		return new DataLong(json.getAsLong());
 	}
 }

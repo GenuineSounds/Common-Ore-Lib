@@ -52,7 +52,7 @@ public class CommonOre {
 
 	@EventHandler
 	public void pre(final FMLPreInitializationEvent event) {
-		configDirectory = new File(event.getModConfigurationDirectory(), "NBTData");
+		configDirectory = new File(event.getModConfigurationDirectory(), "CommonOre");
 		configDirectory.mkdirs();
 		CommonOre.config = new Config(event);
 		MetalRegistry.pre();

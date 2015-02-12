@@ -1,16 +1,23 @@
-package com.genuineflix.metal.api.data.primitives;
+package com.genuineflix.data.primitives;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 import net.minecraft.nbt.NBTTagShort;
 
-import com.genuineflix.metal.api.data.Data;
-import com.genuineflix.metal.api.data.IDataPrimitive;
-import com.genuineflix.metal.api.data.SizeLimit;
+import com.genuineflix.data.AbstractData;
+import com.genuineflix.data.IData;
+import com.genuineflix.data.IDataPrimitive;
+import com.genuineflix.data.SizeLimit;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
 
-public class DataShort extends Data<Short> implements IDataPrimitive {
+public class DataShort extends AbstractData<Short> implements IDataPrimitive {
 
 	public static final String NAME = "SHORT";
 	public static final long SIZE = 16;
@@ -55,7 +62,7 @@ public class DataShort extends Data<Short> implements IDataPrimitive {
 	}
 
 	@Override
-	public Data<Short> copy() {
+	public DataShort copy() {
 		return new DataShort(value);
 	}
 
@@ -72,6 +79,11 @@ public class DataShort extends Data<Short> implements IDataPrimitive {
 	@Override
 	public int hashCode() {
 		return super.hashCode() ^ value;
+	}
+
+	@Override
+	public boolean toBoolean() {
+		return toByte() != 0;
 	}
 
 	@Override
@@ -102,5 +114,15 @@ public class DataShort extends Data<Short> implements IDataPrimitive {
 	@Override
 	public float toFloat() {
 		return value;
+	}
+
+	@Override
+	public JsonPrimitive serialize(final IData<Short> src, final Type typeOfSrc, final JsonSerializationContext context) {
+		return new JsonPrimitive(src.value());
+	}
+
+	@Override
+	public DataShort deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+		return new DataShort(json.getAsShort());
 	}
 }

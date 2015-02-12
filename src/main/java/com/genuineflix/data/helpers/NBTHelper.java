@@ -1,7 +1,8 @@
-package com.genuineflix.metal.api.data;
+package com.genuineflix.data.helpers;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTBase.NBTPrimitive;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,22 +16,37 @@ import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
 
-import com.genuineflix.metal.api.data.collections.DataArrayByte;
-import com.genuineflix.metal.api.data.collections.DataArrayInteger;
-import com.genuineflix.metal.api.data.collections.DataCompound;
-import com.genuineflix.metal.api.data.collections.DataList;
-import com.genuineflix.metal.api.data.primitives.DataByte;
-import com.genuineflix.metal.api.data.primitives.DataDouble;
-import com.genuineflix.metal.api.data.primitives.DataFloat;
-import com.genuineflix.metal.api.data.primitives.DataInteger;
-import com.genuineflix.metal.api.data.primitives.DataLong;
-import com.genuineflix.metal.api.data.primitives.DataShort;
-import com.genuineflix.metal.api.data.primitives.DataString;
+import com.genuineflix.data.AbstractData;
+import com.genuineflix.data.collections.DataByteArray;
+import com.genuineflix.data.collections.DataCompound;
+import com.genuineflix.data.collections.DataIntegerArray;
+import com.genuineflix.data.collections.DataList;
+import com.genuineflix.data.primitives.DataBoolean;
+import com.genuineflix.data.primitives.DataByte;
+import com.genuineflix.data.primitives.DataDouble;
+import com.genuineflix.data.primitives.DataFloat;
+import com.genuineflix.data.primitives.DataInteger;
+import com.genuineflix.data.primitives.DataLong;
+import com.genuineflix.data.primitives.DataNull;
+import com.genuineflix.data.primitives.DataShort;
+import com.genuineflix.data.primitives.DataString;
 
 public class NBTHelper {
 
-	private static Data.DataEnd create(final NBTTagEnd nbt) {
-		return new Data.DataEnd();
+	public static DataCompound create(final ItemStack stack) {
+		return create(stack.writeToNBT(new NBTTagCompound()));
+	}
+
+	public static ItemStack create(final DataCompound compound) {
+		return ItemStack.loadItemStackFromNBT(compound.toNBT());
+	}
+
+	private static DataNull create(final NBTTagEnd nbt) {
+		return DataNull.INSTANCE;
+	}
+
+	public static DataBoolean create(final NBTPrimitive nbt) {
+		return new DataBoolean(nbt.func_150290_f() != 0);
 	}
 
 	public static DataByte create(final NBTTagByte nbt) {
@@ -61,12 +77,12 @@ public class NBTHelper {
 		return new DataString(nbt.func_150285_a_());
 	}
 
-	public static DataArrayInteger create(final NBTTagIntArray nbt) {
-		return new DataArrayInteger(nbt.func_150302_c());
+	public static DataIntegerArray create(final NBTTagIntArray nbt) {
+		return new DataIntegerArray(nbt.func_150302_c());
 	}
 
-	public static DataArrayByte create(final NBTTagByteArray nbt) {
-		return new DataArrayByte(nbt.func_150292_c());
+	public static DataByteArray create(final NBTTagByteArray nbt) {
+		return new DataByteArray(nbt.func_150292_c());
 	}
 
 	public static DataList create(final NBTTagList nbt) {
@@ -75,23 +91,23 @@ public class NBTHelper {
 		switch (nbt.func_150303_d()) {
 			case 6:
 				for (int i = 0; i < count; i++)
-					list.addData(i, new DataDouble(nbt.func_150309_d(i)));
+					list.add(new DataDouble(nbt.func_150309_d(i)));
 				break;
 			case 5:
 				for (int i = 0; i < count; i++)
-					list.addData(i, new DataFloat(nbt.func_150308_e(i)));
+					list.add(new DataFloat(nbt.func_150308_e(i)));
 				break;
 			case 8:
 				for (int i = 0; i < count; i++)
-					list.addData(i, new DataString(nbt.getStringTagAt(i)));
+					list.add(new DataString(nbt.getStringTagAt(i)));
 				break;
 			case 10:
 				for (int i = 0; i < count; i++)
-					list.addData(i, create(nbt.getCompoundTagAt(i)));
+					list.add(create(nbt.getCompoundTagAt(i)));
 				break;
 			case 11:
 				for (int i = 0; i < count; i++)
-					list.addData(i, new DataArrayInteger(nbt.func_150306_c(i)));
+					list.add(new DataIntegerArray(nbt.func_150306_c(i)));
 				break;
 		}
 		return list;
@@ -107,7 +123,7 @@ public class NBTHelper {
 		return compound;
 	}
 
-	public static Data<?> create(final NBTBase nbt) {
+	public static AbstractData<?> create(final NBTBase nbt) {
 		if (nbt instanceof NBTTagEnd)
 			return create((NBTTagEnd) nbt);
 		if (nbt instanceof NBTTagByte)
@@ -133,13 +149,5 @@ public class NBTHelper {
 		if (nbt instanceof NBTTagCompound)
 			return create((NBTTagCompound) nbt);
 		return null;
-	}
-
-	public static DataCompound convert(final ItemStack stack) {
-		return create(stack.writeToNBT(new NBTTagCompound()));
-	}
-
-	public static ItemStack convert(final DataCompound compound) {
-		return ItemStack.loadItemStackFromNBT(compound.toNBT());
 	}
 }

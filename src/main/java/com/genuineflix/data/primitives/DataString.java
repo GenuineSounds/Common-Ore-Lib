@@ -1,15 +1,22 @@
-package com.genuineflix.metal.api.data.primitives;
+package com.genuineflix.data.primitives;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.lang.reflect.Type;
 
 import net.minecraft.nbt.NBTTagString;
 
-import com.genuineflix.metal.api.data.Data;
-import com.genuineflix.metal.api.data.SizeLimit;
+import com.genuineflix.data.AbstractData;
+import com.genuineflix.data.IData;
+import com.genuineflix.data.SizeLimit;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
 
-public class DataString extends Data<String> {
+public class DataString extends AbstractData<String> {
 
 	public static final String NAME = "STRING";
 	public static final long SIZE = 8;
@@ -56,7 +63,7 @@ public class DataString extends Data<String> {
 	}
 
 	@Override
-	public Data<String> copy() {
+	public DataString copy() {
 		return new DataString(value);
 	}
 
@@ -83,5 +90,15 @@ public class DataString extends Data<String> {
 	@Override
 	public String directString() {
 		return value;
+	}
+
+	@Override
+	public JsonPrimitive serialize(final IData<String> src, final Type typeOfSrc, final JsonSerializationContext context) {
+		return new JsonPrimitive(src.value());
+	}
+
+	@Override
+	public DataString deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
+		return new DataString(json.getAsString());
 	}
 }

@@ -64,11 +64,12 @@ public final class MetalRegistry {
 		commonCache.put(name, list);
 		if (closed)
 			return;
-		for (final Metal m : metals)
-			if (m.getName().equals(StringHelper.cleanName(name))) {
-				m.getSettings().setGenerate(true);
-				break;
-			}
+		for (final Metal metal : metals) {
+			if (!metal.getName().equals(StringHelper.cleanName(name)))
+				continue;
+			metal.getSettings().setGenerate(true);
+			break;
+		}
 	}
 
 	public static boolean isCommonBlock(final Block block) {
@@ -91,8 +92,10 @@ public final class MetalRegistry {
 		for (final Metal metal : metals) {
 			if (metal.isManual())
 				continue;
+			closed = true;
 			RegistryHelper.createItems(metal);
 			RegistryHelper.registerItems(metal);
+			closed = false;
 		}
 	}
 

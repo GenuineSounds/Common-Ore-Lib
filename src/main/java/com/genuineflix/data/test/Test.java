@@ -25,15 +25,11 @@ public class Test {
 		main1.set("BigInteger", new BigInteger("2345984321896432168945165165169849913216843216897431024"));
 		main1.set("boolean", true);
 		main1.set("byte", (byte) 36);
-		main1.set("byte[]", new byte[] {
-				(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE
-		});
+		main1.set("byte[]", new byte[] { (byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE });
 		main1.set("DataCompound", new DataCompound());
 		main1.set("float", 8.5F);
 		main1.set("double", 1234.5678);
-		main1.set("int[]", new int[] {
-				0x6E745B5D, 4, 0, 89758,
-		});
+		main1.set("int[]", new int[] { 0x6E745B5D, 4, 0, 89758, });
 		main1.set("int", 28941321);
 		main1.set("long", 0xCCCCCCCCCCCCCCCCL);
 		main1.set("short", Short.MAX_VALUE);

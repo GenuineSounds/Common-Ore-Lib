@@ -36,9 +36,7 @@ public class RegistryHelper {
 
 	static void registerItems(final Metal metal) {
 		final String nameFixed = metal.getDisplayName();
-		GameRegistry.registerBlock(metal.getOre(), ItemOreCommon.class, "ore" + nameFixed, new Object[] {
-			nameFixed
-		});
+		GameRegistry.registerBlock(metal.getOre(), ItemOreCommon.class, "ore" + nameFixed, new Object[] { nameFixed });
 		GameRegistry.registerItem(metal.getDust(), "dust" + nameFixed);
 		GameRegistry.registerItem(metal.getIngot(), "ingot" + nameFixed);
 		GameRegistry.registerItem(metal.getNugget(), "nugget" + nameFixed);

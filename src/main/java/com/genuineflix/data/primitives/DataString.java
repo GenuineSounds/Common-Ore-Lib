@@ -39,14 +39,14 @@ public class DataString extends AbstractData<String> {
 	}
 
 	@Override
-	public void write(final DataOutput out) throws IOException {
-		out.writeUTF(value);
-	}
-
-	@Override
 	public void read(final DataInput in, final int depth, final SizeLimit limit) throws IOException {
 		value = in.readUTF();
 		limit.assertLimit(DataString.SIZE * value.length());
+	}
+
+	@Override
+	public void write(final DataOutput out) throws IOException {
+		out.writeUTF(value);
 	}
 
 	@Override
@@ -75,23 +75,17 @@ public class DataString extends AbstractData<String> {
 	}
 
 	@Override
-	public boolean equals(final Object p_equals_1_) {
-		if (!super.equals(p_equals_1_))
-			return false;
-		else {
-			final DataString nbttagstring = (DataString) p_equals_1_;
-			return value == null && nbttagstring.value == null || value != null && value.equals(nbttagstring.value);
-		}
+	public boolean equals(final Object obj) {
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IData)
+			return value().equals(((IData) obj).value());
+		return value().equals(obj);
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ value.hashCode();
-	}
-
-	@Override
-	public String directString() {
-		return value;
+		return value.hashCode();
 	}
 
 	@Override

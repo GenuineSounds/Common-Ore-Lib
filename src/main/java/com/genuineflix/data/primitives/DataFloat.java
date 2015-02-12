@@ -73,12 +73,16 @@ public class DataFloat extends AbstractData<Float> implements IDataPrimitive {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return super.equals(obj) && value == ((DataFloat) obj).value;
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IDataPrimitive)
+			return value().equals(((IDataPrimitive) obj).toFloat());
+		return obj instanceof Number && value().equals(((Number) obj).floatValue());
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ Float.floatToIntBits(value);
+		return Float.floatToIntBits(value);
 	}
 
 	@Override

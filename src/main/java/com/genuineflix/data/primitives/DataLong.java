@@ -73,12 +73,16 @@ public class DataLong extends AbstractData<Long> implements IDataPrimitive {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return super.equals(obj) && value == ((DataLong) obj).value;
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IDataPrimitive)
+			return value().equals(((IDataPrimitive) obj).toLong());
+		return obj instanceof Number && value().equals(((Number) obj).longValue());
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ (int) (value ^ value >>> 32);
+		return (int) (value ^ value >>> 32);
 	}
 
 	@Override

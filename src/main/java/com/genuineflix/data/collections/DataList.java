@@ -12,11 +12,11 @@ import net.minecraft.nbt.NBTTagList;
 import com.genuineflix.data.AbstractData;
 import com.genuineflix.data.IData;
 import com.genuineflix.data.IDataPrimitive;
+import com.genuineflix.data.IDataPrimitiveArray;
 import com.genuineflix.data.SizeLimit;
 import com.genuineflix.data.primitives.DataByte;
 import com.genuineflix.data.primitives.DataInteger;
 import com.genuineflix.data.primitives.DataNull;
-import com.genuineflix.data.primitives.DataString;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -29,7 +29,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	public static final long SIZE = 8;
 	public static final byte TYPE = 9;
 	private List<AbstractData> value = new ArrayList<AbstractData>();
-	private byte type = 0;
+	private byte valueType = 0;
 
 	@Override
 	public List<AbstractData> value() {
@@ -39,10 +39,10 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	@Override
 	public void write(final DataOutput out) throws IOException {
 		if (!value.isEmpty())
-			type = value.get(0).getTypeByte();
+			valueType = value.get(0).getTypeByte();
 		else
-			type = DataNull.TYPE;
-		out.writeByte(type);
+			valueType = DataNull.TYPE;
+		out.writeByte(valueType);
 		out.writeInt(value.size());
 		for (int i = 0; i < value.size(); i++)
 			value.get(i).write(out);
@@ -50,14 +50,12 @@ public class DataList extends AbstractData<List<AbstractData>> {
 
 	@Override
 	public void read(final DataInput in, final int depth, final SizeLimit limit) throws IOException {
-		if (depth > 512)
-			throw new RuntimeException("Tried to read NBT tag with too high complexity, depth > 512");
 		limit.assertLimit(DataList.SIZE);
-		type = in.readByte();
+		valueType = in.readByte();
 		final int size = in.readInt();
 		value = new ArrayList();
 		for (int i = 0; i < size; i++) {
-			final AbstractData data = AbstractData.create(type);
+			final AbstractData data = AbstractData.create(valueType);
 			data.read(in, depth + 1, limit);
 			value.add(data);
 		}
@@ -78,7 +76,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 		final StringBuilder sb = new StringBuilder(value.size() * (int) DataList.SIZE);
 		sb.append('[');
 		for (int i = 0; i < value.size(); i++) {
-			sb.append(value.get(i).directString());
+			sb.append(value.get(i).value());
 			sb.append(", ");
 		}
 		if (sb.indexOf(", ") > 0) {
@@ -90,9 +88,9 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	}
 
 	public void add(final AbstractData data) {
-		if (type == 0)
-			type = data.getTypeByte();
-		else if (type != data.getTypeByte()) {
+		if (valueType == 0)
+			valueType = data.getTypeByte();
+		else if (valueType != data.getTypeByte()) {
 			System.err.println("WARNING: Adding mismatching tag types to tag list");
 			return;
 		}
@@ -101,9 +99,9 @@ public class DataList extends AbstractData<List<AbstractData>> {
 
 	private AbstractData replace(final int index, final AbstractData data) {
 		if (index >= 0 && index < value.size()) {
-			if (type == 0)
-				type = data.getTypeByte();
-			else if (type != data.getTypeByte()) {
+			if (valueType == 0)
+				valueType = data.getTypeByte();
+			else if (valueType != data.getTypeByte()) {
 				System.err.println("WARNING: Adding mismatching tag types to tag list");
 				return DataNull.INSTANCE;
 			}
@@ -128,7 +126,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	public int[] getIntegerArray(final int index) {
 		if (index >= 0 && index < value.size()) {
 			final AbstractData data = value.get(index);
-			return data.getTypeByte() == DataIntegerArray.TYPE ? ((DataIntegerArray) data).value() : new int[0];
+			return data instanceof IDataPrimitiveArray ? ((IDataPrimitiveArray) data).toIntArray() : new int[0];
 		} else
 			return new int[0];
 	}
@@ -152,7 +150,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	public String getString(final int index) {
 		if (index >= 0 && index < value.size()) {
 			final AbstractData data = value.get(index);
-			return data instanceof DataString ? ((DataString) data).value() : data.toString();
+			return data instanceof IData ? ((IData) data).value().toString() : "";
 		} else
 			return "";
 	}
@@ -164,7 +162,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	@Override
 	public AbstractData<List<AbstractData>> copy() {
 		final DataList list = new DataList();
-		list.type = type;
+		list.valueType = valueType;
 		for (final AbstractData data : value)
 			list.value.add((AbstractData) data.copy());
 		return list;
@@ -180,20 +178,20 @@ public class DataList extends AbstractData<List<AbstractData>> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		if (super.equals(obj)) {
-			final DataList list = (DataList) obj;
-			return type == list.type && value.equals(list.value);
-		}
-		return false;
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IData)
+			return value().equals(((IData) obj).value());
+		return obj instanceof List && value().equals(obj);
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ value.hashCode();
+		return value.hashCode();
 	}
 
 	public byte getListType() {
-		return type;
+		return valueType;
 	}
 
 	@Override

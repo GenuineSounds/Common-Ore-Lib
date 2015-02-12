@@ -145,10 +145,10 @@ public class IOHelper {
 				nbtbase.read(input, depth, limit);
 				return nbtbase;
 			}
-			catch (final IOException ioexception) {
-				final CrashReport report = CrashReport.makeCrashReport(ioexception, "Loading GDF data");
-				final CrashReportCategory category = report.makeCategory("GDF Tag");
-				category.addCrashSection("Byte name", AbstractData.TYPES[type]);
+			catch (final IOException e) {
+				final CrashReport report = CrashReport.makeCrashReport(e, "Loading GDF data");
+				final CrashReportCategory category = report.makeCategory("GDF Byte");
+				category.addCrashSection("Byte name", AbstractData.TYPES[type].getTypeName());
 				category.addCrashSection("Byte type", Byte.valueOf(type));
 				throw new ReportedException(report);
 			}

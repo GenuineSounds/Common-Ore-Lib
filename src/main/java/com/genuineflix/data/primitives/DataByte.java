@@ -73,12 +73,16 @@ public class DataByte extends AbstractData<Byte> implements IDataPrimitive {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return super.equals(obj) && value == ((DataByte) obj).value;
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IDataPrimitive)
+			return value().equals(((IDataPrimitive) obj).toByte());
+		return obj instanceof Number && value().equals(((Number) obj).byteValue());
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ value;
+		return value;
 	}
 
 	@Override

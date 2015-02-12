@@ -7,6 +7,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 import com.genuineflix.metal.api.IMetal;
+import com.genuineflix.metal.api.IMetal.Compound;
 import com.genuineflix.metal.event.OreGenerationEvent;
 import com.genuineflix.metal.registry.Metal;
 import com.genuineflix.metal.registry.MetalRegistry;
@@ -54,30 +55,32 @@ public class Config {
 		for (final Metal metal : MetalRegistry.getMetals()) {
 			if (metal.getSettings() == null)
 				continue;
-			final IMetal.Settings properties = new IMetal.Settings(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal));
+			final IMetal.Settings properties = new IMetal.Settings(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal), metal.getSettings().canGenerate());
 			metal.setSettings(properties);
 			if (!metal.isComposite())
 				continue;
 			final String[] names = getComponentNames(metal);
-			final IMetal.Compound[] components = new IMetal.Compound[names.length];
+			final Compound[] components = new Compound[names.length];
 			for (int i = 0; i < components.length; i++)
-				components[i] = new IMetal.Compound(MetalRegistry.getMetal(names[i]));
+				components[i] = new Compound(MetalRegistry.getMetal(names[i]));
 			metal.setCompounds(components);
 		}
 		metals.save();
 	}
 
 	public void post() {
-		for (final Metal metal : MetalRegistry.getMetals())
-			if (!metal.isManual())
-				metal.getSettings().setGenerate(getGeneration(metal));
+		for (final Metal metal : MetalRegistry.getMetals()) {
+			if (metal.isManual())
+				continue;
+			metal.getSettings().setGenerate(getGeneration(metal));
+		}
 		metals.save();
 	}
 
 	private String[] getComponentNames(final Metal metal) {
 		String[] names = new String[0];
 		for (int i = 0; i < metal.getCompounds().size(); i++) {
-			final IMetal.Compound comp = metal.getCompounds().get(i);
+			final Compound comp = metal.getCompounds().get(i);
 			for (int j = 0; j < comp.factor; j++) {
 				names = Arrays.copyOf(names, names.length + 1);
 				names[names.length - 1] = comp.metal.getName();

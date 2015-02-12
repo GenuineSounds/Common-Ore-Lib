@@ -27,11 +27,6 @@ public class ItemOreCommon extends ItemBlock {
 	}
 
 	@Override
-	public String getUnlocalizedName(final ItemStack item) {
-		return field_150939_a.getUnlocalizedName();
-	}
-
-	@Override
 	public int getMetadata(final int i) {
 		return i;
 	}

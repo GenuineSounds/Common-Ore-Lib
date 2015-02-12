@@ -19,7 +19,7 @@ import com.google.gson.JsonSerializationContext;
 public class DataNull extends AbstractData<Void> {
 
 	public static final DataNull INSTANCE = new DataNull();
-	public static final String NAME = "END";
+	public static final String NAME = "NULL";
 	public static final byte TYPE = 0;
 	public static final long SIZE = 0;
 
@@ -43,7 +43,7 @@ public class DataNull extends AbstractData<Void> {
 
 	@Override
 	public String toString() {
-		return "";
+		return "NULL";
 	}
 
 	@Override
@@ -54,6 +54,11 @@ public class DataNull extends AbstractData<Void> {
 	@Override
 	public NBTTagEnd toNBT() {
 		return new NBTTagEnd();
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		return obj == INSTANCE;
 	}
 
 	@Override

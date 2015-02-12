@@ -88,8 +88,10 @@ public class GenerationHelper {
 	};
 	static Map<Integer, List<NodePos>> genCache = new HashMap<Integer, List<NodePos>>();
 	public static final Block[] REPLACED_BLOCKS = new Block[] {
-			Blocks.stone, Blocks.dirt, Blocks.gravel, Blocks.sandstone, Blocks.hardened_clay, Blocks.netherrack, Blocks.soul_sand, Blocks.end_stone
-	};
+			//
+			Blocks.stone, Blocks.dirt, Blocks.gravel, Blocks.sandstone, Blocks.hardened_clay,
+			//
+			Blocks.netherrack, Blocks.soul_sand, Blocks.end_stone };
 	public static final Block[] GROUND_BLOCKS = new Block[] {
 			// Normal biomes.
 			Blocks.stone, Blocks.grass, Blocks.dirt, Blocks.gravel,
@@ -102,8 +104,7 @@ public class GenerationHelper {
 			// Mushroom biomes.
 			Blocks.mycelium,
 			// Hell biomes.
-			Blocks.netherrack, Blocks.soul_sand
-	};
+			Blocks.netherrack, Blocks.soul_sand };
 
 	public static void cacheNodeGen(final Chunk chunk, final NodePos pos) {
 		final int hash = GenerationHelper.chunkHash(chunk);

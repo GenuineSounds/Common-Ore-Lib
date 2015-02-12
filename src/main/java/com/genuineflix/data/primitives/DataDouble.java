@@ -73,7 +73,11 @@ public class DataDouble extends AbstractData<Double> implements IDataPrimitive {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return super.equals(obj) && value == ((DataDouble) obj).value;
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IDataPrimitive)
+			return value().equals(((IDataPrimitive) obj).toDouble());
+		return obj instanceof Number && value().equals(((Number) obj).doubleValue());
 	}
 
 	@Override

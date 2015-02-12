@@ -94,12 +94,16 @@ public class DataIntegerArray extends AbstractData<int[]> implements IDataPrimit
 
 	@Override
 	public boolean equals(final Object obj) {
-		return super.equals(obj) && Arrays.equals(value, ((DataIntegerArray) obj).value);
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IDataPrimitiveArray)
+			return Arrays.equals(value(), ((IDataPrimitiveArray) obj).toIntArray());
+		return obj instanceof int[] && Arrays.equals(value(), (int[]) obj);
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ Arrays.hashCode(value);
+		return Arrays.hashCode(value);
 	}
 
 	@Override

@@ -73,12 +73,16 @@ public class DataShort extends AbstractData<Short> implements IDataPrimitive {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return super.equals(obj) && value == ((DataShort) obj).value;
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IDataPrimitive)
+			return value().equals(((IDataPrimitive) obj).toShort());
+		return obj instanceof Number && value().equals(((Number) obj).shortValue());
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ value;
+		return value;
 	}
 
 	@Override

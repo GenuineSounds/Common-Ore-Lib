@@ -13,12 +13,8 @@ import com.genuineflix.metal.CommonOre;
 
 public class BlockOreCommon extends BlockOre {
 
-	public static final String[] FOLDERS = new String[] {
-			"", "nether/", "ender/"
-	};
-	public static final String[] NAMES = new String[] {
-			"", "Nether", "Ender"
-	};
+	public static final String[] FOLDERS = { "", "nether/", "ender/" };
+	public static final String[] NAMES = { "", "Nether", "Ender" };
 	private final String name;
 	private final IIcon[] icons = new IIcon[FOLDERS.length];
 

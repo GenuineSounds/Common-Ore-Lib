@@ -144,6 +144,7 @@ public class Metal implements IMetal {
 				compounds.add(Compound.from(list.getCompound(i)));
 			this.compounds = compounds;
 		}
+		manual = data.hasKey("manual") && data.getBoolean("manual");
 		return this;
 	}
 

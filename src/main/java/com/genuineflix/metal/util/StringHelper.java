@@ -16,7 +16,5 @@ public class StringHelper {
 		return name.toLowerCase().replace("aluminum", "aluminium");
 	}
 
-	private static final String[] fixes = {
-			"ore", "dust", "pulv(erized*)*", "block", "ingot", "nugget", "storage", "compress(ed)*"
-	};
+	private static final String[] fixes = { "ore", "dust", "pulv(erized*)*", "block", "ingot", "nugget", "storage", "compress(ed)*" };
 }

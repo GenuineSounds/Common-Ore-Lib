@@ -73,12 +73,16 @@ public class DataBoolean extends AbstractData<Boolean> implements IDataPrimitive
 
 	@Override
 	public boolean equals(final Object obj) {
-		return super.equals(obj) && value == ((DataBoolean) obj).value;
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IDataPrimitive)
+			return value().equals(((IDataPrimitive) obj).toBoolean());
+		return obj instanceof Boolean && value().equals(((Boolean) obj).booleanValue());
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ toByte();
+		return toByte();
 	}
 
 	@Override

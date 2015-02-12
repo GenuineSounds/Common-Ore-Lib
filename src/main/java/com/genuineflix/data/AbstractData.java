@@ -24,29 +24,15 @@ import com.google.gson.JsonPrimitive;
 
 public abstract class AbstractData<T> implements IData<T> {
 
-	@Override
-	public boolean equals(final Object obj) {
-		return obj instanceof AbstractData && getTypeByte() == ((AbstractData) obj).getTypeByte();
-	}
-
-	@Override
-	public int hashCode() {
-		return getTypeByte();
-	}
-
-	public String directString() {
-		return value().toString();
-	}
-
 	public static final AbstractData[] TYPES = new AbstractData[] {
+			//
 			DataNull.INSTANCE, new DataByte(), new DataShort(), new DataInteger(),
 			//
 			new DataLong(), new DataFloat(), new DataDouble(), new DataByteArray(),
 			//
 			new DataString(), new DataList(), new DataCompound(), new DataIntegerArray(),
 			//
-			new DataBoolean()
-	};
+			new DataBoolean() };
 
 	public static AbstractData create(final byte type) {
 		if (type > 0 && type < TYPES.length)

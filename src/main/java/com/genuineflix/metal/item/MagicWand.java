@@ -67,7 +67,6 @@ public class MagicWand extends ItemShears {
 			tag.setInteger("ticks", 60);
 			FMLInterModComms.sendMessage(CC_MOD_NAME, CC_DIRECT_MESSAGE_KEY, tag);
 		}
-		CommonOre.log.warn("Common Ore count: " + count);
 		return stack;
 	}
 }

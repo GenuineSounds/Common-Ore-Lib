@@ -35,8 +35,8 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 
 	public static class Settings implements SaveableData, LoadableData<Settings> {
 
-		public static Settings fromCompound(final DataCompound nbt) {
-			return new Settings().load(nbt);
+		public static Settings fromCompound(final DataCompound compound) {
+			return new Settings().load(compound);
 		}
 
 		public float rarity;
@@ -74,36 +74,36 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 		}
 
 		@Override
-		public DataCompound save(final DataCompound nbt) {
-			nbt.set("rarity", rarity);
-			nbt.set("depth", depth);
-			nbt.set("nodes", nodes);
-			nbt.set("size", size);
-			nbt.set("spread", spread);
-			nbt.set("hardness", hardness);
-			nbt.set("resistance", resistance);
-			nbt.set("generate", generate);
-			return nbt;
+		public DataCompound save(final DataCompound compound) {
+			compound.set("rarity", rarity);
+			compound.set("depth", depth);
+			compound.set("nodes", nodes);
+			compound.set("size", size);
+			compound.set("spread", spread);
+			compound.set("hardness", hardness);
+			compound.set("resistance", resistance);
+			compound.set("generate", generate);
+			return compound;
 		}
 
 		@Override
-		public Settings load(final DataCompound nbt) {
-			rarity = nbt.getFloat("rarity");
-			depth = nbt.getFloat("depth");
-			nodes = nbt.getInteger("nodes");
-			size = nbt.getInteger("size");
-			spread = nbt.getFloat("spread");
-			hardness = nbt.getFloat("hardness");
-			resistance = nbt.getFloat("resistance");
-			generate = nbt.hasKey("generate") && nbt.getBoolean("generate");
+		public Settings load(final DataCompound compound) {
+			rarity = compound.getFloat("rarity");
+			depth = compound.getFloat("depth");
+			nodes = compound.getInteger("nodes");
+			size = compound.getInteger("size");
+			spread = compound.getFloat("spread");
+			hardness = compound.getFloat("hardness");
+			resistance = compound.getFloat("resistance");
+			generate = compound.hasKey("generate") && compound.getBoolean("generate");
 			return this;
 		}
 	}
 
 	public static class Compound implements SaveableData, LoadableData<Compound> {
 
-		public static Compound from(final DataCompound nbt) {
-			return new Compound().load(nbt);
+		public static Compound from(final DataCompound compound) {
+			return new Compound().load(compound);
 		}
 
 		public IMetal metal;
@@ -122,26 +122,26 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 
 		@Override
 		public boolean equals(final Object obj) {
-			if (obj instanceof Compound)
-				return metal.equals(((Compound) obj).metal);
-			return super.equals(obj);
+			if (super.equals(obj))
+				return true;
+			return obj instanceof Compound && metal.equals(((Compound) obj).metal);
 		}
 
 		@Override
-		public DataCompound save(final DataCompound nbt) {
-			nbt.set("class", metal.getClass().getName());
-			nbt.set("metal", metal.save(new DataCompound()));
-			nbt.set("factor", factor);
-			return nbt;
+		public DataCompound save(final DataCompound compound) {
+			compound.set("class", metal.getClass().getName());
+			compound.set("metal", metal.save(new DataCompound()));
+			compound.set("factor", factor);
+			return compound;
 		}
 
 		@Override
-		public Compound load(final DataCompound nbt) {
+		public Compound load(final DataCompound compound) {
 			try {
 				final ClassLoader cl = ClassLoader.getSystemClassLoader();
-				final Class<IMetal> clazz = (Class<IMetal>) cl.loadClass(nbt.getString("class"));
-				metal = clazz.newInstance().load(nbt.getCompound("metal"));
-				factor = nbt.getInteger("factor");
+				final Class<IMetal> clazz = (Class<IMetal>) cl.loadClass(compound.getString("class"));
+				metal = clazz.newInstance().load(compound.getCompound("metal"));
+				factor = compound.getInteger("factor");
 			}
 			catch (final Exception e) {
 				return null;

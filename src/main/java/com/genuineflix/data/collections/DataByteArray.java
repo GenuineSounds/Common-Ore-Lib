@@ -88,12 +88,16 @@ public class DataByteArray extends AbstractData<byte[]> implements IDataPrimitiv
 
 	@Override
 	public boolean equals(final Object obj) {
-		return super.equals(obj) && Arrays.equals(value, ((DataByteArray) obj).value);
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IDataPrimitiveArray)
+			return Arrays.equals(value(), ((IDataPrimitiveArray) obj).toByteArray());
+		return obj instanceof byte[] && Arrays.equals(value(), (byte[]) obj);
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ Arrays.hashCode(value);
+		return Arrays.hashCode(value);
 	}
 
 	@Override

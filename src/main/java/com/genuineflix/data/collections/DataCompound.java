@@ -70,27 +70,23 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	@Override
 	public void read(final DataInput input, final int depth, final SizeLimit limit) throws IOException {
-		if (depth > 512)
-			throw new RuntimeException("Tried to read NBT tag with too high complexity, depth > 512");
-		else {
-			values.clear();
-			byte type;
-			while ((type = input.readByte()) != 0) {
-				final String name = input.readUTF();
-				limit.assertLimit(DataCompound.SIZE * name.length());
-				final AbstractData data = AbstractData.create(type);
-				try {
-					data.read(input, depth + 1, limit);
-				}
-				catch (final IOException e) {
-					final CrashReport report = CrashReport.makeCrashReport(e, "Loading GDF data");
-					final CrashReportCategory category = report.makeCategory("GDF Byte");
-					category.addCrashSection("Byte name", name);
-					category.addCrashSection("Byte type", Byte.valueOf(type));
-					throw new ReportedException(report);
-				}
-				values.put(name, data);
+		values.clear();
+		byte type;
+		while ((type = input.readByte()) != 0) {
+			final String name = input.readUTF();
+			limit.assertLimit(DataCompound.SIZE * name.length());
+			final AbstractData data = AbstractData.create(type);
+			try {
+				data.read(input, depth + 1, limit);
 			}
+			catch (final IOException e) {
+				final CrashReport report = CrashReport.makeCrashReport(e, "Loading GDF data");
+				final CrashReportCategory category = report.makeCategory("GDF Byte");
+				category.addCrashSection("Byte name", name);
+				category.addCrashSection("Byte type", Byte.valueOf(type));
+				throw new ReportedException(report);
+			}
+			values.put(name, data);
 		}
 	}
 
@@ -359,12 +355,16 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	@Override
 	public boolean equals(final Object obj) {
-		return super.equals(obj) && values.entrySet().equals(((DataCompound) obj).values.entrySet());
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IData)
+			return value().equals(((IData) obj).value());
+		return obj instanceof Map && value().entrySet().equals(((Map) obj).entrySet());
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ values.hashCode();
+		return values.hashCode();
 	}
 
 	@Override

@@ -73,12 +73,16 @@ public class DataInteger extends AbstractData<Integer> implements IDataPrimitive
 
 	@Override
 	public boolean equals(final Object obj) {
-		return super.equals(obj) && value == ((DataInteger) obj).value;
+		if (super.equals(obj))
+			return true;
+		if (obj instanceof IDataPrimitive)
+			return value().equals(((IDataPrimitive) obj).toInt());
+		return obj instanceof Number && value().equals(((Number) obj).intValue());
 	}
 
 	@Override
 	public int hashCode() {
-		return super.hashCode() ^ value;
+		return value;
 	}
 
 	@Override

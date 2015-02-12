@@ -106,23 +106,23 @@ public class Metal implements IMetal {
 
 	@Override
 	public DataCompound save(final DataCompound data) {
-		data.setString("name", name);
-		data.setString("displayName", displayName);
-		data.setData("ore", NBTHelper.create(new ItemStack(ore)));
-		data.setData("block", NBTHelper.create(new ItemStack(block)));
-		data.setData("dust", NBTHelper.create(new ItemStack(dust)));
-		data.setData("ingot", NBTHelper.create(new ItemStack(ingot)));
-		data.setData("nugget", NBTHelper.create(new ItemStack(nugget)));
+		data.set("name", name);
+		data.set("displayName", displayName);
+		data.set("ore", NBTHelper.create(new ItemStack(ore)));
+		data.set("block", NBTHelper.create(new ItemStack(block)));
+		data.set("dust", NBTHelper.create(new ItemStack(dust)));
+		data.set("ingot", NBTHelper.create(new ItemStack(ingot)));
+		data.set("nugget", NBTHelper.create(new ItemStack(nugget)));
 		if (settings != null)
-			data.setData("settings", settings.save(new DataCompound()));
+			data.set("settings", settings.save(new DataCompound()));
 		if (compounds != null && !compounds.isEmpty()) {
 			final DataList comps = new DataList();
 			for (int i = 0; i < compounds.size(); i++)
 				comps.add(compounds.get(i).save(new DataCompound()));
-			data.setData("compounds", comps);
+			data.set("compounds", comps);
 		}
 		if (manual)
-			data.setBoolean("manual", manual);
+			data.set("manual", manual);
 		return data;
 	}
 

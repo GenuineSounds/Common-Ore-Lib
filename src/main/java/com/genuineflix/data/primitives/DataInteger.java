@@ -58,7 +58,7 @@ public class DataInteger extends AbstractData<Integer> implements IDataPrimitive
 
 	@Override
 	public String toString() {
-		return Integer.toString(value, 10);
+		return Integer.toString(value);
 	}
 
 	@Override

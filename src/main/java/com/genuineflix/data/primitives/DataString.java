@@ -7,6 +7,8 @@ import java.lang.reflect.Type;
 
 import net.minecraft.nbt.NBTTagString;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import com.genuineflix.data.AbstractData;
 import com.genuineflix.data.IData;
 import com.genuineflix.data.SizeLimit;
@@ -59,7 +61,7 @@ public class DataString extends AbstractData<String> {
 
 	@Override
 	public String toString() {
-		return "\"" + value + "\"";
+		return StringEscapeUtils.escapeJson(value);
 	}
 
 	@Override

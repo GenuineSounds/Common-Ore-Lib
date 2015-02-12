@@ -58,7 +58,7 @@ public class DataDouble extends AbstractData<Double> implements IDataPrimitive {
 
 	@Override
 	public String toString() {
-		return "" + value + "d";
+		return Double.toString(value);
 	}
 
 	@Override

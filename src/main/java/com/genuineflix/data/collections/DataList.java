@@ -78,10 +78,12 @@ public class DataList extends AbstractData<List<AbstractData>> {
 		final StringBuilder sb = new StringBuilder(value.size() * (int) DataList.SIZE);
 		sb.append('[');
 		for (int i = 0; i < value.size(); i++) {
-			sb.append(i);
-			sb.append(':');
 			sb.append(value.get(i).directString());
-			sb.append(',');
+			sb.append(", ");
+		}
+		if (sb.indexOf(", ") > 0) {
+			sb.deleteCharAt(sb.length() - 1);
+			sb.deleteCharAt(sb.length() - 1);
 		}
 		sb.append(']');
 		return sb.toString();
@@ -221,12 +223,12 @@ public class DataList extends AbstractData<List<AbstractData>> {
 		if (allDataByte) {
 			final byte[] bytesOut = new byte[array.length];
 			for (int i = 0; i < array.length; i++)
-				bytesOut[i] = ((DataByte) array[i]).value();
+				bytesOut[i] = ((IDataPrimitive) array[i]).toByte();
 			return new DataByteArray(bytesOut);
 		} else if (allDataInteger) {
 			final int[] intsOut = new int[array.length];
 			for (int i = 0; i < array.length; i++)
-				intsOut[i] = ((DataInteger) array[i]).value();
+				intsOut[i] = ((IDataPrimitive) array[i]).toInt();
 			return new DataIntegerArray(intsOut);
 		}
 		for (final AbstractData data : array)

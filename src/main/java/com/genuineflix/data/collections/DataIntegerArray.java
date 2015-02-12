@@ -66,11 +66,15 @@ public class DataIntegerArray extends AbstractData<int[]> implements IDataPrimit
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder(value.length * (int) DataIntegerArray.SIZE);
+		final StringBuilder sb = new StringBuilder();
 		sb.append('[');
 		for (int i = 0; i < value.length; i++) {
 			sb.append(value[i]);
-			sb.append(',');
+			sb.append(", ");
+		}
+		if (sb.indexOf(", ") > 0) {
+			sb.deleteCharAt(sb.length() - 1);
+			sb.deleteCharAt(sb.length() - 1);
 		}
 		sb.append(']');
 		return sb.toString();

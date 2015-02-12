@@ -16,6 +16,8 @@ import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ReportedException;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import com.genuineflix.data.AbstractData;
 import com.genuineflix.data.IData;
 import com.genuineflix.data.IDataPrimitive;
@@ -106,61 +108,57 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 		return NAME;
 	}
 
-	public void setData(final String name, final AbstractData value) {
+	public void set(final String name, final AbstractData value) {
 		if (this != value)
 			values.put(name, value);
 	}
 
-	public void setBoolean(final String name, final boolean value) {
+	public void set(final String name, final boolean value) {
 		values.put(name, new DataBoolean(value));
 	}
 
-	public void setByte(final String name, final byte value) {
+	public void set(final String name, final byte value) {
 		values.put(name, new DataByte(value));
 	}
 
-	public void setShort(final String name, final short value) {
+	public void set(final String name, final short value) {
 		values.put(name, new DataShort(value));
 	}
 
-	public void setInteger(final String name, final int value) {
+	public void set(final String name, final int value) {
 		values.put(name, new DataInteger(value));
 	}
 
-	public void setLong(final String name, final long value) {
+	public void set(final String name, final long value) {
 		values.put(name, new DataLong(value));
 	}
 
-	public void setFloat(final String name, final float value) {
+	public void set(final String name, final float value) {
 		values.put(name, new DataFloat(value));
 	}
 
-	public void setDouble(final String name, final double value) {
+	public void set(final String name, final double value) {
 		values.put(name, new DataDouble(value));
 	}
 
-	public void setString(final String name, final String value) {
+	public void set(final String name, final String value) {
 		values.put(name, new DataString(value));
 	}
 
-	public void setByteArray(final String name, final byte[] value) {
+	public void set(final String name, final byte[] value) {
 		values.put(name, new DataByteArray(value));
 	}
 
-	public void setIntArray(final String name, final int[] value) {
+	public void set(final String name, final int[] value) {
 		values.put(name, new DataIntegerArray(value));
 	}
 
-	public void setBigInteger(final String name, final BigInteger value) {
+	public void set(final String name, final BigInteger value) {
 		values.put(name, new DataByteArray(value.toByteArray()));
 	}
 
-	public void setBigDecimal(final String name, final BigDecimal value) {
+	public void set(final String name, final BigDecimal value) {
 		values.put(name, new DataString(value.toPlainString()));
-	}
-
-	public AbstractData getData(final String name) {
-		return values.get(name);
 	}
 
 	public byte getType(final String name) {
@@ -175,6 +173,10 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 	public boolean hasKey(final String name, final int withType) {
 		final byte type = getType(name);
 		return type == withType ? true : withType != 99 ? false : type == 1 || type == 2 || type == 3 || type == 4 || type == 5 || type == 6;
+	}
+
+	public AbstractData getData(final String name) {
+		return values.get(name);
 	}
 
 	public boolean getBoolean(final String name) {
@@ -315,10 +317,11 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append('{');
+		sb.append("{ ");
 		for (final String str : values.keySet()) {
-			sb.append(str);
-			sb.append(": ");
+			sb.append('"');
+			sb.append(StringEscapeUtils.escapeJson(str));
+			sb.append("\": ");
 			sb.append(values.get(str));
 			sb.append(", ");
 		}
@@ -326,7 +329,11 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 			sb.deleteCharAt(sb.length() - 1);
 			sb.deleteCharAt(sb.length() - 1);
 		}
-		sb.append('}');
+		sb.append(" }");
+		if (sb.indexOf("  ") > 0) {
+			sb.deleteCharAt(sb.length() - 2);
+			sb.deleteCharAt(sb.length() - 2);
+		}
 		return sb.toString();
 	}
 
@@ -338,7 +345,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 	public DataCompound copy() {
 		final DataCompound compound = new DataCompound();
 		for (final String key : values.keySet())
-			compound.setData(key, (AbstractData) values.get(key).copy());
+			compound.set(key, (AbstractData) values.get(key).copy());
 		return compound;
 	}
 

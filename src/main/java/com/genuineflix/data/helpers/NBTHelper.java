@@ -117,7 +117,7 @@ public class NBTHelper {
 		final DataCompound compound = new DataCompound();
 		for (final Object key : nbt.func_150296_c())
 			try {
-				compound.setData((String) key, create(nbt.getTag((String) key)));
+				compound.set((String) key, create(nbt.getTag((String) key)));
 			}
 			catch (final Exception e) {}
 		return compound;

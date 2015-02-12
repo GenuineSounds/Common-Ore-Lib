@@ -58,7 +58,7 @@ public class DataLong extends AbstractData<Long> implements IDataPrimitive {
 
 	@Override
 	public String toString() {
-		return "" + value + "L";
+		return Long.toString(value);
 	}
 
 	@Override

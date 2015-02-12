@@ -50,6 +50,10 @@ public class JSONHelper {
 		return out;
 	}
 
+	public static DataCompound thereAndBack(final DataCompound compound) {
+		return GSON.fromJson(GSON.toJson(compound), DataCompound.class);
+	}
+
 	static {
 		GSON_BUILDER.setPrettyPrinting();
 		GSON_BUILDER.enableComplexMapKeySerialization();

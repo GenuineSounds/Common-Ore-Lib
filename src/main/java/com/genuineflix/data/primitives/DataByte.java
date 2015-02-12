@@ -58,7 +58,7 @@ public class DataByte extends AbstractData<Byte> implements IDataPrimitive {
 
 	@Override
 	public String toString() {
-		return Byte.toString(value) + "b";
+		return Byte.toString(value);
 	}
 
 	@Override

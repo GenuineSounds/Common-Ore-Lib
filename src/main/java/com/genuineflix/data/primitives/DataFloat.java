@@ -58,7 +58,7 @@ public class DataFloat extends AbstractData<Float> implements IDataPrimitive {
 
 	@Override
 	public String toString() {
-		return "" + value + "f";
+		return Float.toString(value);
 	}
 
 	@Override

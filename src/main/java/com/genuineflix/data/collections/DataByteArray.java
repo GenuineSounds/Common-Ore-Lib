@@ -64,7 +64,14 @@ public class DataByteArray extends AbstractData<byte[]> implements IDataPrimitiv
 
 	@Override
 	public String toString() {
-		return "[" + value.length + " bytes]";
+		final StringBuilder sb = new StringBuilder(value.length * (int) SIZE);
+		sb.append('[');
+		for (int i = 0; i < value.length; i++)
+			sb.append(String.format("%02X ", value[i]));
+		if (sb.indexOf(" ") > 0)
+			sb.deleteCharAt(sb.length() - 1);
+		sb.append(']');
+		return sb.toString();
 	}
 
 	@Override

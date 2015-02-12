@@ -58,7 +58,7 @@ public class DataShort extends AbstractData<Short> implements IDataPrimitive {
 
 	@Override
 	public String toString() {
-		return "" + value + "s";
+		return Short.toString(value);
 	}
 
 	@Override

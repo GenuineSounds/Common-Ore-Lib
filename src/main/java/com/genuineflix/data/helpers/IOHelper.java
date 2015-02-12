@@ -62,9 +62,33 @@ public class IOHelper {
 		return compound;
 	}
 
+	public static DataCompound readEncodedBytes(final byte[] bs, final SizeLimit limit) throws IOException {
+		final DataInputStream compressedInput = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(bs))));
+		DataCompound compound;
+		try {
+			compound = readStream(compressedInput, limit);
+		}
+		finally {
+			compressedInput.close();
+		}
+		return compound;
+	}
+
 	public static byte[] compressToBytes(final DataCompound compound) throws IOException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		final DataOutputStream compressedOutput = new DataOutputStream(new GZIPOutputStream(baos));
+		try {
+			writeToOutput(compound, compressedOutput);
+		}
+		finally {
+			compressedOutput.close();
+		}
+		return baos.toByteArray();
+	}
+
+	public static byte[] encodeToBytes(final DataCompound compound) throws IOException {
+		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		final DataOutputStream compressedOutput = new DataOutputStream(baos);
 		try {
 			writeToOutput(compound, compressedOutput);
 		}

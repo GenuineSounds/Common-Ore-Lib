@@ -75,14 +75,14 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 
 		@Override
 		public DataCompound save(final DataCompound nbt) {
-			nbt.setFloat("rarity", rarity);
-			nbt.setFloat("depth", depth);
-			nbt.setInteger("nodes", nodes);
-			nbt.setInteger("size", size);
-			nbt.setFloat("spread", spread);
-			nbt.setFloat("hardness", hardness);
-			nbt.setFloat("resistance", resistance);
-			nbt.setBoolean("generate", generate);
+			nbt.set("rarity", rarity);
+			nbt.set("depth", depth);
+			nbt.set("nodes", nodes);
+			nbt.set("size", size);
+			nbt.set("spread", spread);
+			nbt.set("hardness", hardness);
+			nbt.set("resistance", resistance);
+			nbt.set("generate", generate);
 			return nbt;
 		}
 
@@ -129,9 +129,9 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 
 		@Override
 		public DataCompound save(final DataCompound nbt) {
-			nbt.setString("class", metal.getClass().getName());
-			nbt.setData("metal", metal.save(new DataCompound()));
-			nbt.setInteger("factor", factor);
+			nbt.set("class", metal.getClass().getName());
+			nbt.set("metal", metal.save(new DataCompound()));
+			nbt.set("factor", factor);
 			return nbt;
 		}
 

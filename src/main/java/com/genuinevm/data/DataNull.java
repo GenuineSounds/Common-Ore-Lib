@@ -40,7 +40,7 @@ public class DataNull extends AbstractData<Void> {
 
 	@Override
 	public String toString() {
-		return "NULL";
+		return NAME;
 	}
 
 	@Override

@@ -26,9 +26,8 @@ public abstract class AbstractData<T> implements Data<T>, JsonSerializer<Abstrac
 	public abstract String getTypeName();
 
 	/**
-	 * The byte corresponding with this IData. Used for reading and writing GDF to a stream.
-	 * Only one byte can be assigned to each IData.
-	 * @return unique byte specific to this IData class.
+	 * The byte corresponding with this class. Used for reading and writing GDF to a stream.
+	 * @return unique byte specific to this class.
 	 */
 	public abstract byte getTypeByte();
 
@@ -52,12 +51,5 @@ public abstract class AbstractData<T> implements Data<T>, JsonSerializer<Abstrac
 		if (type > 0 && type < TYPES.length)
 			return (AbstractData) TYPES[type].copy();
 		return DataNull.INSTANCE;
-	}
-
-	public static class BadDataException extends Exception {
-
-		public BadDataException(final String message, final Exception context) {
-			super(message, context);
-		}
 	}
 }

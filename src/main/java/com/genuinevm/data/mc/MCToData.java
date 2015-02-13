@@ -1,4 +1,4 @@
-package com.genuinevm.data.util;
+package com.genuinevm.data.mc;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -16,29 +16,10 @@ import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
 
-import com.genuinevm.data.AbstractData;
-import com.genuinevm.data.DataNull;
-import com.genuinevm.data.array.DataByteArray;
-import com.genuinevm.data.array.DataIntegerArray;
-import com.genuinevm.data.collection.DataCompound;
-import com.genuinevm.data.collection.DataList;
-import com.genuinevm.data.primitive.DataBoolean;
-import com.genuinevm.data.primitive.DataByte;
-import com.genuinevm.data.primitive.DataDouble;
-import com.genuinevm.data.primitive.DataFloat;
-import com.genuinevm.data.primitive.DataInteger;
-import com.genuinevm.data.primitive.DataLong;
-import com.genuinevm.data.primitive.DataShort;
-import com.genuinevm.data.primitive.DataString;
-
-public class NBT {
-
+public class MCToData {
+	/*
 	public static DataCompound create(final ItemStack stack) {
 		return create(stack.writeToNBT(new NBTTagCompound()));
-	}
-
-	public static ItemStack create(final DataCompound compound) {
-		return ItemStack.loadItemStackFromNBT(compound.toNBT());
 	}
 
 	private static DataNull create(final NBTTagEnd nbt) {
@@ -123,7 +104,7 @@ public class NBT {
 		return compound;
 	}
 
-	public static AbstractData<?> create(final NBTBase nbt) {
+	public static AbstractData<?> create(final NBTBase nbt) throws Exception {
 		if (nbt instanceof NBTTagEnd)
 			return create((NBTTagEnd) nbt);
 		if (nbt instanceof NBTTagByte)
@@ -148,6 +129,7 @@ public class NBT {
 			return create((NBTTagList) nbt);
 		if (nbt instanceof NBTTagCompound)
 			return create((NBTTagCompound) nbt);
-		return null;
+		throw new Exception("Could not create Data from " + nbt.getClass().getSimpleName());
 	}
+	*/
 }

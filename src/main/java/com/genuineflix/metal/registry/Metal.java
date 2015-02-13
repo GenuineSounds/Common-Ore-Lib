@@ -5,13 +5,8 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 
 import com.genuineflix.metal.api.IMetal;
-import com.genuinevm.data.collection.DataCompound;
-import com.genuinevm.data.collection.DataList;
-import com.genuinevm.data.util.NBT;
 
 public class Metal implements IMetal {
 
@@ -105,50 +100,6 @@ public class Metal implements IMetal {
 	}
 
 	@Override
-	public DataCompound save(final DataCompound data) {
-		data.set("name", name);
-		data.set("displayName", displayName);
-		data.set("ore", NBT.create(new ItemStack(ore)));
-		data.set("block", NBT.create(new ItemStack(block)));
-		data.set("dust", NBT.create(new ItemStack(dust)));
-		data.set("ingot", NBT.create(new ItemStack(ingot)));
-		data.set("nugget", NBT.create(new ItemStack(nugget)));
-		if (settings != null)
-			data.set("settings", settings.save(new DataCompound()));
-		if (compounds != null && !compounds.isEmpty()) {
-			final DataList comps = new DataList();
-			for (int i = 0; i < compounds.size(); i++)
-				comps.add(compounds.get(i).save(new DataCompound()));
-			data.set("compounds", comps);
-		}
-		if (manual)
-			data.set("manual", manual);
-		return data;
-	}
-
-	@Override
-	public IMetal load(final DataCompound data) {
-		name = data.getString("name");
-		displayName = data.getString("displayName");
-		ore = ((ItemBlock) NBT.create(data.getCompound("ore")).getItem()).field_150939_a;
-		block = ((ItemBlock) NBT.create(data.getCompound("block")).getItem()).field_150939_a;
-		dust = NBT.create(data.getCompound("dust")).getItem();
-		ingot = NBT.create(data.getCompound("ingot")).getItem();
-		nugget = NBT.create(data.getCompound("nugget")).getItem();
-		if (data.hasKey("settings"))
-			settings = Settings.fromCompound(data.getCompound("settings"));
-		if (data.hasKey("compounds")) {
-			final DataList list = data.getList("compounds", DataCompound.TYPE);
-			final List<Compound> compounds = new ArrayList<Compound>();
-			for (int i = 0; i < list.size(); i++)
-				compounds.add(Compound.from(list.getCompound(i)));
-			this.compounds = compounds;
-		}
-		manual = data.hasKey("manual") && data.getBoolean("manual");
-		return this;
-	}
-
-	@Override
 	public Block getOre() {
 		return ore;
 	}
@@ -192,4 +143,49 @@ public class Metal implements IMetal {
 	void setNugget(final Item nugget) {
 		this.nugget = nugget;
 	}
+	/*
+	@Override
+	public DataCompound save(final DataCompound data) {
+		data.set("name", name);
+		data.set("displayName", displayName);
+		data.set("ore", MCToData.create(new ItemStack(ore)));
+		data.set("block", MCToData.create(new ItemStack(block)));
+		data.set("dust", MCToData.create(new ItemStack(dust)));
+		data.set("ingot", MCToData.create(new ItemStack(ingot)));
+		data.set("nugget", MCToData.create(new ItemStack(nugget)));
+		if (settings != null)
+			data.set("settings", settings.save(new DataCompound()));
+		if (compounds != null && !compounds.isEmpty()) {
+			final DataList comps = new DataList();
+			for (int i = 0; i < compounds.size(); i++)
+				comps.add(compounds.get(i).save(new DataCompound()));
+			data.set("compounds", comps);
+		}
+		if (manual)
+			data.set("manual", manual);
+		return data;
+	}
+
+	@Override
+	public IMetal load(final DataCompound data) {
+		name = data.getString("name");
+		displayName = data.getString("displayName");
+		ore = ((ItemBlock) DataToMC.createItemStack(data.getCompound("ore")).getItem()).field_150939_a;
+		block = ((ItemBlock) DataToMC.createItemStack(data.getCompound("block")).getItem()).field_150939_a;
+		dust = DataToMC.createItemStack(data.getCompound("dust")).getItem();
+		ingot = DataToMC.createItemStack(data.getCompound("ingot")).getItem();
+		nugget = DataToMC.createItemStack(data.getCompound("nugget")).getItem();
+		if (data.hasKey("settings"))
+			settings = Settings.fromCompound(data.getCompound("settings"));
+		if (data.hasKey("compounds")) {
+			final DataList list = data.getList("compounds", DataCompound.TYPE);
+			final List<Compound> compounds = new ArrayList<Compound>();
+			for (int i = 0; i < list.size(); i++)
+				compounds.add(Compound.from(list.getCompound(i)));
+			this.compounds = compounds;
+		}
+		manual = data.hasKey("manual") && data.getBoolean("manual");
+		return this;
+	}
+	 */
 }

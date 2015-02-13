@@ -5,9 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
-import com.genuinevm.data.collection.DataCompound;
-
-public interface IMetal extends SaveableData, LoadableData<IMetal> {
+public interface IMetal { // extends SaveableData, LoadableData<IMetal> {
 
 	public String getName();
 
@@ -33,11 +31,7 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 
 	public boolean isComposite();
 
-	public static class Settings implements SaveableData, LoadableData<Settings> {
-
-		public static Settings fromCompound(final DataCompound compound) {
-			return new Settings().load(compound);
-		}
+	public static class Settings { // implements SaveableData, LoadableData<Settings> {
 
 		public float rarity;
 		public float depth;
@@ -72,7 +66,7 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 		public void setGenerate(final boolean generate) {
 			this.generate = generate;
 		}
-
+		/*
 		@Override
 		public DataCompound save(final DataCompound compound) {
 			compound.set("rarity", rarity);
@@ -98,13 +92,14 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 			generate = compound.hasKey("generate") && compound.getBoolean("generate");
 			return this;
 		}
+
+		public static Settings fromCompound(final DataCompound compound) {
+			return new Settings().load(compound);
+		}
+		*/
 	}
 
-	public static class Compound implements SaveableData, LoadableData<Compound> {
-
-		public static Compound from(final DataCompound compound) {
-			return new Compound().load(compound);
-		}
+	public static class Compound { // implements SaveableData, LoadableData<Compound> {
 
 		public IMetal metal;
 		public int factor;
@@ -126,7 +121,7 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 				return true;
 			return obj instanceof Compound && metal.equals(((Compound) obj).metal);
 		}
-
+		/*
 		@Override
 		public DataCompound save(final DataCompound compound) {
 			compound.set("class", metal.getClass().getName());
@@ -148,5 +143,21 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 			}
 			return this;
 		}
+		
+		public static Compound from(final DataCompound compound) {
+			return new Compound().load(compound);
+		}
+		*/
 	}
 }
+/*
+interface LoadableData<T> {
+
+	public T load(DataCompound compound);
+}
+
+interface SaveableData {
+
+	public DataCompound save(DataCompound compound);
+}
+*/

@@ -1,6 +1,6 @@
 package com.genuineflix.metal.api;
 
-import com.genuineflix.data.collections.DataCompound;
+import com.genuinevm.data.collection.DataCompound;
 
 public interface LoadableData<T> {
 

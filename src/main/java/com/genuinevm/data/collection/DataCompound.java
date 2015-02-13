@@ -1,4 +1,4 @@
-package com.genuineflix.data.collections;
+package com.genuinevm.data.collection;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -11,26 +11,25 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import net.minecraft.crash.CrashReport;
-import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ReportedException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import com.genuineflix.data.AbstractData;
-import com.genuineflix.data.IData;
-import com.genuineflix.data.IDataPrimitive;
-import com.genuineflix.data.IDataPrimitiveArray;
-import com.genuineflix.data.SizeLimit;
-import com.genuineflix.data.primitives.DataBoolean;
-import com.genuineflix.data.primitives.DataByte;
-import com.genuineflix.data.primitives.DataDouble;
-import com.genuineflix.data.primitives.DataFloat;
-import com.genuineflix.data.primitives.DataInteger;
-import com.genuineflix.data.primitives.DataLong;
-import com.genuineflix.data.primitives.DataShort;
-import com.genuineflix.data.primitives.DataString;
+import com.genuinevm.data.AbstractData;
+import com.genuinevm.data.Data;
+import com.genuinevm.data.Primitive;
+import com.genuinevm.data.PrimitiveArray;
+import com.genuinevm.data.array.DataByteArray;
+import com.genuinevm.data.array.DataIntegerArray;
+import com.genuinevm.data.primitive.DataBoolean;
+import com.genuinevm.data.primitive.DataByte;
+import com.genuinevm.data.primitive.DataDouble;
+import com.genuinevm.data.primitive.DataFloat;
+import com.genuinevm.data.primitive.DataInteger;
+import com.genuinevm.data.primitive.DataLong;
+import com.genuinevm.data.primitive.DataShort;
+import com.genuinevm.data.primitive.DataString;
+import com.genuinevm.data.util.Serialization;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -69,23 +68,13 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 	}
 
 	@Override
-	public void read(final DataInput input, final int depth, final SizeLimit limit) throws IOException {
+	public void read(final DataInput input) throws IOException {
 		values.clear();
 		byte type;
 		while ((type = input.readByte()) != 0) {
 			final String name = input.readUTF();
-			limit.assertLimit(DataCompound.SIZE * name.length());
 			final AbstractData data = AbstractData.create(type);
-			try {
-				data.read(input, depth + 1, limit);
-			}
-			catch (final IOException e) {
-				final CrashReport report = CrashReport.makeCrashReport(e, "Loading GDF data");
-				final CrashReportCategory category = report.makeCategory("GDF Byte");
-				category.addCrashSection("Byte name", name);
-				category.addCrashSection("Byte type", Byte.valueOf(type));
-				throw new ReportedException(report);
-			}
+			data.read(input);
 			values.put(name, data);
 		}
 	}
@@ -177,7 +166,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	public boolean getBoolean(final String name) {
 		try {
-			return values.containsKey(name) ? ((IDataPrimitive) values.get(name)).toBoolean() : false;
+			return values.containsKey(name) ? ((Primitive) values.get(name)).toBoolean() : false;
 		}
 		catch (final ClassCastException e) {
 			return false;
@@ -186,7 +175,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	public byte getByte(final String name) {
 		try {
-			return values.containsKey(name) ? ((IDataPrimitive) values.get(name)).toByte() : 0;
+			return values.containsKey(name) ? ((Primitive) values.get(name)).toByte() : 0;
 		}
 		catch (final ClassCastException e) {
 			return (byte) 0;
@@ -195,7 +184,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	public short getShort(final String name) {
 		try {
-			return values.containsKey(name) ? ((IDataPrimitive) values.get(name)).toShort() : 0;
+			return values.containsKey(name) ? ((Primitive) values.get(name)).toShort() : 0;
 		}
 		catch (final ClassCastException e) {
 			return (short) 0;
@@ -204,7 +193,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	public int getInteger(final String name) {
 		try {
-			return values.containsKey(name) ? ((IDataPrimitive) values.get(name)).toInt() : 0;
+			return values.containsKey(name) ? ((Primitive) values.get(name)).toInt() : 0;
 		}
 		catch (final ClassCastException classcastexception) {
 			return 0;
@@ -213,7 +202,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	public long getLong(final String name) {
 		try {
-			return values.containsKey(name) ? ((IDataPrimitive) values.get(name)).toLong() : 0;
+			return values.containsKey(name) ? ((Primitive) values.get(name)).toLong() : 0;
 		}
 		catch (final ClassCastException e) {
 			return 0;
@@ -222,7 +211,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	public float getFloat(final String name) {
 		try {
-			return values.containsKey(name) ? ((IDataPrimitive) values.get(name)).toFloat() : 0;
+			return values.containsKey(name) ? ((Primitive) values.get(name)).toFloat() : 0;
 		}
 		catch (final ClassCastException classcastexception) {
 			return 0;
@@ -231,7 +220,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	public double getDouble(final String name) {
 		try {
-			return values.containsKey(name) ? ((IDataPrimitive) values.get(name)).toDouble() : 0;
+			return values.containsKey(name) ? ((Primitive) values.get(name)).toDouble() : 0;
 		}
 		catch (final ClassCastException classcastexception) {
 			return 0;
@@ -240,7 +229,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	public byte[] getByteArray(final String name) {
 		try {
-			return values.containsKey(name) ? ((IDataPrimitiveArray) values.get(name)).toByteArray() : new byte[0];
+			return values.containsKey(name) ? ((PrimitiveArray) values.get(name)).toByteArray() : new byte[0];
 		}
 		catch (final ClassCastException e) {
 			return new byte[0];
@@ -249,7 +238,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 
 	public int[] getIntArray(final String name) {
 		try {
-			return values.containsKey(name) ? ((IDataPrimitiveArray) values.get(name)).toIntArray() : new int[0];
+			return values.containsKey(name) ? ((PrimitiveArray) values.get(name)).toIntArray() : new int[0];
 		}
 		catch (final ClassCastException e) {
 			return new int[0];
@@ -357,8 +346,8 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 	public boolean equals(final Object obj) {
 		if (super.equals(obj))
 			return true;
-		if (obj instanceof IData)
-			return value().equals(((IData) obj).value());
+		if (obj instanceof Data)
+			return value().equals(((Data) obj).value());
 		return obj instanceof Map && value().entrySet().equals(((Map) obj).entrySet());
 	}
 
@@ -368,7 +357,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 	}
 
 	@Override
-	public JsonObject serialize(final IData<Map<String, AbstractData>> src, final Type typeOfSrc, final JsonSerializationContext context) {
+	public JsonObject serialize(final AbstractData<Map<String, AbstractData>> src, final Type typeOfSrc, final JsonSerializationContext context) {
 		final JsonObject object = new JsonObject();
 		for (final Entry<String, AbstractData> entry : src.value().entrySet())
 			object.add(entry.getKey(), entry.getValue().serialize(entry.getValue(), entry.getValue().getClass(), context));
@@ -380,7 +369,7 @@ public class DataCompound extends AbstractData<Map<String, AbstractData>> {
 		final Map<String, AbstractData> map = new HashMap<String, AbstractData>();
 		try {
 			for (final Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
-				map.put(entry.getKey(), serializedElement(entry.getValue(), entry.getValue().getClass(), context));
+				map.put(entry.getKey(), Serialization.serializedElement(entry.getValue(), entry.getValue().getClass(), context));
 			return new DataCompound(map);
 		}
 		catch (final Exception e) {

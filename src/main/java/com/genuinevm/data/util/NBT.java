@@ -1,4 +1,4 @@
-package com.genuineflix.data.helpers;
+package com.genuinevm.data.util;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -16,22 +16,22 @@ import net.minecraft.nbt.NBTTagLong;
 import net.minecraft.nbt.NBTTagShort;
 import net.minecraft.nbt.NBTTagString;
 
-import com.genuineflix.data.AbstractData;
-import com.genuineflix.data.collections.DataByteArray;
-import com.genuineflix.data.collections.DataCompound;
-import com.genuineflix.data.collections.DataIntegerArray;
-import com.genuineflix.data.collections.DataList;
-import com.genuineflix.data.primitives.DataBoolean;
-import com.genuineflix.data.primitives.DataByte;
-import com.genuineflix.data.primitives.DataDouble;
-import com.genuineflix.data.primitives.DataFloat;
-import com.genuineflix.data.primitives.DataInteger;
-import com.genuineflix.data.primitives.DataLong;
-import com.genuineflix.data.primitives.DataNull;
-import com.genuineflix.data.primitives.DataShort;
-import com.genuineflix.data.primitives.DataString;
+import com.genuinevm.data.AbstractData;
+import com.genuinevm.data.DataNull;
+import com.genuinevm.data.array.DataByteArray;
+import com.genuinevm.data.array.DataIntegerArray;
+import com.genuinevm.data.collection.DataCompound;
+import com.genuinevm.data.collection.DataList;
+import com.genuinevm.data.primitive.DataBoolean;
+import com.genuinevm.data.primitive.DataByte;
+import com.genuinevm.data.primitive.DataDouble;
+import com.genuinevm.data.primitive.DataFloat;
+import com.genuinevm.data.primitive.DataInteger;
+import com.genuinevm.data.primitive.DataLong;
+import com.genuinevm.data.primitive.DataShort;
+import com.genuinevm.data.primitive.DataString;
 
-public class NBTHelper {
+public class NBT {
 
 	public static DataCompound create(final ItemStack stack) {
 		return create(stack.writeToNBT(new NBTTagCompound()));

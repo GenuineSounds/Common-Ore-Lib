@@ -8,10 +8,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
-import com.genuineflix.data.collections.DataCompound;
-import com.genuineflix.data.collections.DataList;
-import com.genuineflix.data.helpers.NBTHelper;
 import com.genuineflix.metal.api.IMetal;
+import com.genuinevm.data.collection.DataCompound;
+import com.genuinevm.data.collection.DataList;
+import com.genuinevm.data.util.NBT;
 
 public class Metal implements IMetal {
 
@@ -108,11 +108,11 @@ public class Metal implements IMetal {
 	public DataCompound save(final DataCompound data) {
 		data.set("name", name);
 		data.set("displayName", displayName);
-		data.set("ore", NBTHelper.create(new ItemStack(ore)));
-		data.set("block", NBTHelper.create(new ItemStack(block)));
-		data.set("dust", NBTHelper.create(new ItemStack(dust)));
-		data.set("ingot", NBTHelper.create(new ItemStack(ingot)));
-		data.set("nugget", NBTHelper.create(new ItemStack(nugget)));
+		data.set("ore", NBT.create(new ItemStack(ore)));
+		data.set("block", NBT.create(new ItemStack(block)));
+		data.set("dust", NBT.create(new ItemStack(dust)));
+		data.set("ingot", NBT.create(new ItemStack(ingot)));
+		data.set("nugget", NBT.create(new ItemStack(nugget)));
 		if (settings != null)
 			data.set("settings", settings.save(new DataCompound()));
 		if (compounds != null && !compounds.isEmpty()) {
@@ -130,11 +130,11 @@ public class Metal implements IMetal {
 	public IMetal load(final DataCompound data) {
 		name = data.getString("name");
 		displayName = data.getString("displayName");
-		ore = ((ItemBlock) NBTHelper.create(data.getCompound("ore")).getItem()).field_150939_a;
-		block = ((ItemBlock) NBTHelper.create(data.getCompound("block")).getItem()).field_150939_a;
-		dust = NBTHelper.create(data.getCompound("dust")).getItem();
-		ingot = NBTHelper.create(data.getCompound("ingot")).getItem();
-		nugget = NBTHelper.create(data.getCompound("nugget")).getItem();
+		ore = ((ItemBlock) NBT.create(data.getCompound("ore")).getItem()).field_150939_a;
+		block = ((ItemBlock) NBT.create(data.getCompound("block")).getItem()).field_150939_a;
+		dust = NBT.create(data.getCompound("dust")).getItem();
+		ingot = NBT.create(data.getCompound("ingot")).getItem();
+		nugget = NBT.create(data.getCompound("nugget")).getItem();
 		if (data.hasKey("settings"))
 			settings = Settings.fromCompound(data.getCompound("settings"));
 		if (data.hasKey("compounds")) {

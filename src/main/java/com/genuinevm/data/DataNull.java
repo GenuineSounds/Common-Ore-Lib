@@ -1,4 +1,4 @@
-package com.genuineflix.data.primitives;
+package com.genuinevm.data;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -7,9 +7,6 @@ import java.lang.reflect.Type;
 
 import net.minecraft.nbt.NBTTagEnd;
 
-import com.genuineflix.data.AbstractData;
-import com.genuineflix.data.IData;
-import com.genuineflix.data.SizeLimit;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -26,7 +23,7 @@ public class DataNull extends AbstractData<Void> {
 	private DataNull() {}
 
 	@Override
-	public void read(final DataInput in, final int depth, final SizeLimit limit) throws IOException {}
+	public void read(final DataInput in) throws IOException {}
 
 	@Override
 	public void write(final DataOutput out) throws IOException {}
@@ -67,7 +64,7 @@ public class DataNull extends AbstractData<Void> {
 	}
 
 	@Override
-	public JsonNull serialize(final IData<Void> src, final Type typeOfSrc, final JsonSerializationContext context) {
+	public JsonNull serialize(final AbstractData<Void> src, final Type typeOfSrc, final JsonSerializationContext context) {
 		return JsonNull.INSTANCE;
 	}
 

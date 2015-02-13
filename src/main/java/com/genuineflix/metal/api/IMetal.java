@@ -5,7 +5,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
-import com.genuineflix.data.collections.DataCompound;
+import com.genuinevm.data.collection.DataCompound;
 
 public interface IMetal extends SaveableData, LoadableData<IMetal> {
 

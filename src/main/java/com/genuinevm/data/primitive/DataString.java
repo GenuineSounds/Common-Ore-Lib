@@ -1,4 +1,4 @@
-package com.genuineflix.data.primitives;
+package com.genuinevm.data.primitive;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -9,9 +9,8 @@ import net.minecraft.nbt.NBTTagString;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import com.genuineflix.data.AbstractData;
-import com.genuineflix.data.IData;
-import com.genuineflix.data.SizeLimit;
+import com.genuinevm.data.AbstractData;
+import com.genuinevm.data.Data;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
@@ -39,9 +38,8 @@ public class DataString extends AbstractData<String> {
 	}
 
 	@Override
-	public void read(final DataInput in, final int depth, final SizeLimit limit) throws IOException {
+	public void read(final DataInput in) throws IOException {
 		value = in.readUTF();
-		limit.assertLimit(DataString.SIZE * value.length());
 	}
 
 	@Override
@@ -78,8 +76,8 @@ public class DataString extends AbstractData<String> {
 	public boolean equals(final Object obj) {
 		if (super.equals(obj))
 			return true;
-		if (obj instanceof IData)
-			return value().equals(((IData) obj).value());
+		if (obj instanceof Data)
+			return value().equals(((Data) obj).value());
 		return value().equals(obj);
 	}
 
@@ -89,7 +87,7 @@ public class DataString extends AbstractData<String> {
 	}
 
 	@Override
-	public JsonPrimitive serialize(final IData<String> src, final Type typeOfSrc, final JsonSerializationContext context) {
+	public JsonPrimitive serialize(final AbstractData<String> src, final Type typeOfSrc, final JsonSerializationContext context) {
 		return new JsonPrimitive(src.value());
 	}
 

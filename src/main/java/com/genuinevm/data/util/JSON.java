@@ -1,4 +1,4 @@
-package com.genuineflix.data.helpers;
+package com.genuinevm.data.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,19 +8,19 @@ import java.io.Writer;
 import java.lang.reflect.Type;
 import java.util.Map;
 
-import com.genuineflix.data.AbstractData;
-import com.genuineflix.data.IData;
-import com.genuineflix.data.collections.DataCompound;
+import com.genuinevm.data.AbstractData;
+import com.genuinevm.data.Data;
+import com.genuinevm.data.collection.DataCompound;
 import com.google.common.base.Charsets;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class JSONHelper {
+public class JSON {
 
 	private static final Gson GSON;
 	private static final GsonBuilder GSON_BUILDER = new GsonBuilder();
-	private static final Type TYPE = new TypeToken<Map<String, IData>>() {}.getType();
+	private static final Type TYPE = new TypeToken<Map<String, Data>>() {}.getType();
 
 	public static void saveDataToJSON(final DataCompound compound, final File file) {
 		try {

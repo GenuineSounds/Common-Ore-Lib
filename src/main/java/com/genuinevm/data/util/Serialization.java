@@ -1,44 +1,28 @@
-package com.genuineflix.data;
+package com.genuinevm.data.util;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import com.genuineflix.data.collections.DataByteArray;
-import com.genuineflix.data.collections.DataCompound;
-import com.genuineflix.data.collections.DataIntegerArray;
-import com.genuineflix.data.collections.DataList;
-import com.genuineflix.data.primitives.DataBoolean;
-import com.genuineflix.data.primitives.DataByte;
-import com.genuineflix.data.primitives.DataDouble;
-import com.genuineflix.data.primitives.DataFloat;
-import com.genuineflix.data.primitives.DataInteger;
-import com.genuineflix.data.primitives.DataLong;
-import com.genuineflix.data.primitives.DataNull;
-import com.genuineflix.data.primitives.DataShort;
-import com.genuineflix.data.primitives.DataString;
+import com.genuinevm.data.AbstractData;
+import com.genuinevm.data.DataNull;
+import com.genuinevm.data.array.DataByteArray;
+import com.genuinevm.data.collection.DataCompound;
+import com.genuinevm.data.collection.DataList;
+import com.genuinevm.data.primitive.DataBoolean;
+import com.genuinevm.data.primitive.DataByte;
+import com.genuinevm.data.primitive.DataDouble;
+import com.genuinevm.data.primitive.DataFloat;
+import com.genuinevm.data.primitive.DataInteger;
+import com.genuinevm.data.primitive.DataLong;
+import com.genuinevm.data.primitive.DataShort;
+import com.genuinevm.data.primitive.DataString;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 
-public abstract class AbstractData<T> implements IData<T> {
-
-	public static final AbstractData[] TYPES = new AbstractData[] {
-			//
-			DataNull.INSTANCE, new DataByte(), new DataShort(), new DataInteger(),
-			//
-			new DataLong(), new DataFloat(), new DataDouble(), new DataByteArray(),
-			//
-			new DataString(), new DataList(), new DataCompound(), new DataIntegerArray(),
-			//
-			new DataBoolean() };
-
-	public static AbstractData create(final byte type) {
-		if (type > 0 && type < TYPES.length)
-			return (AbstractData) TYPES[type].copy();
-		return DataNull.INSTANCE;
-	}
+public class Serialization {
 
 	public static AbstractData serializedElement(final JsonElement element, final Type typeOfT, final JsonDeserializationContext context) throws JsonParseException {
 		AbstractData out = DataNull.INSTANCE;

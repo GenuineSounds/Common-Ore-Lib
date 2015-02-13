@@ -1,10 +1,10 @@
-package com.genuineflix.data;
+package com.genuinevm.data;
 
-import com.genuineflix.data.primitives.DataByte;
+import com.genuinevm.data.primitive.DataByte;
 
-public class SizeLimit {
+public class LimitAssertion {
 
-	public static final SizeLimit NONE = new SizeLimit(0L) {
+	public static final LimitAssertion NONE = new LimitAssertion(0L) {
 
 		@Override
 		public void assertLimit(final long size) {}
@@ -12,7 +12,7 @@ public class SizeLimit {
 	private final long byteMax;
 	private long bytesAllocated;
 
-	public SizeLimit(final long sizeLimit) {
+	public LimitAssertion(final long sizeLimit) {
 		byteMax = sizeLimit;
 	}
 

@@ -1,4 +1,4 @@
-package com.genuineflix.data.collections;
+package com.genuinevm.data.array;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -8,11 +8,9 @@ import java.util.Arrays;
 
 import net.minecraft.nbt.NBTTagIntArray;
 
-import com.genuineflix.data.AbstractData;
-import com.genuineflix.data.IData;
-import com.genuineflix.data.IDataPrimitiveArray;
-import com.genuineflix.data.SizeLimit;
-import com.genuineflix.data.primitives.DataInteger;
+import com.genuinevm.data.AbstractData;
+import com.genuinevm.data.PrimitiveArray;
+import com.genuinevm.data.primitive.DataInteger;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -20,7 +18,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 
-public class DataIntegerArray extends AbstractData<int[]> implements IDataPrimitiveArray {
+public class DataIntegerArray extends AbstractData<int[]> implements PrimitiveArray {
 
 	public static final String NAME = "INT[]";
 	public static final long SIZE = DataInteger.SIZE;
@@ -46,9 +44,8 @@ public class DataIntegerArray extends AbstractData<int[]> implements IDataPrimit
 	}
 
 	@Override
-	public void read(final DataInput in, final int depth, final SizeLimit limit) throws IOException {
+	public void read(final DataInput in) throws IOException {
 		final int size = in.readInt();
-		limit.assertLimit(DataIntegerArray.SIZE * size);
 		value = new int[size];
 		for (int i = 0; i < size; ++i)
 			value[i] = in.readInt();
@@ -96,8 +93,8 @@ public class DataIntegerArray extends AbstractData<int[]> implements IDataPrimit
 	public boolean equals(final Object obj) {
 		if (super.equals(obj))
 			return true;
-		if (obj instanceof IDataPrimitiveArray)
-			return Arrays.equals(value(), ((IDataPrimitiveArray) obj).toIntArray());
+		if (obj instanceof PrimitiveArray)
+			return Arrays.equals(value(), ((PrimitiveArray) obj).toIntArray());
 		return obj instanceof int[] && Arrays.equals(value(), (int[]) obj);
 	}
 
@@ -107,7 +104,7 @@ public class DataIntegerArray extends AbstractData<int[]> implements IDataPrimit
 	}
 
 	@Override
-	public JsonArray serialize(final IData<int[]> src, final Type typeOfSrc, final JsonSerializationContext context) {
+	public JsonArray serialize(final AbstractData<int[]> src, final Type typeOfSrc, final JsonSerializationContext context) {
 		final JsonArray array = new JsonArray();
 		for (final int i : src.value())
 			array.add(new JsonPrimitive(i));

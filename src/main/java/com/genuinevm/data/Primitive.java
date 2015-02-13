@@ -1,6 +1,6 @@
-package com.genuineflix.data;
+package com.genuinevm.data;
 
-public interface IDataPrimitive {
+public interface Primitive {
 
 	public boolean toBoolean();
 

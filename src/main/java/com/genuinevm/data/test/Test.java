@@ -1,13 +1,13 @@
-package com.genuineflix.data.test;
+package com.genuinevm.data.test;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import com.genuineflix.data.collections.DataCompound;
-import com.genuineflix.data.helpers.IOHelper;
-import com.genuineflix.data.helpers.JSONHelper;
+import com.genuinevm.data.collection.DataCompound;
+import com.genuinevm.data.util.InputOutput;
+import com.genuinevm.data.util.JSON;
 
 public class Test {
 
@@ -37,17 +37,17 @@ public class Test {
 		// Display Main 1
 		// System.out.println(main1);
 		try {
-			System.out.println(bytesToHex(IOHelper.encodeToBytes(main1)));
+			System.out.println(bytesToHex(InputOutput.getBytes(main1)));
 		}
 		catch (final IOException e) {}
 		// Save Main1
-		JSONHelper.saveDataToJSON(main1, file);
+		JSON.saveDataToJSON(main1, file);
 		// Load Main2
-		DataCompound main2 = JSONHelper.loadFromJSON(file);
+		DataCompound main2 = JSON.loadFromJSON(file);
 		// Display Main2
 		// System.out.println(main2);
 		try {
-			System.out.println(bytesToHex(IOHelper.encodeToBytes(main2)));
+			System.out.println(bytesToHex(InputOutput.getBytes(main2)));
 		}
 		catch (final IOException e) {}
 		/**
@@ -60,19 +60,19 @@ public class Test {
 		// Display Main 1
 		// System.out.println(main1);
 		try {
-			System.out.println(bytesToHex(IOHelper.encodeToBytes(main1)));
-			System.out.println(bytesToHex(IOHelper.compressToBytes(main1)));
+			System.out.println(bytesToHex(InputOutput.getBytes(main1)));
+			System.out.println(bytesToHex(InputOutput.getCompressedBytes(main1)));
 		}
 		catch (final IOException e) {}
 		// Save Main1
-		JSONHelper.saveDataToJSON(main1, file);
+		JSON.saveDataToJSON(main1, file);
 		// Load Main2
-		main2 = JSONHelper.loadFromJSON(file);
+		main2 = JSON.loadFromJSON(file);
 		// Display Main2
 		// System.out.println(main2);
 		try {
-			System.out.println(bytesToHex(IOHelper.encodeToBytes(main2)));
-			System.out.println(bytesToHex(IOHelper.compressToBytes(main2)));
+			System.out.println(bytesToHex(InputOutput.getBytes(main2)));
+			System.out.println(bytesToHex(InputOutput.getCompressedBytes(main2)));
 		}
 		catch (final IOException e) {}
 		/**

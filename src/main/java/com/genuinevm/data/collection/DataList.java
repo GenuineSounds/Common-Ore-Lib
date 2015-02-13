@@ -1,4 +1,4 @@
-package com.genuineflix.data.collections;
+package com.genuinevm.data.collection;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -9,14 +9,16 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagList;
 
-import com.genuineflix.data.AbstractData;
-import com.genuineflix.data.IData;
-import com.genuineflix.data.IDataPrimitive;
-import com.genuineflix.data.IDataPrimitiveArray;
-import com.genuineflix.data.SizeLimit;
-import com.genuineflix.data.primitives.DataByte;
-import com.genuineflix.data.primitives.DataInteger;
-import com.genuineflix.data.primitives.DataNull;
+import com.genuinevm.data.AbstractData;
+import com.genuinevm.data.Data;
+import com.genuinevm.data.DataNull;
+import com.genuinevm.data.Primitive;
+import com.genuinevm.data.PrimitiveArray;
+import com.genuinevm.data.array.DataByteArray;
+import com.genuinevm.data.array.DataIntegerArray;
+import com.genuinevm.data.primitive.DataByte;
+import com.genuinevm.data.primitive.DataInteger;
+import com.genuinevm.data.util.Serialization;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -49,14 +51,13 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	}
 
 	@Override
-	public void read(final DataInput in, final int depth, final SizeLimit limit) throws IOException {
-		limit.assertLimit(DataList.SIZE);
+	public void read(final DataInput in) throws IOException {
 		valueType = in.readByte();
 		final int size = in.readInt();
 		value = new ArrayList();
 		for (int i = 0; i < size; i++) {
 			final AbstractData data = AbstractData.create(valueType);
-			data.read(in, depth + 1, limit);
+			data.read(in);
 			value.add(data);
 		}
 	}
@@ -126,7 +127,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	public int[] getIntegerArray(final int index) {
 		if (index >= 0 && index < value.size()) {
 			final AbstractData data = value.get(index);
-			return data instanceof IDataPrimitiveArray ? ((IDataPrimitiveArray) data).toIntArray() : new int[0];
+			return data instanceof PrimitiveArray ? ((PrimitiveArray) data).toIntArray() : new int[0];
 		} else
 			return new int[0];
 	}
@@ -134,7 +135,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	public double getDouble(final int index) {
 		if (index >= 0 && index < value.size()) {
 			final AbstractData data = value.get(index);
-			return data instanceof IDataPrimitive ? ((IDataPrimitive) data).toDouble() : 0;
+			return data instanceof Primitive ? ((Primitive) data).toDouble() : 0;
 		} else
 			return 0;
 	}
@@ -142,7 +143,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	public float getFloat(final int index) {
 		if (index >= 0 && index < value.size()) {
 			final AbstractData data = value.get(index);
-			return data instanceof IDataPrimitive ? ((IDataPrimitive) data).toFloat() : 0;
+			return data instanceof Primitive ? ((Primitive) data).toFloat() : 0;
 		} else
 			return 0;
 	}
@@ -150,7 +151,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	public String getString(final int index) {
 		if (index >= 0 && index < value.size()) {
 			final AbstractData data = value.get(index);
-			return data instanceof IData ? ((IData) data).value().toString() : "";
+			return data instanceof Data ? ((Data) data).value().toString() : "";
 		} else
 			return "";
 	}
@@ -180,8 +181,8 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	public boolean equals(final Object obj) {
 		if (super.equals(obj))
 			return true;
-		if (obj instanceof IData)
-			return value().equals(((IData) obj).value());
+		if (obj instanceof Data)
+			return value().equals(((Data) obj).value());
 		return obj instanceof List && value().equals(obj);
 	}
 
@@ -195,7 +196,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 	}
 
 	@Override
-	public JsonArray serialize(final IData<List<AbstractData>> src, final Type typeOfSrc, final JsonSerializationContext context) {
+	public JsonArray serialize(final AbstractData<List<AbstractData>> src, final Type typeOfSrc, final JsonSerializationContext context) {
 		final JsonArray array = new JsonArray();
 		for (final AbstractData data : src.value())
 			array.add(data.serialize(data, data.getClass(), context));
@@ -211,7 +212,7 @@ public class DataList extends AbstractData<List<AbstractData>> {
 		boolean allDataInteger = true;
 		for (int i = 0; i < array.length; i++) {
 			final JsonElement element = jsonArray.get(i);
-			final AbstractData data = serializedElement(element, element.getClass(), context);
+			final AbstractData data = Serialization.serializedElement(element, element.getClass(), context);
 			if (data instanceof DataInteger || data instanceof DataByte)
 				allDataByte &= data instanceof DataByte;
 			else
@@ -221,12 +222,12 @@ public class DataList extends AbstractData<List<AbstractData>> {
 		if (allDataByte) {
 			final byte[] bytesOut = new byte[array.length];
 			for (int i = 0; i < array.length; i++)
-				bytesOut[i] = ((IDataPrimitive) array[i]).toByte();
+				bytesOut[i] = ((Primitive) array[i]).toByte();
 			return new DataByteArray(bytesOut);
 		} else if (allDataInteger) {
 			final int[] intsOut = new int[array.length];
 			for (int i = 0; i < array.length; i++)
-				intsOut[i] = ((IDataPrimitive) array[i]).toInt();
+				intsOut[i] = ((Primitive) array[i]).toInt();
 			return new DataIntegerArray(intsOut);
 		}
 		for (final AbstractData data : array)

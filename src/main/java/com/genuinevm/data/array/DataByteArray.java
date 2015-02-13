@@ -1,4 +1,4 @@
-package com.genuineflix.data.collections;
+package com.genuinevm.data.array;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -8,11 +8,9 @@ import java.util.Arrays;
 
 import net.minecraft.nbt.NBTTagByteArray;
 
-import com.genuineflix.data.AbstractData;
-import com.genuineflix.data.IData;
-import com.genuineflix.data.IDataPrimitiveArray;
-import com.genuineflix.data.SizeLimit;
-import com.genuineflix.data.primitives.DataByte;
+import com.genuinevm.data.AbstractData;
+import com.genuinevm.data.PrimitiveArray;
+import com.genuinevm.data.primitive.DataByte;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -20,7 +18,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 
-public class DataByteArray extends AbstractData<byte[]> implements IDataPrimitiveArray {
+public class DataByteArray extends AbstractData<byte[]> implements PrimitiveArray {
 
 	public static final String NAME = "BYTE[]";
 	public static final long SIZE = DataByte.SIZE;
@@ -45,9 +43,8 @@ public class DataByteArray extends AbstractData<byte[]> implements IDataPrimitiv
 	}
 
 	@Override
-	public void read(final DataInput in, final int depth, final SizeLimit limit) throws IOException {
+	public void read(final DataInput in) throws IOException {
 		final int size = in.readInt();
-		limit.assertLimit(DataByteArray.SIZE * size);
 		value = new byte[size];
 		in.readFully(value);
 	}
@@ -90,8 +87,8 @@ public class DataByteArray extends AbstractData<byte[]> implements IDataPrimitiv
 	public boolean equals(final Object obj) {
 		if (super.equals(obj))
 			return true;
-		if (obj instanceof IDataPrimitiveArray)
-			return Arrays.equals(value(), ((IDataPrimitiveArray) obj).toByteArray());
+		if (obj instanceof PrimitiveArray)
+			return Arrays.equals(value(), ((PrimitiveArray) obj).toByteArray());
 		return obj instanceof byte[] && Arrays.equals(value(), (byte[]) obj);
 	}
 
@@ -101,7 +98,7 @@ public class DataByteArray extends AbstractData<byte[]> implements IDataPrimitiv
 	}
 
 	@Override
-	public JsonArray serialize(final IData<byte[]> src, final Type typeOfSrc, final JsonSerializationContext context) {
+	public JsonArray serialize(final AbstractData<byte[]> src, final Type typeOfSrc, final JsonSerializationContext context) {
 		final JsonArray array = new JsonArray();
 		for (final byte b : src.value())
 			array.add(new JsonPrimitive(b));

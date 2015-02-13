@@ -1,4 +1,4 @@
-package com.genuineflix.data.primitives;
+package com.genuinevm.data.primitive;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -7,17 +7,15 @@ import java.lang.reflect.Type;
 
 import net.minecraft.nbt.NBTTagByte;
 
-import com.genuineflix.data.AbstractData;
-import com.genuineflix.data.IData;
-import com.genuineflix.data.IDataPrimitive;
-import com.genuineflix.data.SizeLimit;
+import com.genuinevm.data.AbstractData;
+import com.genuinevm.data.Primitive;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 
-public class DataByte extends AbstractData<Byte> implements IDataPrimitive {
+public class DataByte extends AbstractData<Byte> implements Primitive {
 
 	public static final String NAME = "BYTE";
 	public static final long SIZE = 8;
@@ -41,8 +39,7 @@ public class DataByte extends AbstractData<Byte> implements IDataPrimitive {
 	}
 
 	@Override
-	public void read(final DataInput in, final int depth, final SizeLimit limit) throws IOException {
-		limit.assertLimit(DataByte.SIZE);
+	public void read(final DataInput in) throws IOException {
 		value = in.readByte();
 	}
 
@@ -75,8 +72,8 @@ public class DataByte extends AbstractData<Byte> implements IDataPrimitive {
 	public boolean equals(final Object obj) {
 		if (super.equals(obj))
 			return true;
-		if (obj instanceof IDataPrimitive)
-			return value().equals(((IDataPrimitive) obj).toByte());
+		if (obj instanceof Primitive)
+			return value().equals(((Primitive) obj).toByte());
 		return obj instanceof Number && value().equals(((Number) obj).byteValue());
 	}
 
@@ -121,7 +118,7 @@ public class DataByte extends AbstractData<Byte> implements IDataPrimitive {
 	}
 
 	@Override
-	public JsonPrimitive serialize(final IData<Byte> src, final Type typeOfSrc, final JsonSerializationContext context) {
+	public JsonPrimitive serialize(final AbstractData<Byte> src, final Type typeOfSrc, final JsonSerializationContext context) {
 		return new JsonPrimitive(src.value());
 	}
 

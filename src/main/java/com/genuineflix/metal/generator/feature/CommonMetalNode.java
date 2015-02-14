@@ -18,6 +18,7 @@ public class CommonMetalNode extends WorldGenMinable {
 
 	public static class NodePos extends Tuple3i {
 
+		private static final long serialVersionUID = -7754326638558155495L;
 		public final String ore;
 		public final double radius;
 

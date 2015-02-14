@@ -48,7 +48,7 @@ public class GeneratorFlatBedrock implements IWorldGenerator {
 				final BiomeGenBase biome = chunk.getBiomeGenForWorldCoords(x, z, world.getWorldChunkManager());
 				for (int y = 1; y < 6; y++)
 					if (chunk.getBlock(x, y, z) == Blocks.bedrock)
-						world.setBlock(chunkX * 16 + x, y, chunkZ * 16 + z, world.getBiomeGenForCoords(x, z).fillerBlock, 0, 2);
+						world.setBlock(chunkX * 16 + x, y, chunkZ * 16 + z, biome.fillerBlock, 0, 2);
 			}
 	}
 

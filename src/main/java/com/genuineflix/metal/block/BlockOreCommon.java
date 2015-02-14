@@ -26,6 +26,9 @@ public class BlockOreCommon extends BlockOre {
 		this.name = name;
 	}
 
+	@SuppressWarnings({
+			"rawtypes", "unchecked"
+	})
 	@Override
 	public void getSubBlocks(final Item item, final CreativeTabs tab, final List blocks) {
 		for (int i = 0; i < icons.length; i++)

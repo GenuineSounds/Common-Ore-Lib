@@ -7,12 +7,9 @@ public class StringHelper {
 	}
 
 	public static String cleanName(String name) {
-		final String old = name;
 		name = name.replaceAll("^(.+?)\\.", "");
-		for (final String string : StringHelper.fixes) {
-			name = name.replaceAll("^" + string, "");
-			name = name.replaceAll(string + "$", "");
-		}
+		for (final String string : StringHelper.fixes)
+			name = name.replaceAll("^" + string, "").replaceAll(string + "$", "");
 		return name.toLowerCase().replace("aluminum", "aluminium");
 	}
 

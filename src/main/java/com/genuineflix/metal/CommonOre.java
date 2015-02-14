@@ -40,7 +40,6 @@ public class CommonOre {
 
 	public CommonOre() {
 		MinecraftForge.EVENT_BUS.register(new OreRegistrationEvent());
-		MinecraftForge.ORE_GEN_BUS.register(new OreGenerationEvent());
 	}
 
 	@EventHandler
@@ -54,6 +53,7 @@ public class CommonOre {
 	public void init(final FMLInitializationEvent event) {
 		MetalRegistry.init();
 		CommonOre.config.init();
+		MinecraftForge.ORE_GEN_BUS.register(new OreGenerationEvent());
 		if (CommonOre.config.flatBedrock)
 			GameRegistry.registerWorldGenerator(new GeneratorFlatBedrock(), Integer.MIN_VALUE);
 		GameRegistry.registerWorldGenerator(new GeneratorStandardOre(), 5000);

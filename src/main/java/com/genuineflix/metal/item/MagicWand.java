@@ -20,7 +20,7 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 public class MagicWand extends ItemShears {
 
 	public static boolean ccIsLoaded() {
-		return Loader.isModLoaded(CC_MOD_NAME);
+		return Loader.isModLoaded(MagicWand.CC_MOD_NAME);
 	}
 
 	public static final String CC_MOD_NAME = "ClosedCaption";
@@ -46,7 +46,7 @@ public class MagicWand extends ItemShears {
 			return stack;
 		int count = 0;
 		final Chunk chunk = world.getChunkFromBlockCoords((int) Math.floor(player.posX), (int) Math.floor(player.posZ));
-		final int yMax = GenerationHelper.findGroundLevel(chunk, removal);
+		final int yMax = GenerationHelper.findGroundLevel(chunk, MagicWand.removal);
 		for (int x = 0; x < 16; x++)
 			for (int z = 0; z < 16; z++)
 				for (int y = yMax; y > 0; y--) {
@@ -59,13 +59,13 @@ public class MagicWand extends ItemShears {
 					else
 						world.setBlock(worldX, y, worldZ, Blocks.air);
 				}
-		if (ccIsLoaded()) {
+		if (MagicWand.ccIsLoaded()) {
 			final NBTTagCompound tag = new NBTTagCompound();
 			tag.setString("type", "common");
 			tag.setFloat("amount", count);
 			tag.setString("message", "Common ores found: ");
 			tag.setInteger("ticks", 60);
-			FMLInterModComms.sendMessage(CC_MOD_NAME, CC_DIRECT_MESSAGE_KEY, tag);
+			FMLInterModComms.sendMessage(MagicWand.CC_MOD_NAME, MagicWand.CC_DIRECT_MESSAGE_KEY, tag);
 		}
 		return stack;
 	}

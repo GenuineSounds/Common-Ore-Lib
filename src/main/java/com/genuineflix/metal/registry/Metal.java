@@ -10,8 +10,8 @@ import com.genuineflix.metal.api.IMetal;
 
 public class Metal implements IMetal {
 
-	private String name;
-	private String displayName;
+	private final String name;
+	private final String displayName;
 	private Block ore;
 	private Block block;
 	private Item dust;
@@ -20,8 +20,6 @@ public class Metal implements IMetal {
 	private Settings settings;
 	private List<Compound> compounds;
 	private boolean manual;
-
-	Metal() {}
 
 	Metal(final String name) {
 		this.name = name;

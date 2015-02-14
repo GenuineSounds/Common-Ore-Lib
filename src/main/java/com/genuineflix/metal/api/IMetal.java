@@ -143,7 +143,7 @@ public interface IMetal { // extends SaveableData, LoadableData<IMetal> {
 			}
 			return this;
 		}
-		
+
 		public static Compound from(final DataCompound compound) {
 			return new Compound().load(compound);
 		}

@@ -38,33 +38,33 @@ public final class MetalRegistry {
 	public static final Metal ELECTRUM;
 
 	public static List<Metal> getMetals() {
-		return metals;
+		return MetalRegistry.metals;
 	}
 
 	public static Metal getMetal(final String name) {
-		for (final Metal m : metals)
+		for (final Metal m : MetalRegistry.metals)
 			if (m.getName().equals(StringHelper.cleanName(name)))
 				return m;
 		return null;
 	}
 
 	public static boolean isMetal(final String name) {
-		return getMetal(name) != null;
+		return MetalRegistry.getMetal(name) != null;
 	}
 
 	public static void registrationEvent(final String name, final Block block, final int meta) {
 		if (!name.startsWith("ore"))
 			return;
 		List<String> list;
-		if (!commonCache.containsKey(name))
+		if (!MetalRegistry.commonCache.containsKey(name))
 			list = new ArrayList<String>();
 		else
-			list = commonCache.get(name);
+			list = MetalRegistry.commonCache.get(name);
 		list.add(block.getUnlocalizedName() + ":" + meta);
-		commonCache.put(name, list);
-		if (closed)
+		MetalRegistry.commonCache.put(name, list);
+		if (MetalRegistry.closed)
 			return;
-		for (final Metal metal : metals) {
+		for (final Metal metal : MetalRegistry.metals) {
 			if (!metal.getName().equals(StringHelper.cleanName(name)))
 				continue;
 			metal.getSettings().setGenerate(true);
@@ -73,13 +73,13 @@ public final class MetalRegistry {
 	}
 
 	public static boolean isCommonBlock(final Block block) {
-		return isCommonBlock(block, 0);
+		return MetalRegistry.isCommonBlock(block, 0);
 	}
 
 	public static boolean isCommonBlock(final Block block, final int meta) {
 		if (block == null)
 			return false;
-		for (final List<String> entry : commonCache.values()) {
+		for (final List<String> entry : MetalRegistry.commonCache.values()) {
 			if (entry == null || entry.isEmpty())
 				continue;
 			if (entry.contains(block.getUnlocalizedName() + ":" + meta))
@@ -89,42 +89,42 @@ public final class MetalRegistry {
 	}
 
 	public static void pre() {
-		for (final Metal metal : metals) {
+		for (final Metal metal : MetalRegistry.metals) {
 			if (metal.isManual())
 				continue;
-			closed = true;
+			MetalRegistry.closed = true;
 			RegistryHelper.createItems(metal);
 			RegistryHelper.registerItems(metal);
-			closed = false;
+			MetalRegistry.closed = false;
 		}
 	}
 
 	public static void init() {
-		COAL.setOre(Blocks.coal_ore);
-		COAL.setBlock(Blocks.coal_block);
-		COAL.setIngot(Items.coal);
+		MetalRegistry.COAL.setOre(Blocks.coal_ore);
+		MetalRegistry.COAL.setBlock(Blocks.coal_block);
+		MetalRegistry.COAL.setIngot(Items.coal);
 		final List<ItemStack> coalDusts = OreDictionary.getOres("dustCoal");
 		if (!coalDusts.isEmpty())
-			COAL.setDust(coalDusts.get(0).getItem());
-		for (final Metal metal : metals)
+			MetalRegistry.COAL.setDust(coalDusts.get(0).getItem());
+		for (final Metal metal : MetalRegistry.metals)
 			RegistryHelper.registerRecipes(metal);
 	}
 
 	public static void post() {
-		for (final Metal metal : metals)
+		for (final Metal metal : MetalRegistry.metals)
 			metal.finallize();
-		metals = ImmutableList.copyOf(metals);
+		MetalRegistry.metals = ImmutableList.copyOf(MetalRegistry.metals);
 	}
 
 	private static Metal registerMetal(final String name) {
 		final Metal metal = new Metal(name);
-		metals.add(metal);
+		MetalRegistry.metals.add(metal);
 		return metal;
 	}
 
 	private static Metal registerMetal(final String name, final Settings properties, final Compound... components) {
 		final Metal metal = new Metal(name, properties, components);
-		metals.add(metal);
+		MetalRegistry.metals.add(metal);
 		return metal;
 	}
 
@@ -151,25 +151,25 @@ public final class MetalRegistry {
 		final Settings propFeNi = new Settings(0.5F, 0.44F, 8, 10, 0.05F, 4.0F, 4.0F);
 		final Settings propAuAg = new Settings(0.3F, 0.19F, 8, 10, 0.05F, 2.5F, 2.5F);
 		// Coal is a dummy metal
-		COAL = registerMetal("coal").manual();
+		COAL = MetalRegistry.registerMetal("coal").manual();
 		// Default metals
-		ALUMINIUM = registerMetal("aluminium", propAl);
-		IRON = registerMetal("iron", propFe);
-		TITANIUM = registerMetal("titanium", propTi);
-		TUNGSTEN = registerMetal("tungsten", propW);
-		NICKEL = registerMetal("nickel", propNi);
-		ZINC = registerMetal("zinc", propZn);
-		COPPER = registerMetal("copper", propCu);
-		LEAD = registerMetal("lead", propPb);
-		TIN = registerMetal("tin", propSn);
-		SILVER = registerMetal("silver", propAg);
-		PLATINUM = registerMetal("platinum", propPt);
-		GOLD = registerMetal("gold", propAu);
+		ALUMINIUM = MetalRegistry.registerMetal("aluminium", propAl);
+		IRON = MetalRegistry.registerMetal("iron", propFe);
+		TITANIUM = MetalRegistry.registerMetal("titanium", propTi);
+		TUNGSTEN = MetalRegistry.registerMetal("tungsten", propW);
+		NICKEL = MetalRegistry.registerMetal("nickel", propNi);
+		ZINC = MetalRegistry.registerMetal("zinc", propZn);
+		COPPER = MetalRegistry.registerMetal("copper", propCu);
+		LEAD = MetalRegistry.registerMetal("lead", propPb);
+		TIN = MetalRegistry.registerMetal("tin", propSn);
+		SILVER = MetalRegistry.registerMetal("silver", propAg);
+		PLATINUM = MetalRegistry.registerMetal("platinum", propPt);
+		GOLD = MetalRegistry.registerMetal("gold", propAu);
 		// Default composite metals
-		BRASS = registerMetal("brass", propCuZn, new Compound(COPPER, 1), new Compound(ZINC, 1));
-		BRONZE = registerMetal("bronze", propCuSn, new Compound(COPPER, 3), new Compound(TIN, 1));
-		STEEL = registerMetal("steel", propFeC, new Compound(IRON, 1), new Compound(COAL, 1));
-		INVAR = registerMetal("invar", propFeNi, new Compound(IRON, 2), new Compound(NICKEL, 1));
-		ELECTRUM = registerMetal("electrum", propAuAg, new Compound(GOLD, 1), new Compound(SILVER, 1));
+		BRASS = MetalRegistry.registerMetal("brass", propCuZn, new Compound(MetalRegistry.COPPER, 1), new Compound(MetalRegistry.ZINC, 1));
+		BRONZE = MetalRegistry.registerMetal("bronze", propCuSn, new Compound(MetalRegistry.COPPER, 3), new Compound(MetalRegistry.TIN, 1));
+		STEEL = MetalRegistry.registerMetal("steel", propFeC, new Compound(MetalRegistry.IRON, 1), new Compound(MetalRegistry.COAL, 1));
+		INVAR = MetalRegistry.registerMetal("invar", propFeNi, new Compound(MetalRegistry.IRON, 2), new Compound(MetalRegistry.NICKEL, 1));
+		ELECTRUM = MetalRegistry.registerMetal("electrum", propAuAg, new Compound(MetalRegistry.GOLD, 1), new Compound(MetalRegistry.SILVER, 1));
 	}
 }

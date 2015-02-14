@@ -13,10 +13,14 @@ import com.genuineflix.metal.CommonOre;
 
 public class BlockOreCommon extends BlockOre {
 
-	public static final String[] FOLDERS = { "", "nether/", "ender/" };
-	public static final String[] NAMES = { "", "Nether", "Ender" };
+	public static final String[] FOLDERS = {
+			"", "nether/", "ender/"
+	};
+	public static final String[] NAMES = {
+			"", "Nether", "Ender"
+	};
 	private final String name;
-	private final IIcon[] icons = new IIcon[FOLDERS.length];
+	private final IIcon[] icons = new IIcon[BlockOreCommon.FOLDERS.length];
 
 	public BlockOreCommon(final String name) {
 		this.name = name;
@@ -37,7 +41,7 @@ public class BlockOreCommon extends BlockOre {
 	public void registerBlockIcons(final IIconRegister registerer) {
 		super.registerBlockIcons(registerer);
 		for (int i = 0; i < icons.length; i++)
-			icons[i] = registerer.registerIcon(CommonOre.MODID + ":ores/" + FOLDERS[i] + name);
+			icons[i] = registerer.registerIcon(CommonOre.MODID + ":ores/" + BlockOreCommon.FOLDERS[i] + name);
 	}
 
 	@Override

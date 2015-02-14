@@ -29,7 +29,7 @@ public class CommonOre {
 	public static final String MODID = "CommonOre";
 	public static final String NAME = "CommonOre";
 	public static final String VERSION = "1.0.16";
-	public static final CreativeTabs COMMON_TAB = new CreativeTabs(NAME) {
+	public static final CreativeTabs COMMON_TAB = new CreativeTabs(CommonOre.NAME) {
 
 		@Override
 		public Item getTabIconItem() {

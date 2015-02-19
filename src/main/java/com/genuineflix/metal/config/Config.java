@@ -9,7 +9,6 @@ import net.minecraftforge.common.config.Property;
 import com.genuineflix.metal.api.IMetal;
 import com.genuineflix.metal.api.IMetal.Compound;
 import com.genuineflix.metal.event.OreGenerationEvent;
-import com.genuineflix.metal.registry.Metal;
 import com.genuineflix.metal.registry.MetalRegistry;
 
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -52,11 +51,11 @@ public class Config {
 	}
 
 	public void init() {
-		for (final Metal metal : MetalRegistry.getMetals()) {
-			if (metal.getSettings() == null)
+		for (final IMetal metal : MetalRegistry.getMetals()) {
+			if (metal.getGeneration() == null)
 				continue;
-			final IMetal.Settings properties = new IMetal.Settings(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal), metal.getSettings().canGenerate());
-			metal.setSettings(properties);
+			final IMetal.Generation properties = new IMetal.Generation(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal), metal.getGeneration().canGenerate());
+			metal.setGeneration(properties);
 			if (!metal.isComposite())
 				continue;
 			final String[] names = getComponentNames(metal);
@@ -69,15 +68,15 @@ public class Config {
 	}
 
 	public void post() {
-		for (final Metal metal : MetalRegistry.getMetals()) {
-			if (metal.isManual())
+		for (final IMetal metal : MetalRegistry.getMetals()) {
+			if (metal.getGeneration() == null)
 				continue;
-			metal.getSettings().setGenerate(getGeneration(metal));
+			metal.getGeneration().setGenerate(getGeneration(metal));
 		}
 		metals.save();
 	}
 
-	private String[] getComponentNames(final Metal metal) {
+	private String[] getComponentNames(final IMetal metal) {
 		String[] names = new String[0];
 		for (int i = 0; i < metal.getCompounds().size(); i++) {
 			final Compound comp = metal.getCompounds().get(i);
@@ -91,11 +90,11 @@ public class Config {
 		return prop.getStringList();
 	}
 
-	private float getDepth(final Metal metal) {
-		return getFloat(metal, "depth", metal.getSettings().depth, 0, 1);
+	private float getDepth(final IMetal metal) {
+		return getFloat(metal, "depth", metal.getGeneration().depth, 0, 1);
 	}
 
-	private float getFloat(final Metal metal, final String category, final float value, final float min, final float max) {
+	private float getFloat(final IMetal metal, final String category, final float value, final float min, final float max) {
 		final Property prop = metals.get(category, metal.getName(), Float.toString(value));
 		prop.setLanguageKey("CommonOre." + category);
 		prop.setMinValue(min);
@@ -108,17 +107,17 @@ public class Config {
 		}
 	}
 
-	private boolean getGeneration(final Metal metal) {
-		final Property prop = metals.get("generation", metal.getName(), metal.getSettings().canGenerate());
+	private boolean getGeneration(final IMetal metal) {
+		final Property prop = metals.get("generation", metal.getName(), metal.getGeneration().canGenerate());
 		prop.setLanguageKey("CommonOre.generation");
-		return prop.getBoolean(metal.getSettings().canGenerate());
+		return prop.getBoolean(metal.getGeneration().canGenerate());
 	}
 
-	private float getHardness(final Metal metal) {
-		return getFloat(metal, "hardness", metal.getSettings().hardness, 0, 100);
+	private float getHardness(final IMetal metal) {
+		return getFloat(metal, "hardness", metal.getGeneration().hardness, 0, 100);
 	}
 
-	private int getInt(final Metal metal, final String category, final int value, final int min, final int max) {
+	private int getInt(final IMetal metal, final String category, final int value, final int min, final int max) {
 		final Property prop = metals.get(category, metal.getName(), value);
 		prop.setLanguageKey("CommonOre." + category);
 		prop.setMinValue(min);
@@ -126,23 +125,23 @@ public class Config {
 		return prop.getInt(value) < min ? min : prop.getInt(value) > max ? max : prop.getInt(value);
 	}
 
-	private int getNodes(final Metal metal) {
-		return getInt(metal, "nodes", metal.getSettings().nodes, 1, 8);
+	private int getNodes(final IMetal metal) {
+		return getInt(metal, "nodes", metal.getGeneration().nodes, 1, 8);
 	}
 
-	private float getRarity(final Metal metal) {
-		return getFloat(metal, "rarity", metal.getSettings().rarity, 0, 1);
+	private float getRarity(final IMetal metal) {
+		return getFloat(metal, "rarity", metal.getGeneration().rarity, 0, 1);
 	}
 
-	private float getResistance(final Metal metal) {
-		return getFloat(metal, "resistance", metal.getSettings().resistance, 0, 100);
+	private float getResistance(final IMetal metal) {
+		return getFloat(metal, "resistance", metal.getGeneration().resistance, 0, 100);
 	}
 
-	private int getSize(final Metal metal) {
-		return getInt(metal, "size", metal.getSettings().size, 1, 16);
+	private int getSize(final IMetal metal) {
+		return getInt(metal, "size", metal.getGeneration().size, 1, 16);
 	}
 
-	private float getSpread(final Metal metal) {
-		return getFloat(metal, "spread", metal.getSettings().spread, 0, 1);
+	private float getSpread(final IMetal metal) {
+		return getFloat(metal, "spread", metal.getGeneration().spread, 0, 1);
 	}
 }

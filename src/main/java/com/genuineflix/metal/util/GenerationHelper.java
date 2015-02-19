@@ -12,7 +12,6 @@ import net.minecraft.world.chunk.Chunk;
 
 import com.genuineflix.metal.api.IMetal;
 import com.genuineflix.metal.generator.feature.CommonMetalNode.NodePos;
-import com.genuineflix.metal.registry.Metal;
 import com.google.common.base.Predicate;
 
 public class GenerationHelper {
@@ -44,7 +43,7 @@ public class GenerationHelper {
 		return chunk.getTopFilledSegment() + 16;
 	}
 
-	public static boolean areComponentsFound(final World world, final int posX, final int posY, final int posZ, final Metal metal, final int radius) {
+	public static boolean areComponentsFound(final World world, final int posX, final int posY, final int posZ, final IMetal metal, final int radius) {
 		final List<NodePos> cachedNodes = GenerationHelper.getNodesInChunk(world.getChunkFromBlockCoords(posX, posZ));
 		if (cachedNodes == null || cachedNodes.isEmpty())
 			return false;

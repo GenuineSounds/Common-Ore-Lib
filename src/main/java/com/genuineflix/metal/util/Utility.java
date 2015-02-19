@@ -7,11 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.genuineflix.metal.api.IMetal;
-import com.genuineflix.metal.registry.Metal;
 
 public class Utility {
 
-	public static List<ItemStack> getOreDictStacks(final Metal metal) {
+	public static List<ItemStack> getOreDictStacks(final IMetal metal) {
 		final List<ItemStack> list = new ArrayList<ItemStack>();
 		for (final IMetal.Compound component : metal.getCompounds())
 			list.addAll(OreDictionary.getOres("ore" + component.metal.getDisplayName()));

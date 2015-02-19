@@ -5,31 +5,34 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
 import com.genuineflix.metal.api.IMetal;
 
-public class Metal implements IMetal {
+class Metal implements IMetal {
 
-	private final String name;
-	private final String displayName;
+	private String name;
+	private String displayName;
 	private Block ore;
 	private Block block;
 	private Item dust;
 	private Item ingot;
 	private Item nugget;
-	private Settings settings;
+	private Generation generation;
 	private List<Compound> compounds;
-	private boolean manual;
 
 	Metal(final String name) {
 		this.name = name;
 		displayName = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 	}
 
-	Metal(final String name, final Settings property, final Compound... compounds) {
+	Metal(final String name, final Generation generation, final Compound... compounds) {
 		this.name = name;
 		displayName = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-		setSettings(property);
+		setGeneration(generation);
 		setCompounds(compounds);
 	}
 
@@ -49,8 +52,8 @@ public class Metal implements IMetal {
 	}
 
 	@Override
-	public Settings getSettings() {
-		return settings;
+	public Generation getGeneration() {
+		return generation;
 	}
 
 	@Override
@@ -71,8 +74,8 @@ public class Metal implements IMetal {
 	}
 
 	@Override
-	public void setSettings(final Settings settings) {
-		this.settings = settings;
+	public void setGeneration(final Generation generation) {
+		this.generation = generation;
 	}
 
 	public void setCompounds(final List<Compound> compounds) {
@@ -80,21 +83,12 @@ public class Metal implements IMetal {
 	}
 
 	void finallize() {
-		if (manual)
+		if (generation == null)
 			return;
-		ore.setHardness(settings.hardness);
-		ore.setResistance(settings.resistance);
-		block.setHardness(settings.hardness);
-		block.setResistance(settings.resistance);
-	}
-
-	public boolean isManual() {
-		return manual;
-	}
-
-	public Metal manual() {
-		manual = true;
-		return this;
+		ore.setHardness(generation.hardness);
+		ore.setResistance(generation.resistance);
+		block.setHardness(generation.hardness);
+		block.setResistance(generation.resistance);
 	}
 
 	@Override
@@ -141,49 +135,45 @@ public class Metal implements IMetal {
 	void setNugget(final Item nugget) {
 		this.nugget = nugget;
 	}
-	/*
+
 	@Override
-	public DataCompound save(final DataCompound data) {
-		data.set("name", name);
-		data.set("displayName", displayName);
-		data.set("ore", MCToData.create(new ItemStack(ore)));
-		data.set("block", MCToData.create(new ItemStack(block)));
-		data.set("dust", MCToData.create(new ItemStack(dust)));
-		data.set("ingot", MCToData.create(new ItemStack(ingot)));
-		data.set("nugget", MCToData.create(new ItemStack(nugget)));
-		if (settings != null)
-			data.set("settings", settings.save(new DataCompound()));
+	public NBTTagCompound save(final NBTTagCompound data) {
+		data.setString("name", name);
+		data.setString("displayName", displayName);
+		data.setTag("ore", new ItemStack(ore).writeToNBT(new NBTTagCompound()));
+		data.setTag("block", new ItemStack(block).writeToNBT(new NBTTagCompound()));
+		data.setTag("dust", new ItemStack(dust).writeToNBT(new NBTTagCompound()));
+		data.setTag("ingot", new ItemStack(ingot).writeToNBT(new NBTTagCompound()));
+		data.setTag("nugget", new ItemStack(nugget).writeToNBT(new NBTTagCompound()));
+		if (generation != null)
+			data.setTag("generation", generation.save(new NBTTagCompound()));
 		if (compounds != null && !compounds.isEmpty()) {
-			final DataList comps = new DataList();
+			final NBTTagList comps = new NBTTagList();
 			for (int i = 0; i < compounds.size(); i++)
-				comps.add(compounds.get(i).save(new DataCompound()));
-			data.set("compounds", comps);
+				comps.appendTag(compounds.get(i).save(new NBTTagCompound()));
+			data.setTag("compounds", comps);
 		}
-		if (manual)
-			data.set("manual", manual);
 		return data;
 	}
 
 	@Override
-	public IMetal load(final DataCompound data) {
+	public IMetal load(final NBTTagCompound data) {
 		name = data.getString("name");
 		displayName = data.getString("displayName");
-		ore = ((ItemBlock) DataToMC.createItemStack(data.getCompound("ore")).getItem()).field_150939_a;
-		block = ((ItemBlock) DataToMC.createItemStack(data.getCompound("block")).getItem()).field_150939_a;
-		dust = DataToMC.createItemStack(data.getCompound("dust")).getItem();
-		ingot = DataToMC.createItemStack(data.getCompound("ingot")).getItem();
-		nugget = DataToMC.createItemStack(data.getCompound("nugget")).getItem();
-		if (data.hasKey("settings"))
-			settings = Settings.fromCompound(data.getCompound("settings"));
+		ore = ((ItemBlock) ItemStack.loadItemStackFromNBT(data.getCompoundTag("ore")).getItem()).field_150939_a;
+		block = ((ItemBlock) ItemStack.loadItemStackFromNBT(data.getCompoundTag("block")).getItem()).field_150939_a;
+		dust = ItemStack.loadItemStackFromNBT(data.getCompoundTag("dust")).getItem();
+		ingot = ItemStack.loadItemStackFromNBT(data.getCompoundTag("ingot")).getItem();
+		nugget = ItemStack.loadItemStackFromNBT(data.getCompoundTag("nugget")).getItem();
+		if (data.hasKey("generation"))
+			generation = new Generation().load(data.getCompoundTag("generation"));
 		if (data.hasKey("compounds")) {
-			final DataList list = data.getList("compounds", DataCompound.TYPE);
+			final NBTTagList list = data.getTagList("compounds", 10);
 			final List<Compound> compounds = new ArrayList<Compound>();
-			for (int i = 0; i < list.size(); i++)
-				compounds.add(Compound.from(list.getCompound(i)));
+			for (int i = 0; i < list.tagCount(); i++)
+				compounds.add(new Compound().load(list.getCompoundTagAt(i)));
 			this.compounds = compounds;
 		}
-		manual = data.hasKey("manual") && data.getBoolean("manual");
 		return this;
 	}
-	 */
 }

@@ -34,7 +34,7 @@ public class RegistryHelper {
 		metal.setBlock(new BlockCompressed(MapColor.ironColor).setBlockName("block" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setStepSound(Block.soundTypeMetal).setBlockTextureName(CommonOre.MODID + ":blocks/" + nameFixed));
 	}
 
-	static void registerItems(final Metal metal) {
+	static void registerItems(final IMetal metal) {
 		final String nameFixed = metal.getDisplayName();
 		GameRegistry.registerBlock(metal.getOre(), ItemOreCommon.class, "ore" + nameFixed, new Object[] {
 			nameFixed
@@ -56,7 +56,7 @@ public class RegistryHelper {
 		FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", new ItemStack(metal.getBlock(), 1, 0));
 	}
 
-	static void registerRecipes(final Metal metal) {
+	static void registerRecipes(final IMetal metal) {
 		final String nameFixed = metal.getDisplayName();
 		GameRegistry.addSmelting(new ItemStack(metal.getOre(), 1, 0), new ItemStack(metal.getIngot(), 1, 0), 10);
 		GameRegistry.addSmelting(new ItemStack(metal.getOre(), 1, 1), new ItemStack(metal.getIngot(), 2, 0), 10);
@@ -73,7 +73,7 @@ public class RegistryHelper {
 			RegistryHelper.registerAlloyRecipes(metal);
 	}
 
-	private static void registerAlloyRecipes(final Metal metal) {
+	private static void registerAlloyRecipes(final IMetal metal) {
 		Object[] dustNames = new Object[0];
 		for (final IMetal.Compound comp : metal.getCompounds())
 			for (int i = 0; i < comp.factor; i++) {

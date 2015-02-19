@@ -10,7 +10,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 
-import com.genuineflix.metal.registry.Metal;
+import com.genuineflix.metal.api.IMetal;
 import com.genuineflix.metal.util.GenerationHelper;
 import com.google.common.base.Predicate;
 
@@ -62,16 +62,16 @@ public class CommonMetalNode extends WorldGenMinable {
 		}
 	}
 
-	public final Metal metal;
+	public final IMetal metal;
 	public final BiomeType type;
 	public final int size;
 	public final Predicate<Block> isBlockReplaceable;
 
-	public CommonMetalNode(final Metal metal, final BiomeType type, final int size) {
-		this(metal, type, size, GenerationHelper.IS_REPLACEABLE_BLOCK);
+	public CommonMetalNode(final IMetal metal2, final BiomeType type, final int size) {
+		this(metal2, type, size, GenerationHelper.IS_REPLACEABLE_BLOCK);
 	}
 
-	public CommonMetalNode(final Metal metal, final BiomeType type, final int size, final Predicate<Block> isBlockReplaceable) {
+	public CommonMetalNode(final IMetal metal, final BiomeType type, final int size, final Predicate<Block> isBlockReplaceable) {
 		super(metal.getOre(), type.meta, size, Blocks.stone);
 		this.metal = metal;
 		this.type = type;

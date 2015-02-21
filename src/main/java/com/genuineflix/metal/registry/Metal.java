@@ -157,7 +157,7 @@ class Metal implements IMetal {
 	}
 
 	@Override
-	public IMetal load(final NBTTagCompound data) {
+	public Metal load(final NBTTagCompound data) {
 		name = data.getString("name");
 		displayName = data.getString("displayName");
 		ore = ((ItemBlock) ItemStack.loadItemStackFromNBT(data.getCompoundTag("ore")).getItem()).field_150939_a;

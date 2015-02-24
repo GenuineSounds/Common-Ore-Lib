@@ -18,9 +18,6 @@ import cpw.mods.fml.common.IWorldGenerator;
 
 public abstract class AbstractMetalGenerator implements IWorldGenerator {
 
-	public static long chunkGenCount = 0;
-	public static long chunkGenTotalTime = 0;
-
 	@Override
 	public void generate(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
 		final Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);

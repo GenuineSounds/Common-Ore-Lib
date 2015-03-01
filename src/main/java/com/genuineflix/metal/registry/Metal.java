@@ -138,6 +138,7 @@ class Metal implements IMetal {
 
 	@Override
 	public NBTTagCompound save(final NBTTagCompound data) {
+		data.setString("class", this.getClass().getName());
 		data.setString("name", name);
 		data.setString("displayName", displayName);
 		data.setTag("ore", new ItemStack(ore).writeToNBT(new NBTTagCompound()));

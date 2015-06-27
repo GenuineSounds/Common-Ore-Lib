@@ -168,10 +168,15 @@ public final class MetalRegistry {
 		PLATINUM = MetalRegistry.createMetal("platinum", propPt);
 		GOLD = MetalRegistry.createMetal("gold", propAu);
 		// Default composite metals
-		BRASS = MetalRegistry.createMetal("brass", propCuZn, new Compound(MetalRegistry.COPPER, 1), new Compound(MetalRegistry.ZINC, 1));
-		BRONZE = MetalRegistry.createMetal("bronze", propCuSn, new Compound(MetalRegistry.COPPER, 3), new Compound(MetalRegistry.TIN, 1));
-		STEEL = MetalRegistry.createMetal("steel", propFeC, new Compound(MetalRegistry.IRON, 1), new Compound(MetalRegistry.COAL, 1));
-		INVAR = MetalRegistry.createMetal("invar", propFeNi, new Compound(MetalRegistry.IRON, 2), new Compound(MetalRegistry.NICKEL, 1));
-		ELECTRUM = MetalRegistry.createMetal("electrum", propAuAg, new Compound(MetalRegistry.GOLD, 1), new Compound(MetalRegistry.SILVER, 1));
+		BRASS = MetalRegistry.createMetal("brass", propCuZn, new Compound(MetalRegistry.COPPER, 1), new Compound(
+				MetalRegistry.ZINC, 1));
+		BRONZE = MetalRegistry.createMetal("bronze", propCuSn, new Compound(MetalRegistry.COPPER, 3), new Compound(
+				MetalRegistry.TIN, 1));
+		STEEL = MetalRegistry.createMetal("steel", propFeC, new Compound(MetalRegistry.IRON, 1), new Compound(
+				MetalRegistry.COAL, 1));
+		INVAR = MetalRegistry.createMetal("invar", propFeNi, new Compound(MetalRegistry.IRON, 2), new Compound(
+				MetalRegistry.NICKEL, 1));
+		ELECTRUM = MetalRegistry.createMetal("electrum", propAuAg, new Compound(MetalRegistry.GOLD, 1), new Compound(
+				MetalRegistry.SILVER, 1));
 	}
 }

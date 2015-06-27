@@ -27,18 +27,22 @@ public class RegistryHelper {
 
 	static void createItems(final Metal metal) {
 		final String nameFixed = metal.getDisplayName();
-		metal.setOre(new BlockOreCommon(nameFixed).setBlockName("ore" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setStepSound(Block.soundTypeStone).setBlockTextureName(CommonOre.MODID + ":ores/" + nameFixed));
-		metal.setDust(new Item().setUnlocalizedName("dust" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setTextureName(CommonOre.MODID + ":dusts/" + nameFixed));
-		metal.setIngot(new Item().setUnlocalizedName("ingot" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setTextureName(CommonOre.MODID + ":ingots/" + nameFixed));
-		metal.setNugget(new Item().setUnlocalizedName("nugget" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setTextureName(CommonOre.MODID + ":nuggets/" + nameFixed));
-		metal.setBlock(new BlockCompressed(MapColor.ironColor).setBlockName("block" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setStepSound(Block.soundTypeMetal).setBlockTextureName(CommonOre.MODID + ":blocks/" + nameFixed));
+		metal.setOre(new BlockOreCommon(nameFixed).setBlockName("ore" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB)
+				.setStepSound(Block.soundTypeStone).setBlockTextureName(CommonOre.MODID + ":ores/" + nameFixed));
+		metal.setDust(new Item().setUnlocalizedName("dust" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB)
+				.setTextureName(CommonOre.MODID + ":dusts/" + nameFixed));
+		metal.setIngot(new Item().setUnlocalizedName("ingot" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB)
+				.setTextureName(CommonOre.MODID + ":ingots/" + nameFixed));
+		metal.setNugget(new Item().setUnlocalizedName("nugget" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB)
+				.setTextureName(CommonOre.MODID + ":nuggets/" + nameFixed));
+		metal.setBlock(new BlockCompressed(MapColor.ironColor).setBlockName("block" + nameFixed)
+				.setCreativeTab(CommonOre.COMMON_TAB).setStepSound(Block.soundTypeMetal)
+				.setBlockTextureName(CommonOre.MODID + ":blocks/" + nameFixed));
 	}
 
 	static void registerItems(final IMetal metal) {
 		final String nameFixed = metal.getDisplayName();
-		GameRegistry.registerBlock(metal.getOre(), ItemOreCommon.class, "ore" + nameFixed, new Object[] {
-			nameFixed
-		});
+		GameRegistry.registerBlock(metal.getOre(), ItemOreCommon.class, "ore" + nameFixed, new Object[] { nameFixed });
 		GameRegistry.registerItem(metal.getDust(), "dust" + nameFixed);
 		GameRegistry.registerItem(metal.getIngot(), "ingot" + nameFixed);
 		GameRegistry.registerItem(metal.getNugget(), "nugget" + nameFixed);
@@ -63,12 +67,19 @@ public class RegistryHelper {
 		GameRegistry.addSmelting(new ItemStack(metal.getOre(), 1, 2), new ItemStack(metal.getIngot(), 4, 0), 10);
 		GameRegistry.addSmelting(metal.getDust(), new ItemStack(metal.getIngot()), 10);
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getNugget(), 9), "ingot" + nameFixed));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getBlock()), "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getIngot()), "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getBlock()), "ingot" + nameFixed, "ingot"
+				+ nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed,
+				"ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getIngot()), "nugget" + nameFixed, "nugget"
+				+ nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed,
+				"nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getIngot(), 9), "block" + nameFixed));
-		RegistryHelper.sendStackTo("ThermalExpansion", "PulverizerRecipe", 4000, new ItemStack(metal.getOre(), 1, 0), new ItemStack(metal.getDust(), 2, 0));
-		RegistryHelper.sendStackTo("ThermalExpansion", "PulverizerRecipe", 4800, new ItemStack(metal.getOre(), 1, 1), new ItemStack(metal.getDust(), 4, 0));
-		RegistryHelper.sendStackTo("ThermalExpansion", "PulverizerRecipe", 6400, new ItemStack(metal.getOre(), 1, 2), new ItemStack(metal.getDust(), 8, 0));
+		RegistryHelper.sendStackTo("ThermalExpansion", "PulverizerRecipe", 4000, new ItemStack(metal.getOre(), 1, 0),
+				new ItemStack(metal.getDust(), 2, 0));
+		RegistryHelper.sendStackTo("ThermalExpansion", "PulverizerRecipe", 4800, new ItemStack(metal.getOre(), 1, 1),
+				new ItemStack(metal.getDust(), 4, 0));
+		RegistryHelper.sendStackTo("ThermalExpansion", "PulverizerRecipe", 6400, new ItemStack(metal.getOre(), 1, 2),
+				new ItemStack(metal.getDust(), 8, 0));
 		if (metal.isComposite())
 			RegistryHelper.registerAlloyRecipes(metal);
 	}
@@ -97,11 +108,13 @@ public class RegistryHelper {
 			final ItemStack ingotStack1 = new ItemStack(ingot1, metal.getCompounds().get(0).factor, 0);
 			final ItemStack ingotStack2 = new ItemStack(ingot2, metal.getCompounds().get(1).factor, 0);
 			final ItemStack ingotOutput = new ItemStack(metal.getIngot(), dustNames.length, 0);
-			RegistryHelper.sendStackTo("ThermalExpansion", "SmelterRecipe", 2400, ingotStack1, ingotStack2, ingotOutput);
+			RegistryHelper
+					.sendStackTo("ThermalExpansion", "SmelterRecipe", 2400, ingotStack1, ingotStack2, ingotOutput);
 		}
 	}
 
-	private static void sendStackTo(final String mod, final String key, final int energy, final ItemStack in, final ItemStack out) {
+	private static void sendStackTo(final String mod, final String key, final int energy, final ItemStack in,
+			final ItemStack out) {
 		final NBTTagCompound message = new NBTTagCompound();
 		final NBTTagCompound input = new NBTTagCompound();
 		final NBTTagCompound primaryOutput = new NBTTagCompound();
@@ -113,7 +126,8 @@ public class RegistryHelper {
 		FMLInterModComms.sendMessage(mod, key, message);
 	}
 
-	private static void sendStackTo(final String mod, final String key, final int energy, final ItemStack input1, final ItemStack input2, final ItemStack out) {
+	private static void sendStackTo(final String mod, final String key, final int energy, final ItemStack input1,
+			final ItemStack input2, final ItemStack out) {
 		final NBTTagCompound message = new NBTTagCompound();
 		final NBTTagCompound primaryInput = new NBTTagCompound();
 		final NBTTagCompound secondaryInput = new NBTTagCompound();

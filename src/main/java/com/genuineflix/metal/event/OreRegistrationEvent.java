@@ -13,6 +13,7 @@ public class OreRegistrationEvent {
 	public void registerOreEvent(final OreRegisterEvent event) {
 		if (!MetalRegistry.isMetal(event.Name) || !(event.Ore.getItem() instanceof ItemBlock))
 			return;
-		MetalRegistry.registrationEvent(event.Name, ((ItemBlock) event.Ore.getItem()).field_150939_a, event.Ore.getItemDamage());
+		MetalRegistry.registrationEvent(event.Name, ((ItemBlock) event.Ore.getItem()).field_150939_a,
+				event.Ore.getItemDamage());
 	}
 }

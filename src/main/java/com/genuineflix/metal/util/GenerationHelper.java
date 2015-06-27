@@ -43,7 +43,8 @@ public class GenerationHelper {
 		return chunk.getTopFilledSegment() + 16;
 	}
 
-	public static boolean areComponentsFound(final World world, final int posX, final int posY, final int posZ, final IMetal metal, final int radius) {
+	public static boolean areComponentsFound(final World world, final int posX, final int posY, final int posZ,
+			final IMetal metal, final int radius) {
 		final List<NodePos> cachedNodes = GenerationHelper.getNodesInChunk(world.getChunkFromBlockCoords(posX, posZ));
 		if (cachedNodes == null || cachedNodes.isEmpty())
 			return false;
@@ -90,8 +91,7 @@ public class GenerationHelper {
 			//
 			Blocks.stone, Blocks.dirt, Blocks.gravel, Blocks.sandstone, Blocks.hardened_clay,
 			//
-			Blocks.netherrack, Blocks.soul_sand, Blocks.end_stone
-	};
+			Blocks.netherrack, Blocks.soul_sand, Blocks.end_stone };
 	public static final Block[] GROUND_BLOCKS = new Block[] {
 			// Normal biomes.
 			Blocks.stone, Blocks.grass, Blocks.dirt, Blocks.gravel,
@@ -104,8 +104,7 @@ public class GenerationHelper {
 			// Mushroom biomes.
 			Blocks.mycelium,
 			// Hell biomes.
-			Blocks.netherrack, Blocks.soul_sand
-	};
+			Blocks.netherrack, Blocks.soul_sand };
 
 	public static void cacheNodeGen(final Chunk chunk, final NodePos pos) {
 		final int hash = GenerationHelper.chunkHash(chunk);
@@ -122,6 +121,7 @@ public class GenerationHelper {
 	}
 
 	public static int chunkHash(final Chunk chunk) {
-		return (chunk.xPosition >> 8 ^ chunk.xPosition) & 0xFFFF | ((chunk.zPosition >> 8 ^ chunk.zPosition) & 0xFFFF) << 16;
+		return (chunk.xPosition >> 8 ^ chunk.xPosition) & 0xFFFF
+				| ((chunk.zPosition >> 8 ^ chunk.zPosition) & 0xFFFF) << 16;
 	}
 }

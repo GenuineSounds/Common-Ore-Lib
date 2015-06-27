@@ -45,11 +45,13 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 
 		public Generation() {}
 
-		public Generation(final float rarity, final float depth, final int nodes, final int size, final float spread, final float hardness, final float resistance) {
+		public Generation(final float rarity, final float depth, final int nodes, final int size, final float spread,
+				final float hardness, final float resistance) {
 			this(rarity, depth, nodes, size, spread, hardness, resistance, false);
 		}
 
-		public Generation(final float rarity, final float depth, final int nodes, final int size, final float spread, final float hardness, final float resistance, final boolean generate) {
+		public Generation(final float rarity, final float depth, final int nodes, final int size, final float spread,
+				final float hardness, final float resistance, final boolean generate) {
 			this.rarity = rarity;
 			this.depth = depth;
 			this.nodes = nodes;
@@ -130,7 +132,8 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 		@Override
 		public Compound load(final NBTTagCompound compound) {
 			try {
-				metal = ((Class<IMetal>) ClassLoader.getSystemClassLoader().loadClass(compound.getString("class"))).newInstance().load(compound.getCompoundTag("metal"));
+				metal = ((Class<IMetal>) ClassLoader.getSystemClassLoader().loadClass(compound.getString("class")))
+						.newInstance().load(compound.getCompoundTag("metal"));
 				factor = compound.getInteger("factor");
 				return this;
 			}

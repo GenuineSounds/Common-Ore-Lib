@@ -13,12 +13,8 @@ import com.genuineflix.metal.CommonOre;
 
 public class BlockOreCommon extends BlockOre {
 
-	public static final String[] FOLDERS = {
-			"", "nether/", "ender/"
-	};
-	public static final String[] NAMES = {
-			"", "Nether", "Ender"
-	};
+	public static final String[] FOLDERS = { "", "nether/", "ender/" };
+	public static final String[] NAMES = { "", "Nether", "Ender" };
 	private final String name;
 	private final IIcon[] icons = new IIcon[BlockOreCommon.FOLDERS.length];
 
@@ -26,9 +22,7 @@ public class BlockOreCommon extends BlockOre {
 		this.name = name;
 	}
 
-	@SuppressWarnings({
-			"rawtypes", "unchecked"
-	})
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void getSubBlocks(final Item item, final CreativeTabs tab, final List blocks) {
 		for (int i = 0; i < icons.length; i++)

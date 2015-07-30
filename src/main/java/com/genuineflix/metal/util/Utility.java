@@ -3,10 +3,10 @@ package com.genuineflix.metal.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.genuineflix.metal.api.IMetal;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
-
-import com.genuineflix.metal.api.IMetal;
 
 public class Utility {
 

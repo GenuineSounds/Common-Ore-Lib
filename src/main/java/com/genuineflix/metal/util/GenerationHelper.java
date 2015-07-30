@@ -5,20 +5,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-
 import com.genuineflix.metal.api.IMetal;
 import com.genuineflix.metal.generator.feature.CommonMetalNode.NodePos;
 import com.google.common.base.Predicate;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
+
 public class GenerationHelper {
 
-	public static int findGroundLevel(final Chunk chunk, final int x, final int z, final Block groundBlock) {
+	public static int findGroundLevel(final Chunk chunk, final int x, final int z, final IBlockState groundBlock) {
 		for (int y = chunk.getTopFilledSegment() + 16; y > 1; y--)
-			if (Block.isEqualTo(groundBlock, chunk.getBlock(x, y, z)))
+			if (Block.isEqualTo(groundBlock.getBlock(), chunk.getBlock(x, y, z)))
 				return y;
 		return chunk.getTopFilledSegment() + 16;
 	}
@@ -27,7 +29,8 @@ public class GenerationHelper {
 		return (inverse ? GenerationHelper.yConst / yMax : yMax / GenerationHelper.yConst) * number;
 	}
 
-	public static int findGroundLevel(final Chunk chunk, final int x, final int z, final Predicate<Block> isGroundBlock) {
+	public static int findGroundLevel(final Chunk chunk, final int x, final int z,
+			final Predicate<Block> isGroundBlock) {
 		for (int y = chunk.getTopFilledSegment() + 16; y > 1; y--)
 			if (isGroundBlock.apply(chunk.getBlock(x, y, z)))
 				return y;
@@ -45,7 +48,8 @@ public class GenerationHelper {
 
 	public static boolean areComponentsFound(final World world, final int posX, final int posY, final int posZ,
 			final IMetal metal, final int radius) {
-		final List<NodePos> cachedNodes = GenerationHelper.getNodesInChunk(world.getChunkFromBlockCoords(posX, posZ));
+		final List<NodePos> cachedNodes = GenerationHelper
+				.getNodesInChunk(world.getChunkFromBlockCoords(new BlockPos(posX, 64, posZ)));
 		if (cachedNodes == null || cachedNodes.isEmpty())
 			return false;
 		final NodePos node = new NodePos(metal.getName(), posX, posY, posZ);

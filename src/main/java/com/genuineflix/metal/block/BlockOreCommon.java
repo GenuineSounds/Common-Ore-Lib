@@ -2,14 +2,12 @@ package com.genuineflix.metal.block;
 
 import java.util.List;
 
+import com.genuineflix.metal.CommonOre;
+
 import net.minecraft.block.BlockOre;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
-
-import com.genuineflix.metal.CommonOre;
 
 public class BlockOreCommon extends BlockOre {
 

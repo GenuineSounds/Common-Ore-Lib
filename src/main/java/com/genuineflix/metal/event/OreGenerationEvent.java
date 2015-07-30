@@ -2,21 +2,21 @@ package com.genuineflix.metal.event;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.block.Block;
-import net.minecraft.world.gen.feature.WorldGenMinable;
-import net.minecraftforge.event.terraingen.OreGenEvent;
-
 import com.genuineflix.metal.generator.feature.CommonMetalNode;
 import com.genuineflix.metal.registry.MetalRegistry;
 
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.block.Block;
+import net.minecraft.world.gen.feature.WorldGenMinable;
+import net.minecraftforge.event.terraingen.OreGenEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class OreGenerationEvent {
 
 	public static Field blockWorldGenMinableField;
 	public static Field metaWorldGenMinableField;
 	public static Boolean restrictOreGen = true;
+
 	static {
 		try {
 			OreGenerationEvent.blockWorldGenMinableField = WorldGenMinable.class.getDeclaredFields()[0];

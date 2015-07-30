@@ -3,14 +3,14 @@ package com.genuineflix.metal.registry;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.genuineflix.metal.api.IMetal;
+
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-
-import com.genuineflix.metal.api.IMetal;
 
 class Metal implements IMetal {
 
@@ -161,8 +161,8 @@ class Metal implements IMetal {
 	public Metal load(final NBTTagCompound data) {
 		name = data.getString("name");
 		displayName = data.getString("displayName");
-		ore = ((ItemBlock) ItemStack.loadItemStackFromNBT(data.getCompoundTag("ore")).getItem()).field_150939_a;
-		block = ((ItemBlock) ItemStack.loadItemStackFromNBT(data.getCompoundTag("block")).getItem()).field_150939_a;
+		ore = ((ItemBlock) ItemStack.loadItemStackFromNBT(data.getCompoundTag("ore")).getItem()).block;
+		block = ((ItemBlock) ItemStack.loadItemStackFromNBT(data.getCompoundTag("block")).getItem()).block;
 		dust = ItemStack.loadItemStackFromNBT(data.getCompoundTag("dust")).getItem();
 		ingot = ItemStack.loadItemStackFromNBT(data.getCompoundTag("ingot")).getItem();
 		nugget = ItemStack.loadItemStackFromNBT(data.getCompoundTag("nugget")).getItem();

@@ -1,5 +1,10 @@
 package com.genuineflix.metal.item;
 
+import com.genuineflix.metal.CommonOre;
+import com.genuineflix.metal.registry.MetalRegistry;
+import com.genuineflix.metal.util.GenerationHelper;
+import com.google.common.base.Predicate;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -8,14 +13,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-
-import com.genuineflix.metal.CommonOre;
-import com.genuineflix.metal.registry.MetalRegistry;
-import com.genuineflix.metal.util.GenerationHelper;
-import com.google.common.base.Predicate;
-
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 
 public class MagicWand extends ItemShears {
 

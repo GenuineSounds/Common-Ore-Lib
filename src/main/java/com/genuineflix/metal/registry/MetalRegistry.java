@@ -5,17 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
-
 import com.genuineflix.metal.api.IMetal;
 import com.genuineflix.metal.api.IMetal.Compound;
 import com.genuineflix.metal.api.IMetal.Generation;
 import com.genuineflix.metal.util.StringHelper;
 import com.google.common.collect.ImmutableList;
+
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public final class MetalRegistry {
 
@@ -133,6 +133,7 @@ public final class MetalRegistry {
 	private static Map<String, List<String>> commonCache = new HashMap<String, List<String>>();
 	private static List<IMetal> metals = new ArrayList<IMetal>();
 	private static boolean closed = false;
+
 	static {
 		// Default properties for metals
 		final Generation propAl = new Generation(1.0F, 1.00F, 10, 20, 0.05F, 3.0F, 3.0F);
@@ -168,15 +169,15 @@ public final class MetalRegistry {
 		PLATINUM = MetalRegistry.createMetal("platinum", propPt);
 		GOLD = MetalRegistry.createMetal("gold", propAu);
 		// Default composite metals
-		BRASS = MetalRegistry.createMetal("brass", propCuZn, new Compound(MetalRegistry.COPPER, 1), new Compound(
-				MetalRegistry.ZINC, 1));
-		BRONZE = MetalRegistry.createMetal("bronze", propCuSn, new Compound(MetalRegistry.COPPER, 3), new Compound(
-				MetalRegistry.TIN, 1));
-		STEEL = MetalRegistry.createMetal("steel", propFeC, new Compound(MetalRegistry.IRON, 1), new Compound(
-				MetalRegistry.COAL, 1));
-		INVAR = MetalRegistry.createMetal("invar", propFeNi, new Compound(MetalRegistry.IRON, 2), new Compound(
-				MetalRegistry.NICKEL, 1));
-		ELECTRUM = MetalRegistry.createMetal("electrum", propAuAg, new Compound(MetalRegistry.GOLD, 1), new Compound(
-				MetalRegistry.SILVER, 1));
+		BRASS = MetalRegistry.createMetal("brass", propCuZn, new Compound(MetalRegistry.COPPER, 1),
+				new Compound(MetalRegistry.ZINC, 1));
+		BRONZE = MetalRegistry.createMetal("bronze", propCuSn, new Compound(MetalRegistry.COPPER, 3),
+				new Compound(MetalRegistry.TIN, 1));
+		STEEL = MetalRegistry.createMetal("steel", propFeC, new Compound(MetalRegistry.IRON, 1),
+				new Compound(MetalRegistry.COAL, 1));
+		INVAR = MetalRegistry.createMetal("invar", propFeNi, new Compound(MetalRegistry.IRON, 2),
+				new Compound(MetalRegistry.NICKEL, 1));
+		ELECTRUM = MetalRegistry.createMetal("electrum", propAuAg, new Compound(MetalRegistry.GOLD, 1),
+				new Compound(MetalRegistry.SILVER, 1));
 	}
 }

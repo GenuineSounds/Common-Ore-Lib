@@ -1,9 +1,5 @@
 package com.genuineflix.metal;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraftforge.common.MinecraftForge;
-
 import com.genuineflix.metal.config.Config;
 import com.genuineflix.metal.event.OreGenerationEvent;
 import com.genuineflix.metal.event.OreRegistrationEvent;
@@ -13,13 +9,16 @@ import com.genuineflix.metal.generator.GeneratorStandardOre;
 import com.genuineflix.metal.item.MagicWand;
 import com.genuineflix.metal.registry.MetalRegistry;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = CommonOre.MODID, name = CommonOre.NAME, version = CommonOre.VERSION)
 public class CommonOre {
@@ -58,8 +57,8 @@ public class CommonOre {
 			GameRegistry.registerWorldGenerator(new GeneratorFlatBedrock(), Integer.MIN_VALUE);
 		GameRegistry.registerWorldGenerator(new GeneratorStandardOre(), 5000);
 		if (CommonOre.config.genAlloys)
-			GameRegistry.registerWorldGenerator(new GeneratorAlloyOre(CommonOre.config.rareAlloys,
-					CommonOre.config.searchRadius), 5001);
+			GameRegistry.registerWorldGenerator(
+					new GeneratorAlloyOre(CommonOre.config.rareAlloys, CommonOre.config.searchRadius), 5001);
 		MagicWand.wand = new MagicWand();
 		GameRegistry.registerItem(MagicWand.wand, "magicWand");
 	}

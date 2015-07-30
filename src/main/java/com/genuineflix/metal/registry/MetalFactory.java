@@ -1,8 +1,8 @@
 package com.genuineflix.metal.registry;
 
-import net.minecraft.nbt.NBTTagCompound;
-
 import com.genuineflix.metal.api.IMetal;
+
+import net.minecraft.nbt.NBTTagCompound;
 
 public class MetalFactory {
 

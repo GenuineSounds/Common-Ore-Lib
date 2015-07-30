@@ -4,15 +4,15 @@ import java.util.Random;
 
 import javax.vecmath.Tuple3i;
 
+import com.genuineflix.metal.api.IMetal;
+import com.genuineflix.metal.util.GenerationHelper;
+import com.google.common.base.Predicate;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenMinable;
-
-import com.genuineflix.metal.api.IMetal;
-import com.genuineflix.metal.util.GenerationHelper;
-import com.google.common.base.Predicate;
 
 public class CommonMetalNode extends WorldGenMinable {
 

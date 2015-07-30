@@ -2,9 +2,9 @@ package com.genuineflix.metal.generator;
 
 import java.util.Random;
 
-import net.minecraft.world.World;
-
 import com.genuineflix.metal.api.IMetal;
+
+import net.minecraft.world.World;
 
 public class GeneratorStandardOre extends AbstractMetalGenerator {
 

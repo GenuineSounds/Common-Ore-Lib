@@ -3,15 +3,14 @@ package com.genuineflix.metal.config;
 import java.io.File;
 import java.util.Arrays;
 
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-
 import com.genuineflix.metal.api.IMetal;
 import com.genuineflix.metal.api.IMetal.Compound;
 import com.genuineflix.metal.event.OreGenerationEvent;
 import com.genuineflix.metal.registry.MetalRegistry;
 
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class Config {
 
@@ -34,20 +33,18 @@ public class Config {
 	public void pre() {
 		OreGenerationEvent.restrictOreGen = common.getBoolean("restrictOreGen", "Options", true,
 				"Intrusively restrict ore generation for ores that are the same as the common ores. (recommended)");
-		genAlloys = common
-				.getBoolean("genAlloys", "Options", true,
-						"Generate alloy ores in world. This might break balance of other mods if rareAlloys is disabled. (recommended)");
-		rareAlloys = common
-				.getBoolean("rareAlloys", "Options", true,
-						"Generation of alloy ores only occur when the two components of the ore appear close together. (recommended)");
+		genAlloys = common.getBoolean("genAlloys", "Options", true,
+				"Generate alloy ores in world. This might break balance of other mods if rareAlloys is disabled. (recommended)");
+		rareAlloys = common.getBoolean("rareAlloys", "Options", true,
+				"Generation of alloy ores only occur when the two components of the ore appear close together. (recommended)");
 		flatBedrock = common.getBoolean("flatBedrock", "Options", false,
 				"Generate flat bedrock in the Over-world and Nether. (You probably have a mod that does this already)");
 		searchRadius = common.getInt("searchRadius", "Options", 2, 1, 8,
 				"Radius for rare alloys to search for their required component ores.");
 		common.save();
 		metals.getCategory("rarity").setComment("Chance of generating in any given chunk [range: 0.0 ~ 1.0]");
-		metals.getCategory("depth").setComment(
-				"Depth at which the ore is most common (Percentage / 64) [range: 0.0 ~ 1.0]");
+		metals.getCategory("depth")
+				.setComment("Depth at which the ore is most common (Percentage / 64) [range: 0.0 ~ 1.0]");
 		metals.getCategory("nodes").setComment("How many nodes have a chance to generate in a chunk [range: 1 ~ 8]");
 		metals.getCategory("size").setComment("How many ore can generate in each node [range: 1 ~ 16]");
 		metals.getCategory("spread").setComment("How far can the ore can spread (Percentage / 64) [range: 0.0 ~ 1.0]");
@@ -63,8 +60,8 @@ public class Config {
 			if (metal.getGeneration() == null)
 				continue;
 			final IMetal.Generation properties = new IMetal.Generation(getRarity(metal), getDepth(metal),
-					getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal), metal
-							.getGeneration().canGenerate());
+					getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal),
+					metal.getGeneration().canGenerate());
 			metal.setGeneration(properties);
 			if (!metal.isComposite())
 				continue;
@@ -111,8 +108,8 @@ public class Config {
 		prop.setMinValue(min);
 		prop.setMaxValue(max);
 		try {
-			return Float.parseFloat(prop.getString()) < min ? min : Float.parseFloat(prop.getString()) > max ? max
-					: Float.parseFloat(prop.getString());
+			return Float.parseFloat(prop.getString()) < min ? min
+					: Float.parseFloat(prop.getString()) > max ? max : Float.parseFloat(prop.getString());
 		}
 		catch (final Exception e) {
 			return value;

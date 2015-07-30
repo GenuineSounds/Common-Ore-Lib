@@ -2,19 +2,19 @@ package com.genuineflix.metal.generator;
 
 import java.util.Random;
 
-import net.minecraft.init.Blocks;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunkProvider;
-
 import com.genuineflix.metal.api.IMetal;
 import com.genuineflix.metal.generator.feature.CommonMetalNode;
 import com.genuineflix.metal.generator.feature.CommonMetalNode.BiomeType;
 import com.genuineflix.metal.registry.MetalRegistry;
 import com.genuineflix.metal.util.GenerationHelper;
 
-import cpw.mods.fml.common.IWorldGenerator;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.fml.common.IWorldGenerator;
 
 public abstract class AbstractMetalGenerator implements IWorldGenerator {
 
@@ -40,9 +40,10 @@ public abstract class AbstractMetalGenerator implements IWorldGenerator {
 			final int rndZ = random.nextInt(16);
 			final int posX = chunk.xPosition * 16 + rndX;
 			final int posZ = chunk.zPosition * 16 + rndZ;
-			final BiomeGenBase biome = chunk.getBiomeGenForWorldCoords(rndX, rndZ, world.getWorldChunkManager());
+			final BiomeGenBase biome = chunk.getBiome(new BlockPos(rndX, 64, rndZ), world.getWorldChunkManager());
 			final BiomeType type;
-			if (biome.fillerBlock == Blocks.netherrack || biome == BiomeGenBase.hell || world.provider.isHellWorld)
+			if (biome.fillerBlock == Blocks.netherrack || biome == BiomeGenBase.hell
+					|| !world.provider.isSurfaceWorld())
 				type = BiomeType.NETHER;
 			else if (biome.fillerBlock == Blocks.end_stone || biome == BiomeGenBase.sky)
 				type = BiomeType.ENDER;
@@ -52,17 +53,18 @@ public abstract class AbstractMetalGenerator implements IWorldGenerator {
 			int posY;
 			switch (type) {
 			case NETHER:
-				posY = (int) (random.nextGaussian() * metal.getGeneration().spread * 64 + metal.getGeneration().depth * 64);
+				posY = (int) (random.nextGaussian() * metal.getGeneration().spread * 64
+						+ metal.getGeneration().depth * 64);
 				if (random.nextBoolean())
 					posY = 128 - posY;
 				break;
 			default:
-				posY = (int) (random.nextGaussian() * metal.getGeneration().spread * columnLevel + metal
-						.getGeneration().depth * columnLevel);
+				posY = (int) (random.nextGaussian() * metal.getGeneration().spread * columnLevel
+						+ metal.getGeneration().depth * columnLevel);
 				break;
 			}
-			final CommonMetalNode node = new CommonMetalNode(metal, type, (int) GenerationHelper.generativeScaling(
-					columnLevel, false, metal.getGeneration().size));
+			final CommonMetalNode node = new CommonMetalNode(metal, type,
+					(int) GenerationHelper.generativeScaling(columnLevel, false, metal.getGeneration().size));
 			if (isValidAction(world, random, posX, posY, posZ, metal))
 				node.generate(world, random, posX, posY, posZ);
 		}
@@ -70,6 +72,6 @@ public abstract class AbstractMetalGenerator implements IWorldGenerator {
 
 	public abstract boolean isValidMetal(final IMetal metal);
 
-	public abstract boolean isValidAction(final World world, final Random random, final int x, final int y,
-			final int z, final IMetal metal);
+	public abstract boolean isValidAction(final World world, final Random random, final int x, final int y, final int z,
+			final IMetal metal);
 }

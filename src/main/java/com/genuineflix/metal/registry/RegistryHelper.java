@@ -2,15 +2,6 @@ package com.genuineflix.metal.registry;
 
 import java.util.Arrays;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCompressed;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
-
 import com.genuineflix.metal.CommonOre;
 import com.genuineflix.metal.api.IMetal;
 import com.genuineflix.metal.block.BlockOreCommon;
@@ -18,8 +9,16 @@ import com.genuineflix.metal.block.ItemOreCommon;
 import com.genuineflix.metal.generator.feature.CommonMetalNode.BiomeType;
 import com.genuineflix.metal.util.StringHelper;
 
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockCompressed;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class RegistryHelper {
 
@@ -67,12 +66,12 @@ public class RegistryHelper {
 		GameRegistry.addSmelting(new ItemStack(metal.getOre(), 1, 2), new ItemStack(metal.getIngot(), 4, 0), 10);
 		GameRegistry.addSmelting(metal.getDust(), new ItemStack(metal.getIngot()), 10);
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getNugget(), 9), "ingot" + nameFixed));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getBlock()), "ingot" + nameFixed, "ingot"
-				+ nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed,
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getBlock()), "ingot" + nameFixed,
+				"ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed,
 				"ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getIngot()), "nugget" + nameFixed, "nugget"
-				+ nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed,
-				"nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getIngot()), "nugget" + nameFixed,
+				"nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed,
+				"nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed));
 		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getIngot(), 9), "block" + nameFixed));
 		RegistryHelper.sendStackTo("ThermalExpansion", "PulverizerRecipe", 4000, new ItemStack(metal.getOre(), 1, 0),
 				new ItemStack(metal.getDust(), 2, 0));
@@ -108,8 +107,8 @@ public class RegistryHelper {
 			final ItemStack ingotStack1 = new ItemStack(ingot1, metal.getCompounds().get(0).factor, 0);
 			final ItemStack ingotStack2 = new ItemStack(ingot2, metal.getCompounds().get(1).factor, 0);
 			final ItemStack ingotOutput = new ItemStack(metal.getIngot(), dustNames.length, 0);
-			RegistryHelper
-					.sendStackTo("ThermalExpansion", "SmelterRecipe", 2400, ingotStack1, ingotStack2, ingotOutput);
+			RegistryHelper.sendStackTo("ThermalExpansion", "SmelterRecipe", 2400, ingotStack1, ingotStack2,
+					ingotOutput);
 		}
 	}
 

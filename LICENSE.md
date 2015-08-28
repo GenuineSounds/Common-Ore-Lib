@@ -1,4 +1,4 @@
-The Genuine Open Source License
+The Genuine Open Source License (GOSL)
 
 Copyright (c) 2015 Brian Wiegand (GenuineSounds)
 
@@ -11,12 +11,15 @@ whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
 
-You're strictly prohibited from making money off the distribution of the mod:
-* No pay to download.
-* No click-through-ads to download.
-* No ads page that is required to be viewed to download.
+Making money from the distribution of this Software, partial or complete,
+in any form, binary or source, is strictly prohibited.
+ 
+* No purchases required to access the Software.
+* No paid subscription services required to access the Software.
+* No click-through ads required to access the Software.
+* No dedicated ads page that is required to be viewed to access the Software.
 
-This does not include coincidental ads on the site that it is HOSTED.
+This does not include coincidental ads on the site that it is hosted.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

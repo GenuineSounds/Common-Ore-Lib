@@ -2,11 +2,10 @@ package com.genuineflix.metal.generator.feature;
 
 import java.util.Random;
 
-import javax.vecmath.Tuple3i;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 
@@ -16,9 +15,8 @@ import com.google.common.base.Predicate;
 
 public class CommonMetalNode extends WorldGenMinable {
 
-	public static class NodePos extends Tuple3i {
+	public static class NodePos extends Vec3 {
 
-		private static final long serialVersionUID = -7754326638558155495L;
 		public final String ore;
 		public final double radius;
 
@@ -41,13 +39,13 @@ public class CommonMetalNode extends WorldGenMinable {
 		}
 
 		public double distanceTo(final NodePos pos) {
-			return this.distanceTo(pos.x, pos.y, pos.z);
+			return this.distanceTo(pos.xCoord, pos.yCoord, pos.zCoord);
 		}
 
 		public double distanceTo(final double x, final double y, final double z) {
-			final double distanceX = this.x - x;
-			final double distanceY = this.y - y;
-			final double distanceZ = this.z - z;
+			final double distanceX = this.xCoord - x;
+			final double distanceY = this.yCoord - y;
+			final double distanceZ = this.zCoord - z;
 			return Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
 		}
 	}
@@ -71,8 +69,7 @@ public class CommonMetalNode extends WorldGenMinable {
 		this(metal2, type, size, GenerationHelper.IS_REPLACEABLE_BLOCK);
 	}
 
-	public CommonMetalNode(final IMetal metal, final BiomeType type, final int size,
-			final Predicate<Block> isBlockReplaceable) {
+	public CommonMetalNode(final IMetal metal, final BiomeType type, final int size, final Predicate<Block> isBlockReplaceable) {
 		super(metal.getOre(), type.meta, size, Blocks.stone);
 		this.metal = metal;
 		this.type = type;
@@ -113,8 +110,7 @@ public class CommonMetalNode extends WorldGenMinable {
 						if (d12 * d12 + d13 * d13 < 1.0D)
 							for (int genZ = k1; genZ <= j2; ++genZ) {
 								final double d14 = (genZ + 0.5D - d8) / (d10 / 2.0D);
-								if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D
-										&& isBlockReplaceable.apply(world.getBlock(genX, genY, genZ))) {
+								if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && isBlockReplaceable.apply(world.getBlock(genX, genY, genZ))) {
 									world.setBlock(genX, genY, genZ, metal.getOre(), type.meta, 2);
 									generated = true;
 								}

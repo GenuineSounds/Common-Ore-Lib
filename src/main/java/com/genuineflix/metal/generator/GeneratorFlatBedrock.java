@@ -12,24 +12,21 @@ import cpw.mods.fml.common.IWorldGenerator;
 public class GeneratorFlatBedrock implements IWorldGenerator {
 
 	@Override
-	public void generate(final Random random, final int chunkX, final int chunkZ, final World world,
-			final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
-		final boolean isHellBiome = world.getBiomeGenForCoords(chunkX, chunkZ) == BiomeGenBase.hell;
+	public void generate(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
 		switch (world.provider.dimensionId) {
 		case -1:
-			genNether(world, random, chunkX, chunkZ, isHellBiome);
+			genNether(world, random, chunkX, chunkZ);
 			break;
 		case 0:
-			genOverworld(world, random, chunkX, chunkZ, isHellBiome);
+			genOverworld(world, random, chunkX, chunkZ);
 			break;
 		case 1:
-			genEnd(world, random, chunkX, chunkZ, isHellBiome);
+			genEnd(world, random, chunkX, chunkZ);
 			break;
 		}
 	}
 
-	private void genNether(final World world, final Random random, final int chunkX, final int chunkZ,
-			final boolean isHellBiome) {
+	private void genNether(final World world, final Random random, final int chunkX, final int chunkZ) {
 		for (int x = 0; x < 16; x++)
 			for (int z = 0; z < 16; z++) {
 				final Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
@@ -43,8 +40,7 @@ public class GeneratorFlatBedrock implements IWorldGenerator {
 			}
 	}
 
-	private void genOverworld(final World world, final Random random, final int chunkX, final int chunkZ,
-			final boolean isHellBiome) {
+	private void genOverworld(final World world, final Random random, final int chunkX, final int chunkZ) {
 		for (int x = 0; x < 16; x++)
 			for (int z = 0; z < 16; z++) {
 				final Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
@@ -55,6 +51,5 @@ public class GeneratorFlatBedrock implements IWorldGenerator {
 			}
 	}
 
-	private void genEnd(final World world, final Random random, final int chunkX, final int chunkZ,
-			final boolean isHellBiome) {}
+	private void genEnd(final World world, final Random random, final int chunkX, final int chunkZ) {}
 }

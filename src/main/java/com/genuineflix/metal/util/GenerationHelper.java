@@ -43,8 +43,7 @@ public class GenerationHelper {
 		return chunk.getTopFilledSegment() + 16;
 	}
 
-	public static boolean areComponentsFound(final World world, final int posX, final int posY, final int posZ,
-			final IMetal metal, final int radius) {
+	public static boolean areComponentsFound(final World world, final int posX, final int posY, final int posZ, final IMetal metal, final int radius) {
 		final List<NodePos> cachedNodes = GenerationHelper.getNodesInChunk(world.getChunkFromBlockCoords(posX, posZ));
 		if (cachedNodes == null || cachedNodes.isEmpty())
 			return false;
@@ -121,7 +120,6 @@ public class GenerationHelper {
 	}
 
 	public static int chunkHash(final Chunk chunk) {
-		return (chunk.xPosition >> 8 ^ chunk.xPosition) & 0xFFFF
-				| ((chunk.zPosition >> 8 ^ chunk.zPosition) & 0xFFFF) << 16;
+		return (chunk.xPosition >> 8 ^ chunk.xPosition) & 0xFFFF | ((chunk.zPosition >> 8 ^ chunk.zPosition) & 0xFFFF) << 16;
 	}
 }

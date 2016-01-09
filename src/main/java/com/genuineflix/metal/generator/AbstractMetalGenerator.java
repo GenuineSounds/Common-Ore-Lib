@@ -19,8 +19,7 @@ import cpw.mods.fml.common.IWorldGenerator;
 public abstract class AbstractMetalGenerator implements IWorldGenerator {
 
 	@Override
-	public void generate(final Random random, final int chunkX, final int chunkZ, final World world,
-			final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
+	public void generate(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
 		final Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
 		final int chunkLevel = GenerationHelper.findGroundLevel(chunk, GenerationHelper.IS_GROUND_BLOCK);
 		for (final IMetal metal : MetalRegistry.getMetals()) {
@@ -31,8 +30,7 @@ public abstract class AbstractMetalGenerator implements IWorldGenerator {
 		}
 	}
 
-	private void generateMetal(final World world, final Chunk chunk, final Random random, final IMetal metal,
-			final int nodes) {
+	private void generateMetal(final World world, final Chunk chunk, final Random random, final IMetal metal, final int nodes) {
 		for (int i = 0; i < nodes; i++) {
 			if (metal.getGeneration().rarity < random.nextDouble())
 				continue;
@@ -57,12 +55,10 @@ public abstract class AbstractMetalGenerator implements IWorldGenerator {
 					posY = 128 - posY;
 				break;
 			default:
-				posY = (int) (random.nextGaussian() * metal.getGeneration().spread * columnLevel + metal
-						.getGeneration().depth * columnLevel);
+				posY = (int) (random.nextGaussian() * metal.getGeneration().spread * columnLevel + metal.getGeneration().depth * columnLevel);
 				break;
 			}
-			final CommonMetalNode node = new CommonMetalNode(metal, type, (int) GenerationHelper.generativeScaling(
-					columnLevel, false, metal.getGeneration().size));
+			final CommonMetalNode node = new CommonMetalNode(metal, type, (int) GenerationHelper.generativeScaling(columnLevel, false, metal.getGeneration().size));
 			if (isValidAction(world, random, posX, posY, posZ, metal))
 				node.generate(world, random, posX, posY, posZ);
 		}
@@ -70,6 +66,5 @@ public abstract class AbstractMetalGenerator implements IWorldGenerator {
 
 	public abstract boolean isValidMetal(final IMetal metal);
 
-	public abstract boolean isValidAction(final World world, final Random random, final int x, final int y,
-			final int z, final IMetal metal);
+	public abstract boolean isValidAction(final World world, final Random random, final int x, final int y, final int z, final IMetal metal);
 }

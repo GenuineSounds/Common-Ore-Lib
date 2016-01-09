@@ -20,7 +20,7 @@ import com.google.common.collect.ImmutableList;
 public final class MetalRegistry {
 
 	public static final IMetal COAL;
-	public static final IMetal ALUMINIUM;
+	public static final IMetal ALUMINUM;
 	public static final IMetal IRON;
 	public static final IMetal TITANIUM;
 	public static final IMetal TUNGSTEN;
@@ -118,8 +118,8 @@ public final class MetalRegistry {
 		MetalRegistry.metals = ImmutableList.copyOf(MetalRegistry.metals);
 	}
 
-	private static Metal createMetal(final String name) {
-		final Metal metal = new Metal(name);
+	private static Metal createFakeMetal(final String name) {
+		final Metal metal = new FakeMetal(name);
 		MetalRegistry.metals.add(metal);
 		return metal;
 	}
@@ -133,6 +133,7 @@ public final class MetalRegistry {
 	private static Map<String, List<String>> commonCache = new HashMap<String, List<String>>();
 	private static List<IMetal> metals = new ArrayList<IMetal>();
 	private static boolean closed = false;
+
 	static {
 		// Default properties for metals
 		final Generation propAl = new Generation(1.0F, 1.00F, 10, 20, 0.05F, 3.0F, 3.0F);
@@ -153,9 +154,9 @@ public final class MetalRegistry {
 		final Generation propFeNi = new Generation(0.5F, 0.44F, 8, 10, 0.05F, 4.0F, 4.0F);
 		final Generation propAuAg = new Generation(0.3F, 0.19F, 8, 10, 0.05F, 2.5F, 2.5F);
 		// Coal is a dummy metal
-		COAL = MetalRegistry.createMetal("coal");
+		COAL = MetalRegistry.createFakeMetal("coal");
 		// Default metals
-		ALUMINIUM = MetalRegistry.createMetal("aluminium", propAl);
+		ALUMINUM = MetalRegistry.createMetal("aluminum", propAl);
 		IRON = MetalRegistry.createMetal("iron", propFe);
 		TITANIUM = MetalRegistry.createMetal("titanium", propTi);
 		TUNGSTEN = MetalRegistry.createMetal("tungsten", propW);
@@ -168,15 +169,10 @@ public final class MetalRegistry {
 		PLATINUM = MetalRegistry.createMetal("platinum", propPt);
 		GOLD = MetalRegistry.createMetal("gold", propAu);
 		// Default composite metals
-		BRASS = MetalRegistry.createMetal("brass", propCuZn, new Compound(MetalRegistry.COPPER, 1), new Compound(
-				MetalRegistry.ZINC, 1));
-		BRONZE = MetalRegistry.createMetal("bronze", propCuSn, new Compound(MetalRegistry.COPPER, 3), new Compound(
-				MetalRegistry.TIN, 1));
-		STEEL = MetalRegistry.createMetal("steel", propFeC, new Compound(MetalRegistry.IRON, 1), new Compound(
-				MetalRegistry.COAL, 1));
-		INVAR = MetalRegistry.createMetal("invar", propFeNi, new Compound(MetalRegistry.IRON, 2), new Compound(
-				MetalRegistry.NICKEL, 1));
-		ELECTRUM = MetalRegistry.createMetal("electrum", propAuAg, new Compound(MetalRegistry.GOLD, 1), new Compound(
-				MetalRegistry.SILVER, 1));
+		BRASS = MetalRegistry.createMetal("brass", propCuZn, new Compound(MetalRegistry.COPPER, 1), new Compound(MetalRegistry.ZINC, 1));
+		BRONZE = MetalRegistry.createMetal("bronze", propCuSn, new Compound(MetalRegistry.COPPER, 3), new Compound(MetalRegistry.TIN, 1));
+		STEEL = MetalRegistry.createMetal("steel", propFeC, new Compound(MetalRegistry.IRON, 1), new Compound(MetalRegistry.COAL, 1));
+		INVAR = MetalRegistry.createMetal("invar", propFeNi, new Compound(MetalRegistry.IRON, 2), new Compound(MetalRegistry.NICKEL, 1));
+		ELECTRUM = MetalRegistry.createMetal("electrum", propAuAg, new Compound(MetalRegistry.GOLD, 1), new Compound(MetalRegistry.SILVER, 1));
 	}
 }

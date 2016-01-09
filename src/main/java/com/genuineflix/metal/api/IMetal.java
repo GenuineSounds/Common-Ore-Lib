@@ -9,17 +9,13 @@ import net.minecraft.nbt.NBTTagCompound;
 public interface IMetal extends SaveableData, LoadableData<IMetal> {
 
 	public String getName();
-
 	public String getDisplayName();
 
 	public Block getOre();
-
 	public Block getBlock();
 
 	public Item getIngot();
-
 	public Item getNugget();
-
 	public Item getDust();
 
 	public Generation getGeneration();
@@ -27,7 +23,6 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 	public List<Compound> getCompounds();
 
 	public void setGeneration(Generation generation);
-
 	public void setCompounds(Compound... components);
 
 	public boolean isComposite();
@@ -45,13 +40,11 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 
 		public Generation() {}
 
-		public Generation(final float rarity, final float depth, final int nodes, final int size, final float spread,
-				final float hardness, final float resistance) {
+		public Generation(final float rarity, final float depth, final int nodes, final int size, final float spread, final float hardness, final float resistance) {
 			this(rarity, depth, nodes, size, spread, hardness, resistance, false);
 		}
 
-		public Generation(final float rarity, final float depth, final int nodes, final int size, final float spread,
-				final float hardness, final float resistance, final boolean generate) {
+		public Generation(final float rarity, final float depth, final int nodes, final int size, final float spread, final float hardness, final float resistance, final boolean generate) {
 			this.rarity = rarity;
 			this.depth = depth;
 			this.nodes = nodes;
@@ -132,12 +125,10 @@ public interface IMetal extends SaveableData, LoadableData<IMetal> {
 		@Override
 		public Compound load(final NBTTagCompound compound) {
 			try {
-				metal = ((Class<IMetal>) ClassLoader.getSystemClassLoader().loadClass(compound.getString("class")))
-						.newInstance().load(compound.getCompoundTag("metal"));
+				metal = ((Class<IMetal>) ClassLoader.getSystemClassLoader().loadClass(compound.getString("class"))).newInstance().load(compound.getCompoundTag("metal"));
 				factor = compound.getInteger("factor");
 				return this;
-			}
-			catch (final Exception e) {}
+			} catch (final Exception e) {}
 			return null;
 		}
 	}

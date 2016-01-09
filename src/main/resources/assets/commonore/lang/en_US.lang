@@ -18,7 +18,7 @@ tile.oreBronze.name=Bronze Ore
 tile.oreCopper.name=Copper Ore
 tile.oreBrass.name=Brass Ore
 tile.oreZinc.name=Zinc Ore
-tile.oreAluminium.name=Aluminum Ore
+tile.oreAluminum.name=Aluminum Ore
 
 item.dustPlatinum.name=Pulverized Platinum
 item.dustTitanium.name=Pulverized Titanium
@@ -36,7 +36,7 @@ item.dustBronze.name=Pulverized Bronze
 item.dustCopper.name=Pulverized Copper
 item.dustBrass.name=Pulverized Brass
 item.dustZinc.name=Pulverized Zinc
-item.dustAluminium.name=Pulverized Aluminum
+item.dustAluminum.name=Pulverized Aluminum
 
 item.ingotPlatinum.name=Platinum Ingot
 item.ingotTitanium.name=Titanium Ingot
@@ -54,7 +54,7 @@ item.ingotBronze.name=Bronze Ingot
 item.ingotCopper.name=Copper Ingot
 item.ingotBrass.name=Brass Ingot
 item.ingotZinc.name=Zinc Ingot
-item.ingotAluminium.name=Aluminum Ingot
+item.ingotAluminum.name=Aluminum Ingot
 
 item.nuggetPlatinum.name=Platinum Nugget
 item.nuggetTitanium.name=Titanium Nugget
@@ -72,7 +72,7 @@ item.nuggetBronze.name=Bronze Nugget
 item.nuggetCopper.name=Copper Nugget
 item.nuggetBrass.name=Brass Nugget
 item.nuggetZinc.name=Zinc Nugget
-item.nuggetAluminium.name=Aluminum Nugget
+item.nuggetAluminum.name=Aluminum Nugget
 
 tile.blockPlatinum.name=Platinum Block
 tile.blockTitanium.name=Titanium Block
@@ -90,4 +90,4 @@ tile.blockBronze.name=Bronze Block
 tile.blockCopper.name=Copper Block
 tile.blockBrass.name=Brass Block
 tile.blockZinc.name=Zinc Block
-tile.blockAluminium.name=Aluminum Block
+tile.blockAluminum.name=Aluminum Block

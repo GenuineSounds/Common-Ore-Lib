@@ -27,17 +27,11 @@ public class RegistryHelper {
 
 	static void createItems(final Metal metal) {
 		final String nameFixed = metal.getDisplayName();
-		metal.setOre(new BlockOreCommon(nameFixed).setBlockName("ore" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB)
-				.setStepSound(Block.soundTypeStone).setBlockTextureName(CommonOre.MODID + ":ores/" + nameFixed));
-		metal.setDust(new Item().setUnlocalizedName("dust" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB)
-				.setTextureName(CommonOre.MODID + ":dusts/" + nameFixed));
-		metal.setIngot(new Item().setUnlocalizedName("ingot" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB)
-				.setTextureName(CommonOre.MODID + ":ingots/" + nameFixed));
-		metal.setNugget(new Item().setUnlocalizedName("nugget" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB)
-				.setTextureName(CommonOre.MODID + ":nuggets/" + nameFixed));
-		metal.setBlock(new BlockCompressed(MapColor.ironColor).setBlockName("block" + nameFixed)
-				.setCreativeTab(CommonOre.COMMON_TAB).setStepSound(Block.soundTypeMetal)
-				.setBlockTextureName(CommonOre.MODID + ":blocks/" + nameFixed));
+		metal.setOre(new BlockOreCommon(nameFixed).setBlockName("ore" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setStepSound(Block.soundTypeStone).setBlockTextureName(CommonOre.MODID + ":ores/" + nameFixed));
+		metal.setDust(new Item().setUnlocalizedName("dust" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setTextureName(CommonOre.MODID + ":dusts/" + nameFixed));
+		metal.setIngot(new Item().setUnlocalizedName("ingot" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setTextureName(CommonOre.MODID + ":ingots/" + nameFixed));
+		metal.setNugget(new Item().setUnlocalizedName("nugget" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setTextureName(CommonOre.MODID + ":nuggets/" + nameFixed));
+		metal.setBlock(new BlockCompressed(MapColor.ironColor).setBlockName("block" + nameFixed).setCreativeTab(CommonOre.COMMON_TAB).setStepSound(Block.soundTypeMetal).setBlockTextureName(CommonOre.MODID + ":blocks/" + nameFixed));
 	}
 
 	static void registerItems(final IMetal metal) {
@@ -61,37 +55,44 @@ public class RegistryHelper {
 	}
 
 	static void registerRecipes(final IMetal metal) {
-		final String nameFixed = metal.getDisplayName();
-		GameRegistry.addSmelting(new ItemStack(metal.getOre(), 1, 0), new ItemStack(metal.getIngot(), 1, 0), 10);
-		GameRegistry.addSmelting(new ItemStack(metal.getOre(), 1, 1), new ItemStack(metal.getIngot(), 2, 0), 10);
-		GameRegistry.addSmelting(new ItemStack(metal.getOre(), 1, 2), new ItemStack(metal.getIngot(), 4, 0), 10);
+		if (metal instanceof FakeMetal)
+			return;
+		final String name = metal.getDisplayName();
+		ItemStack oreRegular = new ItemStack(metal.getOre(), 1, 0);
+		ItemStack oreNether = new ItemStack(metal.getOre(), 1, 1);
+		ItemStack oreEnder = new ItemStack(metal.getOre(), 1, 2);
+		ItemStack ingot1 = new ItemStack(metal.getIngot(), 1, 0);
+		ItemStack ingot2 = new ItemStack(metal.getIngot(), 2, 0);
+		ItemStack ingot3 = new ItemStack(metal.getIngot(), 4, 0);
+		GameRegistry.addSmelting(oreRegular.copy(), ingot1.copy(), 10);
+		GameRegistry.addSmelting(oreNether.copy(), ingot2.copy(), 10);
+		GameRegistry.addSmelting(oreEnder.copy(), ingot3.copy(), 10);
+		ThermalExpansionHelper.addFurnaceRecipe(800 * 2, oreRegular.copy(), ingot1.copy());
+		ThermalExpansionHelper.addFurnaceRecipe(800 * 4, oreNether.copy(), ingot2.copy());
+		ThermalExpansionHelper.addFurnaceRecipe(800 * 8, oreEnder.copy(), ingot3.copy());
 		GameRegistry.addSmelting(metal.getDust(), new ItemStack(metal.getIngot()), 10);
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getNugget(), 9), "ingot" + nameFixed));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getBlock()), "ingot" + nameFixed, "ingot"
-				+ nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed,
-				"ingot" + nameFixed, "ingot" + nameFixed, "ingot" + nameFixed));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getIngot()), "nugget" + nameFixed, "nugget"
-				+ nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed,
-				"nugget" + nameFixed, "nugget" + nameFixed, "nugget" + nameFixed));
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getIngot(), 9), "block" + nameFixed));
-		RegistryHelper.sendStackTo("ThermalExpansion", "PulverizerRecipe", 4000, new ItemStack(metal.getOre(), 1, 0),
-				new ItemStack(metal.getDust(), 2, 0));
-		RegistryHelper.sendStackTo("ThermalExpansion", "PulverizerRecipe", 4800, new ItemStack(metal.getOre(), 1, 1),
-				new ItemStack(metal.getDust(), 4, 0));
-		RegistryHelper.sendStackTo("ThermalExpansion", "PulverizerRecipe", 6400, new ItemStack(metal.getOre(), 1, 2),
-				new ItemStack(metal.getDust(), 8, 0));
+		ThermalExpansionHelper.addFurnaceRecipe(800 * 1, new ItemStack(metal.getDust(), 1, 0), ingot1.copy());
+		String ingot = "ingot" + name;
+		String nugget = "nugget" + name;
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getNugget(), 9), ingot));
+		Object[] o1 = { ingot, ingot, ingot, ingot, ingot, ingot, ingot, ingot, ingot };
+		Object[] o2 = { nugget, nugget, nugget, nugget, nugget, nugget, nugget, nugget, nugget };
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getBlock()), o1));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getIngot()), o2));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getIngot(), 9), "block" + name));
+		ThermalExpansionHelper.addPulverizerRecipe(4000, oreRegular.copy(), new ItemStack(metal.getDust(), 2, 0));
+		ThermalExpansionHelper.addPulverizerRecipe(4800, oreNether.copy(), new ItemStack(metal.getDust(), 4, 0));
+		ThermalExpansionHelper.addPulverizerRecipe(6400, oreEnder.copy(), new ItemStack(metal.getDust(), 8, 0));
 		if (metal.isComposite())
 			RegistryHelper.registerAlloyRecipes(metal);
 	}
 
 	private static void registerAlloyRecipes(final IMetal metal) {
-		Object[] dustNames = new Object[0];
+		Object[] names = new String[0];
 		for (final IMetal.Compound comp : metal.getCompounds())
-			for (int i = 0; i < comp.factor; i++) {
-				dustNames = Arrays.copyOf(dustNames, dustNames.length + 1);
-				dustNames[dustNames.length - 1] = StringHelper.camelCase("dust", comp.metal.getName());
-			}
-		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getDust(), dustNames.length, 0), dustNames));
+			for (int i = 0; i < comp.factor; i++)
+				names = appendToArray(names, StringHelper.camelCase("dust", comp.metal.getName()));
+		GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(metal.getDust(), names.length, 0), names));
 		final IMetal component1 = metal.getCompounds().get(0).metal;
 		final IMetal component2 = metal.getCompounds().get(1).metal;
 		final Item dust1 = component1.getDust();
@@ -99,46 +100,22 @@ public class RegistryHelper {
 		if (dust1 != null && dust2 != null) {
 			final ItemStack dustStack1 = new ItemStack(dust1, metal.getCompounds().get(0).factor, 0);
 			final ItemStack dustStack2 = new ItemStack(dust2, metal.getCompounds().get(1).factor, 0);
-			final ItemStack dustOutput = new ItemStack(metal.getDust(), dustNames.length, 0);
-			RegistryHelper.sendStackTo("ThermalExpansion", "SmelterRecipe", 1600, dustStack1, dustStack2, dustOutput);
+			final ItemStack dustOutput = new ItemStack(metal.getDust(), names.length, 0);
+			ThermalExpansionHelper.addSmelterRecipe(1600, dustStack1, dustStack2, dustOutput);
 		}
 		final Item ingot1 = component1.getIngot();
 		final Item ingot2 = component2.getIngot();
 		if (ingot1 != null && ingot2 != null) {
 			final ItemStack ingotStack1 = new ItemStack(ingot1, metal.getCompounds().get(0).factor, 0);
 			final ItemStack ingotStack2 = new ItemStack(ingot2, metal.getCompounds().get(1).factor, 0);
-			final ItemStack ingotOutput = new ItemStack(metal.getIngot(), dustNames.length, 0);
-			RegistryHelper
-					.sendStackTo("ThermalExpansion", "SmelterRecipe", 2400, ingotStack1, ingotStack2, ingotOutput);
+			final ItemStack ingotOutput = new ItemStack(metal.getIngot(), names.length, 0);
+			ThermalExpansionHelper.addSmelterRecipe(2400, ingotStack1, ingotStack2, ingotOutput);
 		}
 	}
 
-	private static void sendStackTo(final String mod, final String key, final int energy, final ItemStack in,
-			final ItemStack out) {
-		final NBTTagCompound message = new NBTTagCompound();
-		final NBTTagCompound input = new NBTTagCompound();
-		final NBTTagCompound primaryOutput = new NBTTagCompound();
-		in.writeToNBT(input);
-		out.writeToNBT(primaryOutput);
-		message.setInteger("energy", energy);
-		message.setTag("input", input);
-		message.setTag("primaryOutput", primaryOutput);
-		FMLInterModComms.sendMessage(mod, key, message);
-	}
-
-	private static void sendStackTo(final String mod, final String key, final int energy, final ItemStack input1,
-			final ItemStack input2, final ItemStack out) {
-		final NBTTagCompound message = new NBTTagCompound();
-		final NBTTagCompound primaryInput = new NBTTagCompound();
-		final NBTTagCompound secondaryInput = new NBTTagCompound();
-		final NBTTagCompound primaryOutput = new NBTTagCompound();
-		input1.writeToNBT(primaryInput);
-		input2.writeToNBT(secondaryInput);
-		out.writeToNBT(primaryOutput);
-		message.setInteger("energy", energy);
-		message.setTag("primaryInput", primaryInput);
-		message.setTag("secondaryInput", secondaryInput);
-		message.setTag("primaryOutput", primaryOutput);
-		FMLInterModComms.sendMessage(mod, key, message);
+	private static <T> T[] appendToArray(T[] ts, T t) {
+		ts = Arrays.copyOf(ts, ts.length + 1);
+		ts[ts.length - 1] = t;
+		return ts;
 	}
 }

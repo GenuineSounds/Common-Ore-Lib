@@ -16,8 +16,7 @@ public class MetalFactory {
 			Class<?> clazz = cl.loadClass(className);
 			metal = (IMetal) clazz.newInstance();
 			metal.load(tag);
-		}
-		catch (Exception e) {}
+		} catch (Exception e) {}
 		return metal;
 	}
 

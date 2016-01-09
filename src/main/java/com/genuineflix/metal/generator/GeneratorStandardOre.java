@@ -14,8 +14,7 @@ public class GeneratorStandardOre extends AbstractMetalGenerator {
 	}
 
 	@Override
-	public boolean isValidAction(final World world, final Random random, final int x, final int y, final int z,
-			final IMetal metal) {
+	public boolean isValidAction(final World world, final Random random, final int x, final int y, final int z, final IMetal metal) {
 		return true;
 	}
 }

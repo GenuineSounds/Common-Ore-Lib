@@ -17,19 +17,18 @@ public class OreGenerationEvent {
 	public static Field blockWorldGenMinableField;
 	public static Field metaWorldGenMinableField;
 	public static Boolean restrictOreGen = true;
+
 	static {
 		try {
 			OreGenerationEvent.blockWorldGenMinableField = WorldGenMinable.class.getDeclaredFields()[0];
 			OreGenerationEvent.blockWorldGenMinableField.setAccessible(true);
-		}
-		catch (final Exception e) {
+		} catch (final Exception e) {
 			OreGenerationEvent.restrictOreGen = false;
 		}
 		try {
 			OreGenerationEvent.metaWorldGenMinableField = WorldGenMinable.class.getDeclaredFields()[4];
 			OreGenerationEvent.metaWorldGenMinableField.setAccessible(true);
-		}
-		catch (final Exception e) {}
+		} catch (final Exception e) {}
 	}
 
 	@SubscribeEvent
@@ -47,7 +46,6 @@ public class OreGenerationEvent {
 						if (MetalRegistry.isCommonBlock(block, meta))
 							event.setResult(Result.DENY);
 					}
-				}
-				catch (final Exception e) {}
+				} catch (final Exception e) {}
 	}
 }

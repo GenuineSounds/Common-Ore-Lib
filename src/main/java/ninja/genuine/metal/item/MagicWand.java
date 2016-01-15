@@ -12,7 +12,7 @@ import ninja.genuine.metal.CommonOre;
 import ninja.genuine.metal.registry.MetalRegistry;
 import ninja.genuine.metal.util.GenerationHelper;
 
-import java.util.function.Predicate;
+import com.google.common.base.Predicate;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLInterModComms;
@@ -23,12 +23,16 @@ public class MagicWand extends ItemShears {
 		return Loader.isModLoaded(MagicWand.CC_MOD_NAME);
 	}
 
+	private static final Predicate<Block> removal = new Predicate<Block>() {
+
+		@Override
+		public boolean apply(Block input) {
+			return input != null && input != Blocks.air;
+		}
+	};
 	public static final String CC_MOD_NAME = "ClosedCaption";
 	public static final String CC_DIRECT_MESSAGE_KEY = "[Direct]";
 	public static MagicWand wand;
-	private static final Predicate<Block> removal = input -> {
-		return input != null && input != Blocks.air;
-	};
 
 	public MagicWand() {
 		setUnlocalizedName("magicWand");

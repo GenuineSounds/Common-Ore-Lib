@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 import ninja.genuine.metal.api.IMetal;
 import ninja.genuine.metal.util.GenerationHelper;
 
-public class GeneratorAlloyOre implements CommonGenerator {
+public class GeneratorAlloyOre extends CommonGenerator {
 
 	private final boolean rare;
 	private final int radius;

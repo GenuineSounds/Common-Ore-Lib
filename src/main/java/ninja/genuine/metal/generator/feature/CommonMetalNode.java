@@ -1,7 +1,8 @@
 package ninja.genuine.metal.generator.feature;
 
 import java.util.Random;
-import java.util.function.Predicate;
+
+import com.google.common.base.Predicate;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -78,7 +79,7 @@ public class CommonMetalNode extends WorldGenMinable {
 	@Override
 	public boolean generate(final World world, final Random random, final int x, final int y, final int z) {
 		boolean generated = false;
-		if (!replacePredicate.test(world.getBlock(x, y, z)))
+		if (!replacePredicate.apply(world.getBlock(x, y, z)))
 			return false;
 		final float angle = random.nextFloat() * (float) Math.PI;
 		final double d0 = x + 8 + Math.sin(angle) * size / 8;
@@ -108,7 +109,7 @@ public class CommonMetalNode extends WorldGenMinable {
 						if (d12 * d12 + d13 * d13 < 1.0D)
 							for (int genZ = k1; genZ <= j2; ++genZ) {
 								final double d14 = (genZ + 0.5D - d8) / (d10 / 2.0D);
-								if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && replacePredicate.test(world.getBlock(genX, genY, genZ))) {
+								if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D && replacePredicate.apply(world.getBlock(genX, genY, genZ))) {
 									world.setBlock(genX, genY, genZ, metal.getOre(), type.meta, 2);
 									generated = true;
 								}

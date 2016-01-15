@@ -5,7 +5,7 @@ import java.util.Random;
 import net.minecraft.world.World;
 import ninja.genuine.metal.api.IMetal;
 
-public class GeneratorStandardOre implements CommonGenerator {
+public class GeneratorStandardOre extends CommonGenerator {
 
 	@Override
 	public boolean isValidMetal(final IMetal metal) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
+import com.google.common.base.Predicate;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -28,7 +28,7 @@ public class GenerationHelper {
 
 	public static int findGroundLevel(final Chunk chunk, final int x, final int z, final Predicate<Block> groundPredicate) {
 		for (int y = chunk.getTopFilledSegment() + 16; y > 1; y--)
-			if (groundPredicate.test(chunk.getBlock(x, y, z)))
+			if (groundPredicate.apply(chunk.getBlock(x, y, z)))
 				return y;
 		return chunk.getTopFilledSegment() + 16;
 	}
@@ -37,7 +37,7 @@ public class GenerationHelper {
 		for (int y = chunk.getTopFilledSegment() + 16; y > 1; y--)
 			for (int x = 0; x < 16; x++)
 				for (int z = 0; z < 16; z++)
-					if (groundPredicate.test(chunk.getBlock(x, y, z)))
+					if (groundPredicate.apply(chunk.getBlock(x, y, z)))
 						return y;
 		return chunk.getTopFilledSegment() + 16;
 	}
@@ -64,24 +64,28 @@ public class GenerationHelper {
 	}
 
 	static final double yConst = 128D;
-	public static final Predicate<Block> IS_REPLACEABLE_BLOCK = input -> {
-		for (final Block block : GenerationHelper.REPLACED_BLOCKS)
-			if (Block.isEqualTo(input, block))
-				return true;
-		return false;
+	public static final Predicate<Block> IS_REPLACEABLE_BLOCK = new Predicate<Block>() {
+
+		public boolean apply(Block input) {
+			for (final Block block : GenerationHelper.REPLACED_BLOCKS)
+				if (Block.isEqualTo(input, block))
+					return true;
+			return false;
+		}
 	};
-	public static final Predicate<Block> IS_GROUND_BLOCK = input -> {
-		for (final Block block : GenerationHelper.GROUND_BLOCKS)
-			if (Block.isEqualTo(input, block))
-				return true;
-		return false;
+	public static final Predicate<Block> IS_GROUND_BLOCK = new Predicate<Block>() {
+
+		public boolean apply(Block input) {
+			for (final Block block : GenerationHelper.GROUND_BLOCKS)
+				if (Block.isEqualTo(input, block))
+					return true;
+			return false;
+		}
 	};
-	static Map<Integer, List<NodePos>> genCache = new HashMap<Integer, List<NodePos>>();
+	private static Map<Integer, List<NodePos>> genCache = new HashMap<Integer, List<NodePos>>();
 	public static final Block[] REPLACED_BLOCKS = new Block[] {
 			//
-			Blocks.stone, Blocks.dirt, Blocks.gravel, Blocks.sandstone, Blocks.hardened_clay,
-			//
-			Blocks.netherrack, Blocks.soul_sand, Blocks.end_stone };
+			Blocks.stone, Blocks.dirt, Blocks.gravel, Blocks.sandstone, Blocks.hardened_clay, Blocks.netherrack, Blocks.soul_sand, Blocks.end_stone };
 	public static final Block[] GROUND_BLOCKS = new Block[] {
 			// Normal biomes.
 			Blocks.stone, Blocks.grass, Blocks.dirt, Blocks.gravel,
@@ -90,7 +94,7 @@ public class GenerationHelper {
 			// Tall Biomes.
 			Blocks.hardened_clay,
 			// Cold biomes.
-			Blocks.ice, Blocks.snow, Blocks.snow_layer,
+			Blocks.ice, Blocks.snow, Blocks.packed_ice,
 			// Mushroom biomes.
 			Blocks.mycelium,
 			// Hell biomes.

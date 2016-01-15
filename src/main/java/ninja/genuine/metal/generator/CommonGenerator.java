@@ -14,10 +14,10 @@ import ninja.genuine.metal.registry.MetalRegistry;
 import ninja.genuine.metal.util.GenerationHelper;
 import cpw.mods.fml.common.IWorldGenerator;
 
-public interface CommonGenerator extends IWorldGenerator {
+public abstract class CommonGenerator implements IWorldGenerator {
 
 	@Override
-	default void generate(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
+	public void generate(final Random random, final int chunkX, final int chunkZ, final World world, final IChunkProvider chunkGenerator, final IChunkProvider chunkProvider) {
 		final Chunk chunk = world.getChunkFromChunkCoords(chunkX, chunkZ);
 		final int chunkLevel = GenerationHelper.findGroundLevel(chunk, GenerationHelper.IS_GROUND_BLOCK);
 		for (final IMetal metal : MetalRegistry.getMetals()) {
@@ -28,7 +28,7 @@ public interface CommonGenerator extends IWorldGenerator {
 		}
 	}
 
-	default void generateMetal(final CommonGenerator generator, final World world, final Chunk chunk, final Random random, final IMetal metal, final int nodes) {
+	protected void generateMetal(final CommonGenerator generator, final World world, final Chunk chunk, final Random random, final IMetal metal, final int nodes) {
 		for (int i = 0; i < nodes; i++) {
 			if (metal.getGeneration().rarity < random.nextDouble())
 				continue;
@@ -62,7 +62,7 @@ public interface CommonGenerator extends IWorldGenerator {
 		}
 	}
 
-	boolean isValidMetal(final IMetal metal);
+	abstract boolean isValidMetal(final IMetal metal);
 
-	boolean isValidAction(final World world, final Random random, final int x, final int y, final int z, final IMetal metal);
+	abstract boolean isValidAction(final World world, final Random random, final int x, final int y, final int z, final IMetal metal);
 }

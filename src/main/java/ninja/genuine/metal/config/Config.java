@@ -20,8 +20,8 @@ public class Config {
 	public Configuration common;
 	public Configuration metals;
 
-	public Config(final FMLPreInitializationEvent event) {
-		final File folder = new File(event.getModConfigurationDirectory(), "CommonOre");
+	public Config(FMLPreInitializationEvent event) {
+		File folder = new File(event.getModConfigurationDirectory(), "CommonOre");
 		folder.mkdirs();
 		common = new Configuration(new File(folder, "Common.cfg"));
 		common.save();
@@ -49,15 +49,15 @@ public class Config {
 	}
 
 	public void init() {
-		for (final IMetal metal : MetalRegistry.getMetals()) {
+		for (IMetal metal : MetalRegistry.getMetals()) {
 			if (metal.getGeneration() == null)
 				continue;
-			final IMetal.Generation properties = new IMetal.Generation(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal), metal.getGeneration().canGenerate());
+			IMetal.Generation properties = new IMetal.Generation(getRarity(metal), getDepth(metal), getNodes(metal), getSize(metal), getSpread(metal), getHardness(metal), getResistance(metal), metal.getGeneration().canGenerate());
 			metal.setGeneration(properties);
 			if (!metal.isComposite())
 				continue;
-			final String[] names = getComponentNames(metal);
-			final Compound[] components = new Compound[names.length];
+			String[] names = getComponentNames(metal);
+			Compound[] components = new Compound[names.length];
 			for (int i = 0; i < components.length; i++)
 				components[i] = new Compound(MetalRegistry.getMetal(names[i]));
 			metal.setCompounds(components);
@@ -66,7 +66,7 @@ public class Config {
 	}
 
 	public void post() {
-		for (final IMetal metal : MetalRegistry.getMetals()) {
+		for (IMetal metal : MetalRegistry.getMetals()) {
 			if (metal.getGeneration() == null)
 				continue;
 			metal.getGeneration().setGenerate(getGeneration(metal));
@@ -74,71 +74,71 @@ public class Config {
 		metals.save();
 	}
 
-	private String[] getComponentNames(final IMetal metal) {
+	private String[] getComponentNames(IMetal metal) {
 		String[] names = new String[0];
 		for (int i = 0; i < metal.getCompounds().size(); i++) {
-			final Compound comp = metal.getCompounds().get(i);
+			Compound comp = metal.getCompounds().get(i);
 			for (int j = 0; j < comp.factor; j++) {
 				names = Arrays.copyOf(names, names.length + 1);
 				names[names.length - 1] = comp.metal.getName();
 			}
 		}
-		final Property prop = metals.get("components", metal.getName(), names);
+		Property prop = metals.get("components", metal.getName(), names);
 		prop.setLanguageKey("CommonOre.components");
 		return prop.getStringList();
 	}
 
-	private float getDepth(final IMetal metal) {
+	private float getDepth(IMetal metal) {
 		return getFloat(metal, "depth", metal.getGeneration().depth, 0, 1);
 	}
 
-	private float getFloat(final IMetal metal, final String category, final float value, final float min, final float max) {
-		final Property prop = metals.get(category, metal.getName(), Float.toString(value));
+	private float getFloat(IMetal metal, String category, float value, float min, float max) {
+		Property prop = metals.get(category, metal.getName(), Float.toString(value));
 		prop.setLanguageKey("CommonOre." + category);
 		prop.setMinValue(min);
 		prop.setMaxValue(max);
 		try {
 			return Float.parseFloat(prop.getString()) < min ? min : Float.parseFloat(prop.getString()) > max ? max : Float.parseFloat(prop.getString());
-		} catch (final Exception e) {
+		} catch (Exception e) {
 			return value;
 		}
 	}
 
-	private boolean getGeneration(final IMetal metal) {
-		final Property prop = metals.get("generation", metal.getName(), metal.getGeneration().canGenerate());
+	private boolean getGeneration(IMetal metal) {
+		Property prop = metals.get("generation", metal.getName(), metal.getGeneration().canGenerate());
 		prop.setLanguageKey("CommonOre.generation");
 		return prop.getBoolean(metal.getGeneration().canGenerate());
 	}
 
-	private float getHardness(final IMetal metal) {
+	private float getHardness(IMetal metal) {
 		return getFloat(metal, "hardness", metal.getGeneration().hardness, 0, 100);
 	}
 
-	private int getInt(final IMetal metal, final String category, final int value, final int min, final int max) {
-		final Property prop = metals.get(category, metal.getName(), value);
+	private int getInt(IMetal metal, String category, int value, int min, int max) {
+		Property prop = metals.get(category, metal.getName(), value);
 		prop.setLanguageKey("CommonOre." + category);
 		prop.setMinValue(min);
 		prop.setMaxValue(max);
 		return prop.getInt(value) < min ? min : prop.getInt(value) > max ? max : prop.getInt(value);
 	}
 
-	private int getNodes(final IMetal metal) {
+	private int getNodes(IMetal metal) {
 		return getInt(metal, "nodes", metal.getGeneration().nodes, 1, 8);
 	}
 
-	private float getRarity(final IMetal metal) {
+	private float getRarity(IMetal metal) {
 		return getFloat(metal, "rarity", metal.getGeneration().rarity, 0, 1);
 	}
 
-	private float getResistance(final IMetal metal) {
+	private float getResistance(IMetal metal) {
 		return getFloat(metal, "resistance", metal.getGeneration().resistance, 0, 100);
 	}
 
-	private int getSize(final IMetal metal) {
+	private int getSize(IMetal metal) {
 		return getInt(metal, "size", metal.getGeneration().size, 1, 16);
 	}
 
-	private float getSpread(final IMetal metal) {
+	private float getSpread(IMetal metal) {
 		return getFloat(metal, "spread", metal.getGeneration().spread, 0, 1);
 	}
 }
